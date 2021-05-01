@@ -1,0 +1,42 @@
+{
+	"pages": [
+		"pages/homepage/homepage",
+		"pages/ranklist/ranklist",
+		"pages/my/my",
+		"pages/postAdd/postAdd",
+		"pages/postDetail/postDetail"
+	],
+	"tabBar": {
+		"color": "#000",
+		"selectedColor": "#1AE6E6",
+		"backgroundColor": "#FFF",
+		"position": "bottom",
+		"borderStyle": "black",
+		"list": [
+			{
+				"pagePath": "pages/homepage/homepage",
+				"iconPath": "icon/roll.png",
+				"selectedIconPath": "icon/roll2.png"
+			},
+			{
+				"pagePath": "pages/ranklist/ranklist",
+				"iconPath": "icon/rank.png",
+				"selectedIconPath": "icon/rank2.png"
+			},
+			{
+				"pagePath": "pages/my/my",
+				"iconPath": "./icon/my.png",
+				"selectedIconPath": "./icon/my2.png"
+			}
+		]
+	},
+	"window": {
+		"backgroundColor": "#F6F6F6",
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#F6F6F6",
+		"navigationBarTitleText": "我是卷王",
+		"navigationBarTextStyle": "black"
+	},
+	"sitemapLocation": "sitemap.json",
+	"style": "v2"
+}

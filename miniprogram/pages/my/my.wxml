@@ -1,0 +1,12 @@
+<view class="page">
+	<view class="user-info" wx:if="{{userInfo}}">
+		<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
+		<view class="user-nickname">{{userInfo.nickName}}</view>
+	</view>
+
+	<view class="user-info" wx:if="{{!userInfo}}">
+		<image class="user-avatar" src="../../images/defaultAvatar.jpeg" bindtap="getUserInfo"></image>
+		<view class="user-nickname" bindtap="getUserInfo">点击登录</view>
+	</view>
+
+</view>

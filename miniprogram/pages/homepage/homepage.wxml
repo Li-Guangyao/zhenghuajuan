@@ -1,0 +1,23 @@
+<view class="page">
+	<view class="post" wx:for="{{postList}}" wx:key="index">
+		<view class="user-info" data-index="{{index}}" bindtap="tapPost">
+			<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
+			<view class="nickname-time">
+				<view class="user-nickname">{{item.nickname}}</view>
+				<view class="pub-time">{{item.timeDiff}}</view>
+			</view>
+		</view>
+		<rich-text class="content" nodes="{{item.content}}" data-index="{{index}}"
+			bindtap="tapPost" />
+		<view class="media" wx:if="{{item.photoList.length!=0}}" wx:for="{{item.photoList}}" wx:for-item="item2"
+			wx:for-index="indPex2" wx:key="index2">
+			<video class="post-video" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
+				play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}"
+				data-index1="{{index}}" data-index2="{{index2}}" bindtap="previewMadia"></video>
+			<image class="post-image" wx:if="{{item2.type=='image'}}" mode="aspectFill" src="{{item2.url}}"
+				data-index1="{{index}}" data-index2="{{index2}}" bindtap="previewMadia"></image>
+		</view>
+	</view>
+</view>
+
+<image class="btn-addpost" src="../../images/pen.png" mode="aspectFill" bindtap="toPostAdd"></image>

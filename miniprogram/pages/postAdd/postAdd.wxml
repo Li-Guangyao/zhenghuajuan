@@ -1,0 +1,22 @@
+<view class="post">
+	<editor class="content-input" model:value="{{content}}" bindinput="contentInput" placeholder="写下你的成果吧~"
+		auto-height="{{true}}" maxlength="-1" >
+	</editor>
+
+	<view class="upload-photo">
+		<van-uploader file-list="{{fileList}}" accept="media" bind:after-read="chosenImage" bind:delete="removeImage"
+			multiple preview-size="233rpx" image-fit="aspectFill" preview-image="true" max-count="9" max-size="20000000" max-duration="30"/>
+	</view>
+
+	<view class="location" bindtap="getLocation">
+		<van-icon name="location-o" />
+		<view>添加位置</view>
+	</view>
+
+	<view class="show-location" wx:if="{{location}}">
+		<view class="location-name">{{location.name}}</view>
+		<van-icon class="location-delete" name="cross" bindtap="removeLocation"/>
+	</view>
+</view>
+
+<view class="buttons" bindtap="publishPost">发布笔记</view>

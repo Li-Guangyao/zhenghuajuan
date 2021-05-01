@@ -1,0 +1,54 @@
+page {
+  background-color: var(--themeBackgroundColor);
+}
+.post {
+  background-color: white;
+  margin: 10rpx 15rpx 5rpx 15rpx;
+  padding: 15rpx 15rpx;
+  border-radius: 20rpx;
+}
+.post .user-info {
+  margin: 0 0 20rpx 0;
+  display: flex;
+  flex-direction: row;
+}
+.post .user-info .user-avatar {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 35rpx;
+  margin: 10rpx;
+}
+.post .user-info .nickname-time {
+  margin: 10rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.post .user-info .nickname-time .user-nickname {
+  font-size: 30rpx;
+}
+.post .user-info .nickname-time .pub-time {
+  font-size: 20rpx;
+  color: #4b4b4b;
+}
+.post .media {
+  margin: 15rpx 10rpx 0 0;
+  width: 210rpx;
+  height: 210rpx;
+  display: inline;
+}
+.post .media .post-video {
+  width: 100%;
+  height: 100%;
+}
+.post .media .post-image {
+  width: 100%;
+  height: 100%;
+}
+.btn-addpost {
+  border-radius: 50rpx;
+  width: 100rpx;
+  height: 100rpx;
+  bottom: 20rpx;
+  right: 20rpx;
+  position: fixed;
+}

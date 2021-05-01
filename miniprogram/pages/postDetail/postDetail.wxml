@@ -1,0 +1,18 @@
+<view class="post">
+	<view class="user-info">
+		<image class="user-avatar" mode="aspectFill" src="{{post.avatarUrl}}"></image>
+		<view class="nickname-time">
+			<view class="user-nickname">{{post.nickname}}</view>
+			<view class="pub-time">{{post.timeDiff}}</view>
+		</view>
+	</view>
+	<rich-text class="content" nodes="{{post.content}}" />
+	<view class="media" wx:if="{{post.photoList.length!=0}}" wx:for="{{post.photoList}}" wx:for-item="item2"
+		wx:for-index="indPex2" wx:key="index2">
+		<video class="post-video" custom-cache="{{false}}" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
+			play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}" data-index2="{{index2}}"
+			bindtap="previewMadia"></video>
+		<image class="post-image" wx:if="{{item2.type=='image'}}" mode="aspectFill" src="{{item2.url}}"
+			data-index2="{{index2}}" bindtap="previewMadia"></image>
+	</view>
+</view>

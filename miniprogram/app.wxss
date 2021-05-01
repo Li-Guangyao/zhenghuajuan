@@ -1,0 +1,8 @@
+/* @import '@vant/weapp/common/index.wxss'; */
+@import './miniprogram_npm/@vant/weapp/common/index.wxss';
+
+page{
+  --themeColor: #ffa600;
+  --themeBackgroundColor: #f6f6f6;
+  font-size: 28rpx;
+}

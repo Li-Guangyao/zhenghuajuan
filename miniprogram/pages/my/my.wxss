@@ -1,0 +1,20 @@
+page {
+  background-color: var(--themeBackgroundColor);
+}
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  padding: 10rpx;
+}
+.user-info .user-avatar {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 55rpx;
+  margin: 20rpx;
+}
+.user-info .user-nickname {
+  font-size: 40rpx;
+  margin: 0 0 0 20rpx;
+}
