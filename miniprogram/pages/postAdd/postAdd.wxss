@@ -10,7 +10,9 @@ page {
   background-color: #ffffff;
   border-radius: 5rpx;
   padding: 20rpx 20rpx;
-  max-height: 600rpx;
+  width: 100%;
+  min-height: 400rpx;
+  max-height: 900rpx;
   overflow: scroll;
 }
 .post .location {
@@ -38,7 +40,7 @@ page {
 }
 .post .show-location .location-delete {
   float: left;
-  margin: auto;
+  vertical-align: middle;
 }
 .buttons {
   padding: 30rpx 0 0 0;

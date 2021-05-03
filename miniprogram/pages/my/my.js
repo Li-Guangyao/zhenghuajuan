@@ -36,5 +36,13 @@ Page({
 				})
 			}
 		})
+	},
+
+	test(){
+		wx.cloud.callFunction({
+			name: 'countDayJuanwang'
+		}).then(res=>{
+			console.log(res)
+		})
 	}
 })

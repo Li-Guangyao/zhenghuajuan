@@ -1,7 +1,12 @@
 <view class="post">
-	<editor class="content-input" model:value="{{content}}" bindinput="contentInput" placeholder="写下你的成果吧~"
+	<!-- 富文本输入，已废除 -->
+	<!-- <editor class="content-input" model:value="{{content}}" bindinput="contentInput" placeholder="写下你的成果吧~"
 		auto-height="{{true}}" maxlength="-1" >
-	</editor>
+	</editor> -->
+
+	<textarea class="content-input" model:value="{{content}}" placeholder="写下你的成果吧~"
+		auto-height="{{true}}" maxlength="10000" auto-focus="{{true}}">
+	</textarea>
 
 	<view class="upload-photo">
 		<van-uploader file-list="{{fileList}}" accept="media" bind:after-read="chosenImage" bind:delete="removeImage"
@@ -10,7 +15,7 @@
 
 	<view class="location" bindtap="getLocation">
 		<van-icon name="location-o" />
-		<view>添加位置</view>
+		<view style="font-size: 30rpx">添加位置</view>
 	</view>
 
 	<view class="show-location" wx:if="{{location}}">

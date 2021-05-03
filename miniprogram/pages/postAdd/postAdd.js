@@ -40,24 +40,22 @@ Page({
 		}
 	},
 
-	// 输入内容
-	contentInput(e) {
-		this.setData({
-			content: e.detail.html
-		})
-	},
+	// 输入内容(editor富文本方式，已废弃)
+	// contentInput(e) {
+	// 	this.setData({
+	// 		content: e.detail.html
+	// 	})
+	// },
 
 	// 获取用户位置
 	getLocation() {
-		console.log('getLocation')
-
 		wx.chooseLocation({
 			success: res => {
-				if(res.name){
+				if (res.name) {
 					this.setData({
 						location: res
 					})
-				}else{
+				} else {
 					// 用户没有选择一个地址，所以没有具体的地名
 				}
 			},
@@ -73,7 +71,7 @@ Page({
 							}
 						}
 					})
-				}else{
+				} else {
 					// 可能是点击了取消按钮，所以获取失败
 				}
 			}
@@ -133,11 +131,11 @@ Page({
 				success: async (e) => {
 					if (e.confirm) {
 						wx.showLoading({
-						  title: '保存中',
+							title: '保存中',
 						})
 
 						// 用户点击了确定
-						if(this.data.fileList.length !=0){
+						if (this.data.fileList.length != 0) {
 							var uploadedFileList = await uploadImage(this.data.fileList, 'postPhoto')
 						}
 
@@ -154,12 +152,18 @@ Page({
 						}).then(res => {
 							wx.hideLoading()
 
+							// 直接调用上一页的刷新，然后在返回
+							// 让新发布的帖子显示到主页
+							var pages = getCurrentPages()
+							var beforePage = pages[pages.length - 2]
+							beforePage.refreshPage()
+
 							setTimeout(() => {
 								wx.showToast({
 									title: '发布成功',
 									icon: "success",
 								});
-			
+
 								setTimeout(() => {
 									wx.hideToast();
 								}, 2000)

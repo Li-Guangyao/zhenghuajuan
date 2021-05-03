@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+
+  "triggers": [{
+    "name": "countDayJuanwang",
+    "type": "timer",
+    "config": "*/10 * * * * * *"
+  }]
+}

@@ -7,17 +7,15 @@ const db = cloud.database()
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-
-	return db.collection('t_post').add({
+	db.collection('t_post_like').add({
 		data:{
 			_openid: event.userInfo.openId,
-			avatar: event.avatarUrl,
-			nickname: event.nickname,
-
-			content: event.content,
-			location: event.location,
-			photoList: event.photoList,
-			createdAt: Date()
+			postAuthor_openid: event.postAuthorOpenId,
+			postId: event.postId,
+			value: event.value,
+			valueIndex: event.valueIndex,
+			createdAt: new Date()
 		}
 	})
+
 }
