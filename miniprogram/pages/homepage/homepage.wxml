@@ -2,10 +2,17 @@
 	<view class="post" wx:for="{{postList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
 
 		<view class="user-info">
-			<image class="user-avatar" mode="aspectFill" src="{{item.avatar}}"></image>
-			<view class="nickname-time">
-				<view class="user-nickname">{{item.nickname}}</view>
-				<view class="pub-time">{{item.timeDiff}}</view>
+			<view class="left">
+				<image class="user-avatar" mode="aspectFill" src="{{item.avatar}}"></image>
+				<view class="nickname-time">
+					<view class="user-nickname">{{item.nickname}}</view>
+					<view class="pub-time">{{item.timeDiff}}</view>
+				</view>
+			</view>
+			<view class="right">
+				<view class="juan-number"  wx:if="{{item.likeValue!=0}}">{{item.likeValue}}</view>
+				<view class="juan-number"  wx:if="{{item.likeValue==0}}">0</view>
+				<image class="juan-image" src="../../icon/roll2.png"></image>
 			</view>
 		</view>
 

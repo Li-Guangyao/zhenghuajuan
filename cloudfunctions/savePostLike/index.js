@@ -4,9 +4,12 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+const _ = db.command
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+	var likeValue = event.value
+
 	db.collection('t_post_like').add({
 		data:{
 			_openid: event.userInfo.openId,
@@ -18,4 +21,9 @@ exports.main = async (event, context) => {
 		}
 	})
 
+	db.collection('t_post').doc(event.postId).update({
+		data:{
+			likeValue: _.inc(likeValue)
+		}
+	})
 }

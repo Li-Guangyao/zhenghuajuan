@@ -4,6 +4,6 @@
 		"van-uploader": "@vant/weapp/uploader/index",
 		"van-button": "@vant/weapp/button/index"
   },
-  "navigationBarTitleText": "秀一波",
+  "navigationBarTitleText": "卷一波",
   "navigationBarBackgroundColor": "#ffa600"
 }

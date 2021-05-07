@@ -1,12 +1,149 @@
 page {
   background-color: var(--themeBackgroundColor);
 }
-.page {
+.background .background-image {
   width: 750rpx;
-  height: 2000rpx;
+  overflow-y: hidden;
 }
-.background {
-  width: 750rpx;
-  height: 2000rpx;
+.background .first,
+.background .second,
+.background .third,
+.background .update-date {
+  position: absolute;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.background .first .avatar,
+.background .second .avatar,
+.background .third .avatar,
+.background .update-date .avatar {
+  width: 128rpx;
+  height: 128rpx;
+  z-index: -1;
+}
+.background .first .nickname,
+.background .second .nickname,
+.background .third .nickname,
+.background .update-date .nickname,
+.background .first .value,
+.background .second .value,
+.background .third .value,
+.background .update-date .value {
+  z-index: 1;
+  color: white;
+}
+.background .first .nickname,
+.background .second .nickname,
+.background .third .nickname,
+.background .update-date .nickname {
+  margin: 30rpx 0 0 0;
+  font-size: 35rpx;
+}
+.background .first .value,
+.background .second .value,
+.background .third .value,
+.background .update-date .value {
+  margin: 10rpx 0 0 0;
+}
+.background .first {
+  top: 301rpx;
+  left: 313rpx;
+}
+.background .second {
+  top: 347rpx;
+  left: 125rpx;
+}
+.background .third {
+  top: 375rpx;
+  left: 501rpx;
+}
+.background .update-date {
+  top: 665rpx;
+  right: 10rpx;
+  color: #4b4b4b;
+  font-size: 20rpx;
+}
+.swiper-region {
+  overflow: scroll;
+}
+.whole-rank {
+  height: 100%;
+  overflow: scroll;
+}
+.whole-rank-item {
+  background-color: white;
+  padding: 5rpx;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.whole-rank-item .left {
+  flex: 3;
+  display: flex;
+  align-items: center;
+}
+.whole-rank-item .left .rank-number {
+  width: 50rpx;
+  text-align: center;
+}
+.whole-rank-item .left .user-avatar {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 45rpx;
+  margin: 15rpx;
+  display: inline-block;
+}
+.whole-rank-item .left .user-nickname {
+  font-size: 35rpx;
+  display: inline-block;
+  overflow: hidden;
+}
+.whole-rank-item .right {
+  margin: 0 10rpx 0 0;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.whole-rank-item .right .juan-image {
+  margin: 10rpx 15rpx;
+  width: 55rpx;
+  height: 55rpx;
+}
+.my-rank {
+  background-color: white;
+  padding: 10rpx;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.my-rank .left {
+  flex: 3;
+  display: flex;
+  align-items: center;
+}
+.my-rank .left .user-avatar {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 45rpx;
+  margin: 15rpx;
+  display: inline-block;
+}
+.my-rank .left .user-nickname {
+  font-size: 40rpx;
+  margin: 0 0 0 20rpx;
+  display: inline-block;
+}
+.my-rank .right {
+  margin: 0 30rpx 0 0;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }

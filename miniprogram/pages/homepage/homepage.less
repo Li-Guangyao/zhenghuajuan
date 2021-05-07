@@ -9,33 +9,54 @@ page {
     border-radius: 20rpx;
 
     .user-info {
-        margin: 0 0 20rpx 0;
-
         display: flex;
-        flex-direction: row;
+        align-items: center;
 
-        .user-avatar {
-            width: 70rpx;
-            height: 70rpx;
-            border-radius: 35rpx;
-            margin: 10rpx;
-        }
-
-        .nickname-time {
-            margin: 10rpx 30rpx;
+        .left {
 
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex: 3;
 
-            .user-nickname {
-                font-size: 30rpx;
+            .user-avatar {
+                width: 70rpx;
+                height: 70rpx;
+                border-radius: 35rpx;
+                margin: 10rpx;
             }
 
-            .pub-time {
-                font-size: 20rpx;
-                color: rgb(75, 75, 75);
+            .nickname-time {
+                margin: 10rpx 30rpx;
+
+                display: flex;
+                flex-direction: column;
+
+                .user-nickname {
+                    font-size: 30rpx;
+                }
+
+                .pub-time {
+                    font-size: 20rpx;
+                    color: rgb(75, 75, 75);
+                }
             }
         }
+
+        .right{
+
+            flex: 2;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+    
+            .juan-image {
+                margin: 10rpx 15rpx;
+                width: 45rpx;
+                height: 45rpx;
+            }
+        }
+
+
     }
 
     // 经过测试，在手机端不能正常显示文字，电脑端正常
@@ -43,6 +64,7 @@ page {
         min-height: 30rpx;
         width: 100%;
         font-size: 30rpx;
+        margin: 10rpx 0;
 
         display: block;
 

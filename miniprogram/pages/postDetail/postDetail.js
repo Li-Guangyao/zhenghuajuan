@@ -2,6 +2,7 @@ import getDateDiff from "../../utils/getDateDiff"
 
 Page({
 	data: {
+		userInfo: null,
 		post: {},
 		// 评论帖子的输入框
 		showInput: false,
@@ -36,14 +37,18 @@ Page({
 				name: '还不够卷啊！',
 				value: 1
 			},
-
 		],
+
+		postIndex: null
 	},
 
 	onLoad: function (e) {
+		this.judgeLogin()
+
 		var post = JSON.parse(e.post)
 		this.setData({
-			post: post
+			post: post,
+			postIndex: e.postIndex
 		})
 
 		wx.cloud.callFunction({
@@ -61,6 +66,32 @@ Page({
 		})
 
 		this.refreshComment()
+	},
+
+	async judgeLogin() {
+		var userInfo = await wx.getStorageSync('userInfo')
+		if (!userInfo) {
+			wx.showModal({
+				title: '陈独秀同志，请先登陆再来',
+				showCancel: true,
+
+				success(res) {
+					if (res.confirm) {
+						wx.switchTab({
+							url: '../my/my',
+						})
+					} else if (res.cancel) {
+						wx.navigateBack({
+							delta: 1,
+						})
+					}
+				}
+			})
+		} else {
+			this.setData({
+				userInfo: userInfo
+			})
+		}
 	},
 
 	refreshComment() {
@@ -113,6 +144,7 @@ Page({
 		})
 	},
 
+	// 评论评论
 	showInputForComment(e) {
 		var comment = this.data.commentList[e.currentTarget.dataset.index]
 		this.setData({
@@ -142,8 +174,22 @@ Page({
 			// 	inputComment: this.data.commentSb + this.data.inputCommentComment
 			// })
 			// this.pubComment()
-			this.saveComment(this.data.commentSb + this.data.inputCommentComment)
+			var content = this.data.commentSb + this.data.inputCommentComment
+			console.log(content)
+			this.saveComment(content)
 		}
+	},
+
+	inputCommentChange(e) {
+		this.setData({
+			inputComment: e.detail.value
+		})
+	},
+
+	inputCommentCommentChange() {
+		this.setData({
+			inputCommentComment: e.detail.value
+		})
 	},
 
 	// 保存
@@ -174,29 +220,43 @@ Page({
 		console.log(e)
 	},
 
+	// 点击了点赞的按钮，弹出popup
 	giveLike() {
-		this.setData({
-			showPopup: !this.data.showPopup
-		})
+		if (this.data.userInfo._openid == this.data.post._openid) {
+			wx.showToast({
+				title: '自己不能给自己点赞哟',
+				icon: 'none'
+			})
+		} else {
+			this.setData({
+				showPopup: !this.data.showPopup
+			})
+		}
 	},
 
+	// 给出赞之后，图标变为彩色，再次点击直接变为无色，即取消点赞
 	cancelLike() {
+		var item = 'post.likeValue'
 		this.setData({
-			chosenPopupItemIndex: -1
+			chosenPopupItemIndex: -1,
+			[item]: this.data.post.likeValue - this.data.popupItem[this.data.chosenPopupItemIndex].value
 		})
 	},
 
+	// 再次点击就关闭
 	closePopup() {
 		this.setData({
 			showPopup: !this.data.showPopup
 		})
 	},
 
+	// 在popup中选择一项
 	tapLikeItem(e) {
-		console.log(e)
+		var item = 'post.likeValue'
 		this.setData({
 			chosenPopupItemIndex: e.currentTarget.dataset.index,
-			showPopup: !this.data.showPopup
+			showPopup: !this.data.showPopup,
+			[item]: this.data.post.likeValue + this.data.popupItem[e.currentTarget.dataset.index].value
 		})
 	},
 
@@ -221,6 +281,11 @@ Page({
 		var now = this.data.chosenPopupItemIndex
 		var origin = this.data.originChosenPopupItemIndex
 
+		var pages = getCurrentPages();
+		var prevPage = pages[pages.length - 2]; //上一个页面
+		var item = 'postList[' + this.data.postIndex + '].likeValue'
+		var item2 = 'this.data.postList[' + this.data.postIndex + '].likeValue'
+
 		// 给出了新点赞
 		if (now != -1 && origin == -1) {
 			wx.cloud.callFunction({
@@ -228,28 +293,40 @@ Page({
 				data: {
 					postId: this.data.post._id,
 					postAuthorOpenId: this.data.post._openid,
-					value: this.data.popupItem[this.data.chosenPopupItemIndex].value,
-					valueIndex: this.data.chosenPopupItemIndex
+					value: this.data.popupItem[now].value,
+					valueIndex: now
 				}
 			})
-		// 取消了之前的点赞
+			prevPage.setData({
+				[item]: this.data.post.likeValue
+			});
+			// 取消了之前的点赞
 		} else if (now == -1 && origin != -1) {
 			wx.cloud.callFunction({
 				name: 'removePostLike',
 				data: {
 					postId: this.data.post._id,
+					originValue: this.data.popupItem[origin].value
 				}
 			})
-		// 改变了点赞数量
+			prevPage.setData({
+				[item]: this.data.post.likeValue
+			});
+			// 改变了点赞数量
 		} else if (now != origin) {
 			wx.cloud.callFunction({
 				name: 'updatePostLike',
 				data: {
 					postId: this.data.post._id,
-					value: this.data.popupItem[this.data.chosenPopupItemIndex].value,
-					valueIndex: this.data.chosenPopupItemIndex
+					value: this.data.popupItem[now].value,
+					valueIndex: now,
+					originValue: this.data.popupItem[origin].value
 				}
 			})
+
+			prevPage.setData({
+				[item]: this.data.post.likeValue
+			});
 		}
 	},
 

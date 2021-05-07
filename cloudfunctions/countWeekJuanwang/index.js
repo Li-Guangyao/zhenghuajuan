@@ -8,9 +8,9 @@ const _ = db.command
 const $ = db.command.aggregate
 
 function saveResult(result, now) {
-	db.collection('t_rank_day').add({
+	db.collection('t_rank_week').add({
 		data: {
-			dayRankList: result,
+			weekRankList: result,
 			createdAt: now
 		}
 	})
@@ -20,16 +20,15 @@ function saveResult(result, now) {
 exports.main = async (event, context) => {
 	var now = new Date()
 	var nowStamp = Date.parse(new Date())
-	//先统计出来一天有多少毫秒
-	var day = 24 * 60 * 60 * 1000
-	var dayAgoStamp = nowStamp - day
+	//先统计出来一zhou有多少毫秒
+	var week =7* 24 * 60 * 60 * 1000
+	var weekAgoStamp = nowStamp - week
 
-	var dayAgo = new Date(dayAgoStamp)
-
-
+	var weekAgo = new Date(weekAgoStamp)
+	
 	return db.collection('t_post_like').aggregate().match({
 		createdAt: _.lt(now),
-		createdAt: _.gt(dayAgo)
+		createdAt: _.gt(weekAgo)
 	}).group({
 		_id: '$postAuthor_openid',
 		totalValue: $.sum('$value')
@@ -50,5 +49,4 @@ exports.main = async (event, context) => {
 	}).end().then(res => {
 		saveResult(res.list, now)
 	})
-
 }

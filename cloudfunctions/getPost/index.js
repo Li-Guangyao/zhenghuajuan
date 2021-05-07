@@ -4,14 +4,34 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+const _ = db.command
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-	return db.collection('t_post').aggregate().sort({
-		createdAt: -1
-	}).end().then(res=>{
-		return res.list
-	})
+	// return db.collection('t_post').aggregate().sort({
+	// 	createdAt: -1
+	// }).end().then(res=>{
+	// 	return res.list
+	// })
+
+	if (event.newestDate) {
+		return db.collection('t_post').aggregate().match({
+			createdAt: _.lt(event.newestDate)
+		}).sort({
+			createdAt: -1
+		}).skip(event.skipNum).end().then(res => {
+			return res.list
+		})
+	} else {
+		return db.collection('t_post').aggregate().sort({
+			createdAt: -1
+		}).end().then(res => {
+			return res.list
+		})
+	}
+
+
+
 
 	// const db = cloud.database()
 	// const _ = db.command

@@ -1,10 +1,17 @@
 <view class="post">
 
 	<view class="user-info">
-		<image class="user-avatar" mode="aspectFill" src="{{post.avatar}}"></image>
-		<view class="nickname-time">
-			<view class="user-nickname">{{post.nickname}}</view>
-			<view class="pub-time">{{post.timeDiff}}</view>
+		<view class="left">
+			<image class="user-avatar" mode="aspectFill" src="{{post.avatar}}"></image>
+			<view class="nickname-time">
+				<view class="user-nickname">{{post.nickname}}</view>
+				<view class="pub-time">{{post.timeDiff}}</view>
+			</view>
+		</view>
+		<view class="right">
+			<view class="juan-number" wx:if="{{post.likeValue!=0}}">{{post.likeValue}}</view>
+			<view class="juan-number" wx:if="{{post.likeValue==0}}">0</view>
+			<image class="juan-image" src="../../icon/roll2.png"></image>
 		</view>
 	</view>
 
@@ -38,8 +45,8 @@
 	</view>
 
 	<view class="input" wx:if="{{showInput}}">
-		<textarea class="input-textarea" model:value="{{inputComment}}" auto-focus="{{true}}" placeholder="说点什么吧~"
-			auto-height maxlength="2000" adjust-position="{{true}}" bindconfirm="pubComment"
+		<textarea class="input-textarea" value="{{inputComment}}" auto-focus="{{true}}" placeholder="说点什么吧~" auto-height
+			maxlength="2000" adjust-position="{{true}}" bindinput="inputCommentChange" bindconfirm="pubComment"
 			bindblur="foldInput"></textarea>
 	</view>
 
@@ -62,12 +69,10 @@
 
 <view class="input-for-comment" wx:if="{{showInputForComment}}">
 	<view class="input-for-comment-title">{{commentSb}}</view>
-	<textarea class="input-for-comment-textarea" model:value="{{inputCommentComment}}" auto-focus="{{true}}"
-		fixed="{{true}}" adjust-position="{{true}}" placeholder="说点什么吧~" auto-height maxlength="2000"
-		bindconfirm="pubCommentComment" bindblur="foldInputForComment" show-confirm-bar="{{true}}"
-		bindkeyboardheightchange="keyboardHeightChange"></textarea>
+	<textarea class="input-for-comment-textarea" value="{{inputCommentComment}}" auto-focus="{{true}}" fixed="{{true}}"
+		adjust-position="{{true}}" placeholder="说点什么吧~" auto-height maxlength="2000" bindconfirm="pubCommentComment"
+		bindblur="foldInputForComment" bindinput="inputCommentCommentChange" show-confirm-bar="{{true}}"></textarea>
 </view>
-
 
 <van-popup custom-style="van-popup" show="{{ showPopup }}" position="bottom" round="{{true}}" bind:close="closePopup">
 	<van-cell-group>
@@ -79,23 +84,3 @@
 		</van-cell>
 	</van-cell-group>
 </van-popup>
-
-
-<!-- <van-popup show="{{ showPopup }}" position="bottom" bind:close="closePopup" round="{{true}}" custom-style="van-popup">
-	<view class="popup-goods-info">
-		<image class="popup-image" mode="aspectFill" src="{{goods.display_photo[0]}}"></image>
-		<view class="popup-price">￥{{changedPrice}}</view>
-	</view> -->
-
-<!-- 商品选项总共有两级，为l1和l2 -->
-<!-- <view class="option" wx:for="{{goodsOption}}" wx:for-item="l1" wx:for-index="l1idx" wx:key="l1idx">
-		<view class="option-title">{{l1.name}}</view>
-		<view class="option-content {{l2.isChosen? 'isChosen': ' '}}" wx:for="{{l1.attribute}}" wx:for-item="l2"
-			wx:for-index="l2idx" wx:key="l2idx" data-l1idx="{{l1idx}}" data-l2idx="{{l2idx}}" bindtap="choseOption">
-			{{l2.name}}</view>
-	</view>
-
-	<view class="button-area">
-		<van-button custom-class="popup-button" type="default" bindtap="tapBuy" color="#f11b27">购买</van-button>
-	</view>
-</van-popup> -->

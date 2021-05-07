@@ -4,6 +4,7 @@ Page({
 	},
 
 	onLoad: function (options) {
+
 		wx.cloud.callFunction({
 			name: 'getUser',
 			success: (res) => {
@@ -17,10 +18,11 @@ Page({
 
 	// 如果是新用户，就需要授权获取
 	getUserInfo() {
+		console.log('getUserInfo')
+
 		wx.getUserProfile({
-			desc: '允许该程序获得你的昵称、地址等信息，只用于展示，不做其它用途',
+			desc: '获取用户信息',
 			success: (res) => {
-				console.log(res)
 
 				this.setData({
 					userInfo: res.userInfo
@@ -34,15 +36,12 @@ Page({
 						userInfo: this.data.userInfo
 					},
 				})
+			},
+
+			fail: res => {
+				console.log(res)
 			}
 		})
 	},
 
-	test(){
-		wx.cloud.callFunction({
-			name: 'countDayJuanwang'
-		}).then(res=>{
-			console.log(res)
-		})
-	}
 })

@@ -1,0 +1,10 @@
+<view class="tabbar">
+    <view class="tabbar_title">
+        <view wx:for="{{tabbar}}" wx:key="id" class="title_item {{item.isChosen? 'isChosen':' '}}" bindtap="handleTabbarTap" data-index="{{index}}">
+            {{item.name}}
+        </view>
+    </view>
+    <view class="tabbar_content">
+        <slot></slot>
+    </view>
+</view>

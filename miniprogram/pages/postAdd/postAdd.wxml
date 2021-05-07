@@ -4,13 +4,14 @@
 		auto-height="{{true}}" maxlength="-1" >
 	</editor> -->
 
-	<textarea class="content-input" model:value="{{content}}" placeholder="写下你的成果吧~"
-		auto-height="{{true}}" maxlength="10000" auto-focus="{{true}}">
+	<textarea class="content-input" model:value="{{content}}" placeholder="写下你的成果吧~" auto-height="{{true}}"
+		maxlength="10000" auto-focus="{{true}}">
 	</textarea>
 
 	<view class="upload-photo">
 		<van-uploader file-list="{{fileList}}" accept="media" bind:after-read="chosenImage" bind:delete="removeImage"
-			multiple preview-size="233rpx" image-fit="aspectFill" preview-image="true" max-count="9" max-size="20000000" max-duration="30"/>
+			bind:click-preview="previewMedia" multiple preview-size="233rpx" image-fit="aspectFill" preview-image="{{true}}"
+			max-count="9" max-size="20000000" max-duration="30" />
 	</view>
 
 	<view class="location" bindtap="getLocation">
@@ -20,7 +21,7 @@
 
 	<view class="show-location" wx:if="{{location}}">
 		<view class="location-name">{{location.name}}</view>
-		<van-icon class="location-delete" name="cross" bindtap="removeLocation"/>
+		<van-icon class="location-delete" name="cross" bindtap="removeLocation" />
 	</view>
 </view>
 

@@ -17,7 +17,8 @@ exports.main = async (event, context) => {
 			content: event.content,
 			location: event.location,
 			photoList: event.photoList,
-			createdAt: Date()
+			createdAt: new Date(),
+			likeValue: 0
 		}
 	})
 }

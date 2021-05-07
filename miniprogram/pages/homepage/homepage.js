@@ -6,6 +6,11 @@ Page({
 		postList: []
 	},
 
+	queryParams: {
+		pageNum: 0,
+		pageSize: 100
+	},
+
 	onLoad: function (options) {
 		this.refreshPage()
 	},
@@ -16,16 +21,48 @@ Page({
 		wx.stopPullDownRefresh()
 	},
 
+	//触底加载
+	onReachBottom() {
+		console.log('ReachBottom')
+		wx.showLoading({
+			title: '加载中',
+		})
+
+		this.queryParams.pageNum++
+		wx.cloud.callFunction({
+			name: 'getPost',
+			data: {
+				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
+				newestDate: this.data.postList[0].createdAt
+			}
+		}).then(res => {
+			if (res.result.length == 0) {
+				// wx.showToast({
+				// 	icon: 'error',
+				// 	title: '没有更多了~',
+				// })
+			} else {
+				this.setData({
+					postList: [...this.data.postList].concat(...res.result)
+				})
+			}
+		})
+
+		wx.hideLoading()
+	},
+
 	async refreshPage() {
+		this.queryParams.pageNum = 0
+
 		wx.showLoading({
 			title: '加载中',
 		})
 
 		await wx.cloud.callFunction({
-			name: 'getPost',
-		}).then(res=>{
+			name: 'getPost'
+		}).then(res => {
 			console.log(res)
-			if(res.result){
+			if (res.result) {
 				this.setData({
 					postList: res.result
 				})
@@ -44,11 +81,10 @@ Page({
 	},
 
 	tapPost(e) {
-		console.log(e)
 		var index = e.currentTarget.dataset.index
 		var post = JSON.stringify(this.data.postList[index])
 		wx.navigateTo({
-			url: '../postDetail/postDetail?post=' + post,
+			url: '../postDetail/postDetail?post=' + post+ '&postIndex='+ index,
 		})
 	},
 

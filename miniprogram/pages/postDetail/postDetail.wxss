@@ -7,6 +7,51 @@ page {
   padding: 15rpx 15rpx;
   border-radius: 20rpx;
 }
+.post .user-info {
+  display: flex;
+  align-items: center;
+}
+.post .user-info .left {
+  display: flex;
+  flex-direction: row;
+  flex: 3;
+}
+.post .user-info .left .user-avatar {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 35rpx;
+  margin: 10rpx;
+}
+.post .user-info .left .nickname-time {
+  margin: 10rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.post .user-info .left .nickname-time .user-nickname {
+  font-size: 30rpx;
+}
+.post .user-info .left .nickname-time .pub-time {
+  font-size: 20rpx;
+  color: #4b4b4b;
+}
+.post .user-info .right {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.post .user-info .right .juan-image {
+  margin: 10rpx 15rpx;
+  width: 45rpx;
+  height: 45rpx;
+}
+.post .content {
+  min-height: 30rpx;
+  width: 100%;
+  font-size: 30rpx;
+  margin: 10rpx 0;
+  display: block;
+}
 .post .media {
   margin: 15rpx 10rpx 0 0;
   width: 210rpx;
@@ -87,33 +132,33 @@ page {
   border-top: #e6e6e6 1rpx solid;
   margin: 15rpx;
 }
-.user-info {
-  margin: 0 0 20rpx 0;
+.comment .comment-item .user-info {
   display: flex;
   flex-direction: row;
 }
-.user-info .user-avatar {
-  width: 70rpx;
-  height: 70rpx;
-  border-radius: 35rpx;
+.comment .comment-item .user-info .user-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 30rpx;
   margin: 10rpx;
 }
-.user-info .nickname-time {
+.comment .comment-item .user-info .nickname-time {
   margin: 10rpx 30rpx;
   display: flex;
   flex-direction: column;
 }
-.user-info .nickname-time .user-nickname {
+.comment .comment-item .user-info .nickname-time .user-nickname {
   font-size: 30rpx;
 }
-.user-info .nickname-time .pub-time {
+.comment .comment-item .user-info .nickname-time .pub-time {
   font-size: 20rpx;
   color: #4b4b4b;
 }
-.content {
+.comment .comment-item .content {
   min-height: 30rpx;
   width: 100%;
   font-size: 30rpx;
+  margin: 10rpx 0;
   display: block;
 }
 .input-for-comment {
@@ -135,6 +180,9 @@ page {
   height: 80rpx;
   max-height: 600rpx;
   overflow: scroll;
+}
+.van-cell__title {
+  flex: 3;
 }
 .popup-image {
   width: 45rpx;

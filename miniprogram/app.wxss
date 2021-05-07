@@ -1,8 +1,11 @@
 /* @import '@vant/weapp/common/index.wxss'; */
 @import './miniprogram_npm/@vant/weapp/common/index.wxss';
 
-page{
+page {
   --themeColor: #ffa600;
   --themeBackgroundColor: #f6f6f6;
   font-size: 28rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
 }

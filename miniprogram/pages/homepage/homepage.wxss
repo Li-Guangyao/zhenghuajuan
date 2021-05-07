@@ -8,32 +8,48 @@ page {
   border-radius: 20rpx;
 }
 .post .user-info {
-  margin: 0 0 20rpx 0;
+  display: flex;
+  align-items: center;
+}
+.post .user-info .left {
   display: flex;
   flex-direction: row;
+  flex: 3;
 }
-.post .user-info .user-avatar {
+.post .user-info .left .user-avatar {
   width: 70rpx;
   height: 70rpx;
   border-radius: 35rpx;
   margin: 10rpx;
 }
-.post .user-info .nickname-time {
+.post .user-info .left .nickname-time {
   margin: 10rpx 30rpx;
   display: flex;
   flex-direction: column;
 }
-.post .user-info .nickname-time .user-nickname {
+.post .user-info .left .nickname-time .user-nickname {
   font-size: 30rpx;
 }
-.post .user-info .nickname-time .pub-time {
+.post .user-info .left .nickname-time .pub-time {
   font-size: 20rpx;
   color: #4b4b4b;
+}
+.post .user-info .right {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.post .user-info .right .juan-image {
+  margin: 10rpx 15rpx;
+  width: 45rpx;
+  height: 45rpx;
 }
 .post .content {
   min-height: 30rpx;
   width: 100%;
   font-size: 30rpx;
+  margin: 10rpx 0;
   display: block;
   /* 内容过长显示两行，多余为省略号 */
   text-overflow: ellipsis;

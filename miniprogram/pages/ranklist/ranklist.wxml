@@ -1,3 +1,188 @@
-<view class="page">
-	<image class="background" src="../../images/rankList.png" mode="widthFix" />
+<view class="background">
+	<image class="background-image" src="../../images/rankList.png" mode="widthFix" />
+	<view class="first">
+		<image class="avatar" src="{{weekRankList[0].avatarUrl}}"></image>
+		<view class="nickname">{{weekRankList[0].nickName}}</view>
+		<view class="value">{{weekRankList[0].totalValue}}</view>
+	</view>
+	<view class="second">
+		<image class="avatar" src="{{weekRankList[1].avatarUrl}}"></image>
+		<view class="nickname">{{weekRankList[1].nickName}}</view>
+		<view class="value">{{weekRankList[1].totalValue}}</view>
+	</view>
+	<view class="third">
+		<image class="avatar" src="{{weekRankList[2].avatarUrl}}"></image>
+		<view class="nickname">{{weekRankList[2].nickName}}</view>
+		<view class="value">{{weekRankList[2].totalValue}}</view>
+	</view>
+	<view class="update-date">更新时间：{{updateDate}}</view>
+</view>
+
+<tabbar class="tabbar" tabbar="{{tabbar}}" bindtabbarChange="tabbarChange">
+</tabbar>
+
+<swiper style="height:{{wholeRankHeight?wholeRankHeight+'px':'auto'}}" current="{{chosenTabIndex}}"
+	class="swiper-region" bindchange="swiperChange">
+
+	<swiper-item class="swiper-item">
+		<view class="whole-rank">
+			<view class="whole-rank-item" wx:for="{{dayRankList}}" wx:key="index">
+				<view class="left">
+					<text class="rank-number">{{index+1}}</text>
+					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
+					<view class="user-nickname">{{item.nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{item.totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+		</view>
+	</swiper-item>
+
+	<swiper-item class="swiper-item">
+			<view class="whole-rank">
+				<view class="whole-rank-item" wx:for="{{weekRankList}}" wx:key="index">
+					<view class="left">
+						<text class="rank-number">{{index+1}}</text>
+						<image class="user-avatar" src="{{item.avatarUrl}}"></image>
+						<view class="user-nickname">{{item.nickName}}</view>
+					</view>
+					<view class="right">
+						<view class="juan-number">{{item.totalValue}}</view>
+						<image class="juan-image" src="../../icon/roll2.png"></image>
+					</view>
+				</view>
+			</view>
+		</swiper-item>
+
+	<!-- <swiper-item class="swiper-item">
+		<view class="whole-rank">
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">1</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">2</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">3</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">4</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">5</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">6</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">7</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">8</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">9</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="whole-rank-item">
+				<view class="left">
+					<text class="rank-number">10</text>
+					<image class="user-avatar" src="{{dayRankList[0].avatarUrl}}"></image>
+					<view class="user-nickname">{{dayRankList[0].nickName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{dayRankList[0].totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+
+		</view>
+	</swiper-item> -->
+
+</swiper>
+
+
+
+<view class="my-rank">
+	<view class="left">
+		<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
+		<view class="user-nickname">{{userInfo.nickName}}</view>
+	</view>
+	<view class="right">
+		<text class="rank-info" wx:if="{{myRank!=-1}}">{{"No."+ myRank}}</text>
+		<text class="rank-info" wx:if="{{myRank==-1}}">您未上榜</text>
+	</view>
 </view>

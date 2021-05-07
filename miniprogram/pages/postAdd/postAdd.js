@@ -18,7 +18,7 @@ Page({
 		var userInfo = await wx.getStorageSync('userInfo')
 		if (!userInfo) {
 			wx.showModal({
-				title: '陈独秀同志，请登陆再来',
+				title: '陈独秀同志，请先登陆再来',
 				showCancel: true,
 
 				success(res) {
@@ -115,6 +115,24 @@ Page({
 		//然后赋值回去，更新前端
 		this.setData({
 			fileList: this.data.fileList
+		})
+	},
+
+	// 点击预览
+	previewMedia(e){
+		console.log(e)
+		wx.previewMedia({
+			sources: this.data.fileList,
+			current: e.detail.index,
+			showmenu: true,
+
+			success:res=>{
+				console.log(res)
+			},
+
+			fail: err=>{
+				console.log(err)
+			}
 		})
 	},
 
