@@ -12,7 +12,8 @@
 		"backgroundColor": "#FFF",
 		"position": "bottom",
 		"borderStyle": "black",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/homepage/homepage",
 				"iconPath": "icon/roll.png",
 				"selectedIconPath": "icon/roll2.png"
@@ -41,7 +42,7 @@
 
 	"permission": {
 		"scope.userLocation": {
-			"desc": "您的位置信息仅用于展示"
+		  "desc": "您的位置信息仅用于展示"
 		}
-	}
+	  }
 }
