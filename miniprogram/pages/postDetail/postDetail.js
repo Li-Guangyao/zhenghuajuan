@@ -45,6 +45,10 @@ Page({
 	onLoad: function (e) {
 		this.judgeLogin()
 
+		wx.showLoading({
+		  title: '加载中',
+		})
+
 		var post = JSON.parse(e.post)
 		this.setData({
 			post: post,
@@ -66,13 +70,17 @@ Page({
 		})
 
 		this.refreshComment()
+
+		wx.hideLoading({
+		  success: (res) => {},
+		})
 	},
 
 	async judgeLogin() {
 		var userInfo = await wx.getStorageSync('userInfo')
 		if (!userInfo) {
 			wx.showModal({
-				title: '陈独秀同志，请先登陆再来',
+				title: '卷王同志，请先登陆再来',
 				showCancel: true,
 
 				success(res) {
@@ -186,7 +194,7 @@ Page({
 		})
 	},
 
-	inputCommentCommentChange() {
+	inputCommentCommentChange(e) {
 		this.setData({
 			inputCommentComment: e.detail.value
 		})
@@ -260,23 +268,6 @@ Page({
 		})
 	},
 
-	/**
-	 * 生命周期函数--监听页面显示
-	 */
-	onShow: function () {
-
-	},
-
-	/**
-	 * 生命周期函数--监听页面隐藏
-	 */
-	onHide: function () {
-
-	},
-
-	/**
-	 * 生命周期函数--监听页面卸载
-	 */
 	onUnload: function () {
 		var now = this.data.chosenPopupItemIndex
 		var origin = this.data.originChosenPopupItemIndex

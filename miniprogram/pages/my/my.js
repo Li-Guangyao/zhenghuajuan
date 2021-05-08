@@ -3,7 +3,10 @@ Page({
 		userInfo: wx.getStorageSync('userInfo'),
 	},
 
-	onLoad: function (options) {
+	onLoad:async function (options) {
+		wx.showLoading({
+		  title: '加载中',
+		})
 
 		wx.cloud.callFunction({
 			name: 'getUser',
@@ -13,6 +16,10 @@ Page({
 				})
 				wx.setStorageSync('userInfo', res.result)
 			}
+		})
+
+		wx.hideLoading({
+		  success: (res) => {},
 		})
 	},
 
@@ -44,4 +51,11 @@ Page({
 		})
 	},
 
+	test(){
+		wx.cloud.callFunction({
+			name: 'countDayJuanwang'
+		})
+	}
+
 })
+

@@ -20,8 +20,12 @@ exports.main = async (event, context) => {
 
 	db.collection('t_post').doc(event.postId).update({
 		data:{
-			likeValue: _.inc(event.value),
 			likeValue: _.inc(-event.originValue)
+		}
+	})
+	db.collection('t_post').doc(event.postId).update({
+		data:{
+			likeValue: _.inc(event.value),
 		}
 	})
 }

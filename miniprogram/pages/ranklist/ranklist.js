@@ -68,7 +68,7 @@ Page({
 		var userInfo = await wx.getStorageSync('userInfo')
 		if (!userInfo) {
 			wx.showModal({
-				title: '陈独秀同志，请先登陆再来',
+				title: '卷王同志，请先登陆再来',
 				showCancel: true,
 
 				success(res) {

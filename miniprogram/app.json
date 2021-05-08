@@ -12,8 +12,7 @@
 		"backgroundColor": "#FFF",
 		"position": "bottom",
 		"borderStyle": "black",
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/homepage/homepage",
 				"iconPath": "icon/roll.png",
 				"selectedIconPath": "icon/roll2.png"
@@ -38,5 +37,11 @@
 		"navigationBarTextStyle": "black"
 	},
 	"sitemapLocation": "sitemap.json",
-	"style": "v2"
+	"style": "v2",
+
+	"permission": {
+		"scope.userLocation": {
+			"desc": "您的位置信息仅用于展示"
+		}
+	}
 }
