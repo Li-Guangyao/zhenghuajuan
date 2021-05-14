@@ -4,7 +4,8 @@
 		"pages/ranklist/ranklist",
 		"pages/my/my",
 		"pages/postAdd/postAdd",
-		"pages/postDetail/postDetail"
+		"pages/postDetail/postDetail",
+		"pages/myPost/myPost"
 	],
 	"tabBar": {
 		"color": "#000",

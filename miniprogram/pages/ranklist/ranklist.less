@@ -74,7 +74,7 @@ page {
     overflow: scroll;
 }
 
-.whole-rank-item {
+.rank-item {
     background-color: white;
     padding: 5rpx;
     width: 100%;
@@ -110,7 +110,6 @@ page {
         }
     }
 
-
     .right {
         margin: 0 10rpx 0 0;
 
@@ -134,39 +133,14 @@ page {
 
     position: fixed;
     bottom: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 
-    .left {
-        flex: 3;
+    .rank-item{
         display: flex;
+        justify-content: space-between;
         align-items: center;
 
-        .user-avatar {
-            width: 90rpx;
-            height: 90rpx;
-            border-radius: 45rpx;
-            margin: 15rpx;
-
-            display: inline-block;
+        .rank-info{
+            margin-right: 20rpx;
         }
-
-        .user-nickname {
-            font-size: 40rpx;
-            margin: 0 0 0 20rpx;
-
-            display: inline-block;
-        }
-    }
-
-
-    .right {
-        margin: 0 30rpx 0 0;
-
-        flex: 1;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
     }
 }

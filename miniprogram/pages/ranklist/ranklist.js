@@ -5,7 +5,11 @@ Page({
 		weekRankList: [],
 		updateDate: null,
 
-		myRank: -1,
+		myDayRank: -1,
+		myDayValue: 0,
+		myWeekRank: -1,
+		myWeekValue: 0,
+
 		tabbar: [{
 				id: 0,
 				name: "日排行",
@@ -17,51 +21,26 @@ Page({
 				isChosen: false
 			}
 		],
+		chosenTabIndex: 0,
 
 		// 初始化wholeRank的高度
 		wholeRankHeight: null
 	},
 
-	onLoad: async function (options) {
-		await this.judgeLogin()
+	onLoad: function (options) {
 		this.initPageStyle()
-
-		wx.showLoading({
-		  title: '加载中',
-		})
-
-		await wx.cloud.callFunction({
-			name: 'getDayJuanwang'
-		}).then(res => {
-			this.setData({
-				dayRankList: res.result.rankList.dayRankList,
-				myRank: res.result.myRank
-			})
-		})
-
-		await wx.cloud.callFunction({
-			name: 'getWeekJuanwang'
-		}).then(res => {
-			console.log(res)
-			this.setData({
-				weekRankList: res.result.rankList.weekRankList,
-				myRank: res.result.myRank,
-				updateDate: this.setDateFormat(res.result.rankList.createdAt)
-			})
-		})
-
-		wx.hideLoading()
+		this.initPageContent()
 	},
 
-	setDateFormat(date){
+	// 排行榜更新时间显示，格式标准化
+	setDateFormat(date) {
 		var date = new Date(date)
 		var Y = date.getFullYear() + '-';
-		var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
 		var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
 		var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
-		var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes());
-		return M+D+h+m;
-
+		var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+		return M + D + h + m;
 	},
 
 	async judgeLogin() {
@@ -72,15 +51,9 @@ Page({
 				showCancel: true,
 
 				success(res) {
-					if (res.confirm) {
-						wx.switchTab({
-							url: '../my/my',
-						})
-					} else if (res.cancel) {
-						wx.navigateBack({
-							delta: 1,
-						})
-					}
+					wx.switchTab({
+						url: '../my/my',
+					})
 				}
 			})
 		} else {
@@ -91,25 +64,50 @@ Page({
 	},
 
 	initPageStyle() {
-		wx.getSystemInfo({
-			success: (result) => {
-				console.log(result)
-			},
-		})
-
 		//根据底部下单区域的高矮，来初始化页面的大小
 		var query = wx.createSelectorQuery()
 
 		query.select('.tabbar').boundingClientRect()
 		query.select('.my-rank').boundingClientRect()
-		setTimeout(		
+		setTimeout(
 			query.exec.bind(this, res => {
 				console.log(res)
 				this.setData({
-					wholeRankHeight: res[1].top-res[0].bottom
+					wholeRankHeight: res[1].top - res[0].bottom
 				})
 			}), 1000
 		)
+	},
+
+	async initPageContent(){
+		wx.showLoading({
+			title: '加载中',
+		})
+
+		await wx.cloud.callFunction({
+			name: 'getDayJuanwang'
+		}).then(res => {
+			console.log(res)
+			this.setData({
+				dayRankList: res.result.rankList.dayRankList,
+				myDayRank: res.result.myRank,
+				myDayValue: res.result.myDayValue
+			})
+		})
+
+		await wx.cloud.callFunction({
+			name: 'getWeekJuanwang'
+		}).then(res => {
+			console.log(res)
+			this.setData({
+				weekRankList: res.result.rankList.weekRankList,
+				myWeekRank: res.result.myWeekRank,
+				myWeekValue: res.result.myWeekValue,
+				updateDate: this.setDateFormat(res.result.rankList.createdAt)
+			})
+		})
+
+		wx.hideLoading()
 	},
 
 	tabbarChange(e) {
@@ -121,7 +119,7 @@ Page({
 		// console.log(this)
 		this.setData({
 			tabbar,
-			chosenTabIndex
+			chosenTabIndex: chosenTabIndex
 		});
 	},
 
@@ -132,7 +130,7 @@ Page({
 		tabbar.forEach((v, i) => i === chosenTabIndex ? v.isChosen = true : v.isChosen = false);
 		this.setData({
 			tabbar,
-			chosenTabIndex
+			chosenTabIndex: chosenTabIndex
 		})
 	},
 
@@ -144,41 +142,24 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-
+		this.judgeLogin()
 	},
 
-	/**
-	 * 生命周期函数--监听页面隐藏
-	 */
 	onHide: function () {
 
 	},
 
-	/**
-	 * 生命周期函数--监听页面卸载
-	 */
 	onUnload: function () {
 
 	},
 
-	/**
-	 * 页面相关事件处理函数--监听用户下拉动作
-	 */
 	onPullDownRefresh: function () {
-
+		this.initPageContent()
+		wx.stopPullDownRefresh()
 	},
 
-	/**
-	 * 页面上拉触底事件的处理函数
-	 */
 	onReachBottom: function () {
 
 	},
 
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {
-
-	}
 })

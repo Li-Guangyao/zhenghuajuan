@@ -21,5 +21,4 @@ exports.main = async (event, context) => {
 		postId: event.postId,
 	}).remove()
 
-
 }

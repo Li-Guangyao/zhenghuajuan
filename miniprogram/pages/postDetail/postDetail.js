@@ -46,7 +46,7 @@ Page({
 		this.judgeLogin()
 
 		wx.showLoading({
-		  title: '加载中',
+			title: '加载中',
 		})
 
 		var post = JSON.parse(e.post)
@@ -72,7 +72,7 @@ Page({
 		this.refreshComment()
 
 		wx.hideLoading({
-		  success: (res) => {},
+			success: (res) => {},
 		})
 	},
 
@@ -175,6 +175,25 @@ Page({
 		}
 	},
 
+	deleteComment(e) {
+		// 必须是本人的才能删除
+		if (this.data.userInfo._openid == this.data.commentList[e.currentTarget.dataset.index]._openid) {
+			wx.cloud.callFunction({
+				name: 'removeComment',
+				data: {
+					commentId: this.data.commentList[e.currentTarget.dataset.index]._id
+				},
+				success: res => {
+					this.data.commentList.splice(e.currentTarget.dataset.index, 1)
+					this.setData({
+						commentList: this.data.commentList
+					})
+				}
+			})
+		}
+
+	},
+
 	// 保存评论的评论
 	pubCommentComment() {
 		if (this.data.inputCommentComment) {
@@ -202,26 +221,23 @@ Page({
 
 	// 保存
 	saveComment(content) {
-		wx.showModal({
-			content: '确定保存评论',
-			success: async (e) => {
-				if (e.confirm) {
-					wx.cloud.callFunction({
-						name: 'savePostComment',
-						data: {
-							postId: this.data.post._id,
-							comment: content,
-						}
-					}).then(res => {
-						wx.showToast({
-							title: '保存成功',
-							icon: 'none'
-						});
-						this.refreshComment()
-					})
-				}
-			}
+		wx.showLoading({
+		  title: '保存中',
 		})
+		wx.cloud.callFunction({
+			name: 'savePostComment',
+			data: {
+				postId: this.data.post._id,
+				comment: content,
+			}
+		}).then(res => {
+			wx.showToast({
+				title: '保存成功',
+				icon: 'none'
+			});
+			this.refreshComment()
+		})
+		wx.hideLoading()
 	},
 
 	keyboardHeightChange(e) {

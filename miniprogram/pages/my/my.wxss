@@ -2,11 +2,13 @@ page {
   background-color: var(--themeBackgroundColor);
 }
 .user-info {
+  border-radius: 20rpx;
+  background-color: white;
+  padding: 10rpx;
+  margin: 0 15rpx;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: white;
-  padding: 10rpx;
 }
 .user-info .user-avatar {
   width: 110rpx;
@@ -17,4 +19,13 @@ page {
 .user-info .user-nickname {
   font-size: 40rpx;
   margin: 0 0 0 20rpx;
+}
+.my-page {
+  height: 80rpx;
+  border-radius: 20rpx;
+  background-color: white;
+  margin: 10rpx 15rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

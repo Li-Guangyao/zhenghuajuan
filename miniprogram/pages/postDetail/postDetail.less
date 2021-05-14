@@ -105,7 +105,7 @@ page {
 
             display: flex;
             flex-direction: row;
-            flex: 1;
+            flex: 2;
             align-items: center;
 
             .location-name {
@@ -166,32 +166,48 @@ page {
         border-top: rgb(230, 230, 230) 1rpx solid;
         margin: 15rpx;
 
-        .user-info {
+        .comment-info {
             display: flex;
             flex-direction: row;
-        
-            .user-avatar {
-                width: 60rpx;
-                height: 60rpx;
-                border-radius: 30rpx;
-                margin: 10rpx;
-            }
-        
-            .nickname-time {
-                margin: 10rpx 30rpx;
-        
+            align-items: center;
+
+            .left{
                 display: flex;
-                flex-direction: column;
-        
-                .user-nickname {
-                    font-size: 30rpx;
+                flex-direction: row;
+                align-items: center;
+                flex: 5;
+
+                .user-avatar {
+                    width: 60rpx;
+                    height: 60rpx;
+                    border-radius: 30rpx;
+                    margin: 10rpx;
                 }
-        
-                .pub-time {
-                    font-size: 20rpx;
-                    color: rgb(75, 75, 75);
+            
+                .nickname-time {
+                    margin: 10rpx 30rpx;
+            
+                    display: flex;
+                    flex-direction: column;
+            
+                    .user-nickname {
+                        font-size: 30rpx;
+                    }
+            
+                    .pub-time {
+                        font-size: 20rpx;
+                        color: rgb(75, 75, 75);
+                    }
                 }
             }
+
+            .right{
+                flex: 1;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+            }
+        
         }
         
         .content {

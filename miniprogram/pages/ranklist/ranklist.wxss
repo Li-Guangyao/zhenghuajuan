@@ -72,7 +72,7 @@ page {
   height: 100%;
   overflow: scroll;
 }
-.whole-rank-item {
+.rank-item {
   background-color: white;
   padding: 5rpx;
   width: 100%;
@@ -80,35 +80,35 @@ page {
   justify-content: space-between;
   align-items: center;
 }
-.whole-rank-item .left {
+.rank-item .left {
   flex: 3;
   display: flex;
   align-items: center;
 }
-.whole-rank-item .left .rank-number {
+.rank-item .left .rank-number {
   width: 50rpx;
   text-align: center;
 }
-.whole-rank-item .left .user-avatar {
+.rank-item .left .user-avatar {
   width: 90rpx;
   height: 90rpx;
   border-radius: 45rpx;
   margin: 15rpx;
   display: inline-block;
 }
-.whole-rank-item .left .user-nickname {
+.rank-item .left .user-nickname {
   font-size: 35rpx;
   display: inline-block;
   overflow: hidden;
 }
-.whole-rank-item .right {
+.rank-item .right {
   margin: 0 10rpx 0 0;
   flex: 1;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
-.whole-rank-item .right .juan-image {
+.rank-item .right .juan-image {
   margin: 10rpx 15rpx;
   width: 55rpx;
   height: 55rpx;
@@ -119,31 +119,12 @@ page {
   width: 100%;
   position: fixed;
   bottom: 0;
+}
+.my-rank .rank-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.my-rank .left {
-  flex: 3;
-  display: flex;
-  align-items: center;
-}
-.my-rank .left .user-avatar {
-  width: 90rpx;
-  height: 90rpx;
-  border-radius: 45rpx;
-  margin: 15rpx;
-  display: inline-block;
-}
-.my-rank .left .user-nickname {
-  font-size: 40rpx;
-  margin: 0 0 0 20rpx;
-  display: inline-block;
-}
-.my-rank .right {
-  margin: 0 30rpx 0 0;
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.my-rank .rank-item .rank-info {
+  margin-right: 20rpx;
 }

@@ -14,9 +14,17 @@ exports.main = async (event, context) => {
 	// 	return res.list
 	// })
 
+	// return db.collection('t_post').aggregate().sort({
+	// 	createdAt: -1
+	// }).skip(skipNum).end().then(res => {
+	// 	return res.list
+	// })
+
 	if (event.newestDate) {
+		var newestDate = new Date(event.newestDate)
+
 		return db.collection('t_post').aggregate().match({
-			createdAt: _.lt(event.newestDate)
+			createdAt: _.lt(newestDate)
 		}).sort({
 			createdAt: -1
 		}).skip(event.skipNum).end().then(res => {

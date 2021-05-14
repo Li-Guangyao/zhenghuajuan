@@ -9,6 +9,8 @@
 		<view class="user-nickname" bindtap="getUserInfo">点击登录</view>
 	</view>
 
+	<navigator class="my-page" url="../myPost/myPost">我的帖子</navigator>
+
 </view>
 
 <!-- <button bindtap="test">测试</button> -->

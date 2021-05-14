@@ -12,6 +12,15 @@ Page({
 
 	onLoad: function (options) {
 		this.judgeLogin()
+
+		var tempPost = wx.getStorageSync('tempPost')
+		if (tempPost) {
+			this.setData({
+				content: tempPost.content,
+				location: tempPost.location,
+				fileList: tempPost.fileList,
+			})
+		}
 	},
 
 	async judgeLogin() {
@@ -119,18 +128,18 @@ Page({
 	},
 
 	// 点击预览
-	previewMedia(e){
+	previewMedia(e) {
 		console.log(e)
 		wx.previewMedia({
 			sources: this.data.fileList,
 			current: e.detail.index,
 			showmenu: true,
 
-			success:res=>{
+			success: res => {
 				console.log(res)
 			},
 
-			fail: err=>{
+			fail: err => {
 				console.log(err)
 			}
 		})
@@ -187,6 +196,10 @@ Page({
 								}, 2000)
 							}, 0);
 
+							wx.removeStorage({
+								key: 'tempPost'
+							})
+
 							wx.navigateBack({
 								delta: 1,
 							})
@@ -219,11 +232,16 @@ Page({
 
 	},
 
-	/**
-	 * 生命周期函数--监听页面卸载
-	 */
-	onUnload: function () {
 
+	onUnload: function () {
+		wx.setStorage({
+			key: 'tempPost',
+			data: {
+				content: this.data.content,
+				location: this.data.location,
+				fileList: this.data.fileList,
+			}
+		})
 	},
 
 	/**

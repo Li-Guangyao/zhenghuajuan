@@ -84,7 +84,7 @@ page {
   margin: 10rpx 0;
   display: flex;
   flex-direction: row;
-  flex: 6;
+  flex: 1;
   align-items: center;
 }
 .post .post-info .location .location-name {
@@ -107,12 +107,4 @@ page {
   margin: 10rpx 20rpx;
   width: 45rpx;
   height: 45rpx;
-}
-.btn-addpost {
-  border-radius: 50rpx;
-  width: 100rpx;
-  height: 100rpx;
-  bottom: 20rpx;
-  right: 20rpx;
-  position: fixed;
 }

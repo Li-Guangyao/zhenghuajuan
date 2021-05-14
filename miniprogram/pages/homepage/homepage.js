@@ -8,7 +8,7 @@ Page({
 
 	queryParams: {
 		pageNum: 0,
-		pageSize: 100
+		pageSize: 20
 	},
 
 	onLoad: function (options) {
@@ -22,25 +22,25 @@ Page({
 	},
 
 	//触底加载
-	onReachBottom() {
-		console.log('ReachBottom')
+	async onReachBottom() {
 		wx.showLoading({
 			title: '加载中',
 		})
 
 		this.queryParams.pageNum++
-		wx.cloud.callFunction({
+		await wx.cloud.callFunction({
 			name: 'getPost',
 			data: {
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
 				newestDate: this.data.postList[0].createdAt
 			}
 		}).then(res => {
+			console.log(res)
 			if (res.result.length == 0) {
-				// wx.showToast({
-				// 	icon: 'error',
-				// 	title: '没有更多了~',
-				// })
+				wx.showToast({
+					icon: 'error',
+					title: '没有更多了~',
+				})
 			} else {
 				this.setData({
 					postList: [...this.data.postList].concat(...res.result)
@@ -61,7 +61,6 @@ Page({
 		await wx.cloud.callFunction({
 			name: 'getPost'
 		}).then(res => {
-			console.log(res)
 			if (res.result) {
 				this.setData({
 					postList: res.result
@@ -84,7 +83,7 @@ Page({
 		var index = e.currentTarget.dataset.index
 		var post = JSON.stringify(this.data.postList[index])
 		wx.navigateTo({
-			url: '../postDetail/postDetail?post=' + post+ '&postIndex='+ index,
+			url: '../postDetail/postDetail?post=' + post + '&postIndex=' + index,
 		})
 	},
 

@@ -1,0 +1,40 @@
+<view class="post" wx:for="{{postList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
+
+	<view class="user-info">
+		<view class="left">
+			<image class="user-avatar" mode="aspectFill" src="{{item.avatar}}"></image>
+			<view class="nickname-time">
+				<view class="user-nickname">{{item.nickname}}</view>
+				<view class="pub-time">{{item.timeDiff}}</view>
+			</view>
+		</view>
+		<view class="right">
+			<view class="juan-number" wx:if="{{item.likeValue!=0}}">{{item.likeValue}}</view>
+			<view class="juan-number" wx:if="{{item.likeValue==0}}">0</view>
+			<image class="juan-image" src="../../icon/roll2.png"></image>
+		</view>
+	</view>
+
+	<!-- <rich-text class="content" nodes="{{item.content}}" /> -->
+	<text class="content">{{item.content}}</text>
+
+	<view class="media" wx:if="{{item.photoList.length!=0}}" wx:for="{{item.photoList}}" wx:for-item="item2"
+		wx:for-index="index2" wx:key="index2">
+		<video class="post-video" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
+			play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}" data-index1="{{index}}"
+			data-index2="{{index2}}" catchtap="previewMadia"></video>
+		<image class="post-image" wx:if="{{item2.type=='image'}}" mode="aspectFill" src="{{item2.url}}"
+			data-index1="{{index}}" data-index2="{{index2}}" catchtap="previewMadia"></image>
+	</view>
+
+	<view class="post-info">
+		<view class="location" wx:if="{{item.location}}">
+			<van-icon name="location-o" size="20rpx" />
+			<view class="location-name">{{item.location.name}}</view>
+		</view>
+		<view class="interaction">
+			<van-icon custom-style="icon-delete" name="delete-o" size="35rpx" data-index="{{index}}" catchtap="deletePost"/>
+		</view>
+	</view>
+
+</view>
