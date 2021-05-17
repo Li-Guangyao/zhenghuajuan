@@ -27,9 +27,9 @@ export default function getDateDiff(date) {
 	if (monthC >= 1) {
 		// result = "" + parseInt(monthC) + "月前"
 		result = YMD(dateTimeStamp)
-	} else if (weekC >= 1) {
-		// result = "" + parseInt(weekC) + "周前"
-		result = YMD(dateTimeStamp)
+	// } else if (weekC >= 1) {
+	// 	// result = "" + parseInt(weekC) + "周前"
+	// 	result = YMD(dateTimeStamp)
 	} else if (dayC >= 1) {
 		result = "" + parseInt(dayC) + "天前"
 	} else if (hourC >= 1) {

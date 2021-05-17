@@ -35,13 +35,15 @@
         "userConfirmedBundleSwitch": false,
         "minifyWXSS": true,
         "packNpmManually": true,
-        "packNpmRelationList": [{
-            "packageJsonPath": "./miniprogram/package.json",
-            "miniprogramNpmDistDir": "./miniprogram/"
-        }]
+        "packNpmRelationList": [
+            {
+                "packageJsonPath": "./miniprogram/package.json",
+                "miniprogramNpmDistDir": "./miniprogram/"
+            }
+        ]
     },
     "appid": "wx357c892e853d791d",
-    "projectname": "花卷",
+    "projectname": "蒸花卷",
     "libVersion": "2.16.1",
     "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
     "condition": {
@@ -58,11 +60,13 @@
             "list": []
         },
         "miniprogram": {
-            "list": [{
-                "id": -1,
-                "name": "db guide",
-                "pathName": "pages/databaseGuide/databaseGuide"
-            }]
+            "list": [
+                {
+                    "id": -1,
+                    "name": "db guide",
+                    "pathName": "pages/databaseGuide/databaseGuide"
+                }
+            ]
         }
     }
 }

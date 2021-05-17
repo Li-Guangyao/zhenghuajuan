@@ -42,8 +42,9 @@ Page({
 					title: '没有更多了~',
 				})
 			} else {
+				var subPostList = this.dateDiffTrans(res.result)
 				this.setData({
-					postList: [...this.data.postList].concat(...res.result)
+					postList: [...this.data.postList].concat(...subPostList)
 				})
 			}
 		})
@@ -63,9 +64,8 @@ Page({
 		}).then(res => {
 			if (res.result) {
 				this.setData({
-					postList: res.result
+					postList: this.dateDiffTrans(res.result)
 				})
-				this.dateDiffTrans()
 			}
 		})
 
@@ -88,15 +88,13 @@ Page({
 	},
 
 	// 发帖的时间距离现在多久
-	dateDiffTrans() {
-		var length = this.data.postList.length
+	dateDiffTrans(postList) {
+		var length = postList.length
 		for (var i = 0; i < length; i++) {
-			var item = 'postList[' + i + '].timeDiff'
-			var originDate = this.data.postList[i].createdAt
-			this.setData({
-				[item]: getDateDiff(originDate)
-			})
+			var originDate = postList[i].createdAt
+			postList[i].timeDiff = getDateDiff(originDate)
 		}
+		return postList
 	},
 
 	// 点击视频或者图片预览

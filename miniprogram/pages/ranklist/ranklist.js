@@ -90,7 +90,7 @@ Page({
 			console.log(res)
 			this.setData({
 				dayRankList: res.result.rankList.dayRankList,
-				myDayRank: res.result.myRank,
+				myDayRank: res.result.myDayRank,
 				myDayValue: res.result.myDayValue
 			})
 		})
@@ -99,6 +99,7 @@ Page({
 			name: 'getWeekJuanwang'
 		}).then(res => {
 			console.log(res)
+			
 			this.setData({
 				weekRankList: res.result.rankList.weekRankList,
 				myWeekRank: res.result.myWeekRank,

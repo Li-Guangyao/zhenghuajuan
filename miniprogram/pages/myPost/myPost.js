@@ -8,7 +8,7 @@ Page({
 
 	queryParams: {
 		pageNum: 0,
-		pageSize: 100
+		pageSize: 20
 	},
 
 	onLoad: function (options) {
@@ -28,9 +28,8 @@ Page({
 			console.log(res)
 			if (res.result) {
 				this.setData({
-					postList: res.result
+					postList: this.dateDiffTrans(res.result)
 				})
-				this.dateDiffTrans()
 			}
 		})
 
@@ -38,15 +37,13 @@ Page({
 	},
 
 	// 发帖的时间距离现在多久
-	dateDiffTrans() {
-		var length = this.data.postList.length
+	dateDiffTrans(postList) {
+		var length = postList.length
 		for (var i = 0; i < length; i++) {
-			var item = 'postList[' + i + '].timeDiff'
-			var originDate = this.data.postList[i].createdAt
-			this.setData({
-				[item]: getDateDiff(originDate)
-			})
+			var originDate = postList[i].createdAt
+			postList[i].timeDiff = getDateDiff(originDate)
 		}
+		return postList
 	},
 
 	// 点击视频或者图片预览
@@ -77,23 +74,23 @@ Page({
 
 
 	//触底加载
-	onReachBottom() {
+	async onReachBottom() {
 		console.log('ReachBottom')
 		wx.showLoading({
 			title: '加载中',
 		})
 
 		this.queryParams.pageNum++
-		wx.cloud.callFunction({
-			name: 'getPost',
+		await wx.cloud.callFunction({
+			name: 'getMyPost',
 			data: {
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-				newestDate: this.data.postList[0].createdAt
 			}
 		}).then(res => {
 			if (res.result.length == 0) {} else {
+				var subPostList = this.dateDiffTrans(res.result)
 				this.setData({
-					postList: [...this.data.postList].concat(...res.result)
+					postList: [...this.data.postList].concat(...subPostList)
 				})
 			}
 		})

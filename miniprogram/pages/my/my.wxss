@@ -22,9 +22,10 @@ page {
 }
 .my-page {
   height: 80rpx;
+  width: 96% !important;
   border-radius: 20rpx;
   background-color: white;
-  margin: 10rpx 15rpx;
+  margin: 10rpx 15rpx 10rpx 15rpx;
   display: flex;
   justify-content: center;
   align-items: center;

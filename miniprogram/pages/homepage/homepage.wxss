@@ -113,6 +113,6 @@ page {
   width: 100rpx;
   height: 100rpx;
   bottom: 20rpx;
-  right: 20rpx;
+  right: 35rpx;
   position: fixed;
 }

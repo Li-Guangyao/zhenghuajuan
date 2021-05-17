@@ -51,12 +51,21 @@ Page({
 		})
 	},
 
-	test() {
-		wx.getSystemInfo({
-			success: (result) => {
-				console.log(result)
-			},
+	
+	// 点击了“我的帖子”
+	toMyPost(){
+		wx.navigateTo({
+			url: '../myPost/myPost',
 		})
-	}
-
+	},
+	
+	test() {
+		wx.cloud.downloadFile({
+			fileID: 'cloud://backend-1gbavjkaab568661.6261-backend-1gbavjkaab568661-1305784015/postPhoto/.-1621215028916-0.png',
+			success: res=>{
+				console.log(res)
+			},
+			fail: console.error
+		})
+	},
 })

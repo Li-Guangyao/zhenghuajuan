@@ -15,6 +15,7 @@ function getMyInfo(rankList, myOpenId) {
 				}
 			}
 		}
+	} else {
 		return {
 			myWeekRank: -1,
 			myWeekValue: -1
