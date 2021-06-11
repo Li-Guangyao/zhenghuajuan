@@ -15,6 +15,10 @@ function getMyInfo(rankList, myOpenId) {
 				}
 			}
 		}
+		return {
+			myWeekRank: -1,
+			myWeekValue: -1
+		}
 	} else {
 		return {
 			myWeekRank: -1,

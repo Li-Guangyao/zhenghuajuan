@@ -60,6 +60,7 @@ Page({
 	getLocation() {
 		wx.chooseLocation({
 			success: res => {
+				console.log(res)
 				if (res.name) {
 					this.setData({
 						location: res
@@ -196,42 +197,19 @@ Page({
 								}, 2000)
 							}, 0);
 
-							wx.removeStorage({
-								key: 'tempPost'
-							})
-
 							wx.navigateBack({
 								delta: 1,
 							})
+
+							setTimeout(() => {
+								wx.removeStorageSync('tempPost')
+							}, 1000);
 						})
 					}
 				}
 			})
 		}
 	},
-
-
-	/**
-	 * 生命周期函数--监听页面初次渲染完成
-	 */
-	onReady: function () {
-
-	},
-
-	/**
-	 * 生命周期函数--监听页面显示
-	 */
-	onShow: function () {
-
-	},
-
-	/**
-	 * 生命周期函数--监听页面隐藏
-	 */
-	onHide: function () {
-
-	},
-
 
 	onUnload: function () {
 		wx.setStorage({
@@ -244,24 +222,14 @@ Page({
 		})
 	},
 
-	/**
-	 * 页面相关事件处理函数--监听用户下拉动作
-	 */
-	onPullDownRefresh: function () {
-
-	},
-
-	/**
-	 * 页面上拉触底事件的处理函数
-	 */
-	onReachBottom: function () {
-
-	},
-
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {
+	checkContent(){
+		wx.request({
+		  url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=ACCESS_TOKEN',
+		  method: 'POST',
+		  data:{
+			  
+		  }
+		})
 
 	}
 })

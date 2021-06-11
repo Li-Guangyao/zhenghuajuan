@@ -4,6 +4,7 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+// 数据库操作符
 const _ = db.command
 
 // 云函数入口函数
@@ -16,19 +17,24 @@ exports.main = async (event, context) => {
 
 	// return db.collection('t_post').aggregate().sort({
 	// 	createdAt: -1
-	// }).skip(skipNum).end().then(res => {
+	// }).skip(3).end().then(res => {
 	// 	return res.list
 	// })
 
-	if (event.newestDate) {
+	if (event.skipNum) {
 		var newestDate = new Date(event.newestDate)
 
 		return db.collection('t_post').aggregate().match({
+			// 小于最新日期的
 			createdAt: _.lt(newestDate)
 		}).sort({
+			// 按照时间顺序排列
 			createdAt: -1
-		}).skip(event.skipNum).end().then(res => {
-			return res.list
+		}).skip(event.skipNum-1).end().then(res => {
+			return {
+				list:res.list,
+				skipNum: event.skipNum
+			}
 		})
 	} else {
 		return db.collection('t_post').aggregate().sort({

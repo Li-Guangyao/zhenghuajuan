@@ -28,21 +28,23 @@ Page({
 		})
 
 		this.queryParams.pageNum++
+		// skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
+
 		await wx.cloud.callFunction({
 			name: 'getPost',
 			data: {
-				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-				newestDate: this.data.postList[0].createdAt
+				newestDate: this.data.postList[0].createdAt,
+				skipNum: this.queryParams.pageNum * this.queryParams.pageSize
 			}
 		}).then(res => {
 			console.log(res)
-			if (res.result.length == 0) {
+			if (res.result.listlength == 0) {
 				wx.showToast({
 					icon: 'error',
 					title: '没有更多了~',
 				})
 			} else {
-				var subPostList = this.dateDiffTrans(res.result)
+				var subPostList = this.dateDiffTrans(res.result.list)
 				this.setData({
 					postList: [...this.data.postList].concat(...subPostList)
 				})
@@ -108,6 +110,16 @@ Page({
 			current: index2,
 			showmenu: true,
 		})
+	},
+
+	test(){
+		wx.request({
+			url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=ACCESS_TOKEN',
+			method: 'POST',
+			data:{
+				
+			}
+		  })
 	}
 
 })

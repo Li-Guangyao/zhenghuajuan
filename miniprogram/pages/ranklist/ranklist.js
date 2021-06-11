@@ -88,11 +88,11 @@ Page({
 			name: 'getDayJuanwang'
 		}).then(res => {
 			console.log(res)
-			this.setData({
-				dayRankList: res.result.rankList.dayRankList,
-				myDayRank: res.result.myDayRank,
-				myDayValue: res.result.myDayValue
-			})
+			// this.setData({
+			// 	dayRankList: res.result.rankList.dayRankList,
+			// 	myDayRank: res.result.myDayRank,
+			// 	myDayValue: res.result.myDayValue
+			// })
 		})
 
 		await wx.cloud.callFunction({

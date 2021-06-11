@@ -1,4 +1,8 @@
-//上传图片至云存储
+/**
+ * 上传图片至云存储，并返回永久fileID
+ * @param {Array} fileList 文件列表
+ * @param {String} savePath 指定储存的文件夹路径
+ */
 export default async function uploadImage(fileList, savePath) {
 	const uploadTasks = fileList.map(file => uploadFilePromise(file, savePath))
 	// uploadTasks是若干Promise对象的集合，此时已经上传成功
@@ -23,7 +27,11 @@ export default async function uploadImage(fileList, savePath) {
 		});
 	});
 }
-
+/**
+ * 执行函数，单个文件上传到云存储
+ * @param {Object} file 单个文件对象，包含name，url，type三个属性
+ * @param {String} savePath 指定储存的文件夹路径
+ */
 function uploadFilePromise(file, savePath) {
 	return wx.cloud.uploadFile({
 		cloudPath: savePath + '/' + file.name,

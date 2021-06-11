@@ -2,7 +2,7 @@
     "miniprogramRoot": "miniprogram/",
     "cloudfunctionRoot": "cloudfunctions/",
     "setting": {
-        "urlCheck": true,
+        "urlCheck": false,
         "es6": true,
         "enhance": true,
         "postcss": true,
@@ -18,7 +18,7 @@
         "checkInvalidKey": true,
         "checkSiteMap": true,
         "uploadWithSourceMap": true,
-        "compileHotReLoad": false,
+        "compileHotReLoad": true,
         "useMultiFrameRuntime": true,
         "useApiHook": true,
         "useApiHostProcess": true,
@@ -28,23 +28,21 @@
             "outputPath": ""
         },
         "enableEngineNative": false,
-        "bundle": false,
         "useIsolateContext": true,
-        "useCompilerModule": true,
-        "userConfirmedUseCompilerModuleSwitch": false,
         "userConfirmedBundleSwitch": false,
-        "minifyWXSS": true,
         "packNpmManually": true,
         "packNpmRelationList": [
             {
                 "packageJsonPath": "./miniprogram/package.json",
                 "miniprogramNpmDistDir": "./miniprogram/"
             }
-        ]
+        ],
+        "minifyWXSS": true,
+        "showES6CompileOption": false
     },
     "appid": "wx8bfdd5aaea4938d5",
     "projectname": "蒸花卷",
-    "libVersion": "2.16.1",
+    "libVersion": "2.17.0",
     "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
     "condition": {
         "search": {

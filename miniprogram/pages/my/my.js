@@ -1,3 +1,5 @@
+import getAccessToken from '../../utils/getAccessToken'
+
 Page({
 	data: {
 		userInfo: wx.getStorageSync('userInfo'),
@@ -60,12 +62,16 @@ Page({
 	},
 	
 	test() {
-		wx.cloud.downloadFile({
-			fileID: 'cloud://backend-1gbavjkaab568661.6261-backend-1gbavjkaab568661-1305784015/postPhoto/.-1621215028916-0.png',
-			success: res=>{
-				console.log(res)
-			},
-			fail: console.error
-		})
+		return getAccessToken()
+
+		// wx.removeStorage({
+		// 	key: 'tempPost',
+		// 	success: res=>{
+		// 		console.log(res)
+		// 	},
+		// 	fail: err=>{
+		// 		console.log(err)
+		// 	}
+		// })
 	},
 })

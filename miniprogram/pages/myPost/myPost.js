@@ -99,6 +99,16 @@ Page({
 	},
 
 	deletePost(e) {
+		// wx.cloud.callFunction({
+		// 	name: 'removePost',
+		// 	data: {
+		// 		postId: this.data.postList[e.currentTarget.dataset.index]._id
+		// 	},
+		// 	success: res => {
+		// 		console.log(res)
+		// 	}
+		// })
+
 		wx.showModal({
 			content: '确定删除',
 			success: async (res) => {
@@ -108,7 +118,6 @@ Page({
 						data: {
 							postId: this.data.postList[e.currentTarget.dataset.index]._id
 						},
-
 						success: res => {
 							wx.showToast({
 								title: '删除成功',
@@ -119,6 +128,9 @@ Page({
 							this.setData({
 								postList: this.data.postList
 							})
+						},
+						fail: err=>{
+							console.log(err)
 						}
 					})
 				}

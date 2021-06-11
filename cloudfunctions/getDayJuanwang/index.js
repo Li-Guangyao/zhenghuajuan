@@ -15,6 +15,10 @@ function getMyInfo(rankList, myOpenId) {
 				}
 			}
 		}
+		return {
+			myDayRank: -1,
+			myDayValue: -1
+		}
 	} else {
 		return {
 			myDayRank: -1,
@@ -36,9 +40,12 @@ exports.main = async (event, context) => {
 		myInfo = getMyInfo(rankList.dayRankList, event.userInfo.openId)
 	})
 
-	return {
-		rankList,
-		myDayRank: myInfo.myDayRank,
-		myDayValue: myInfo.myDayValue
-	}
+	return rankList
+
+
+	// return {
+	// 	rankList,
+	// 	myDayRank: myInfo.myDayRank,
+	// 	myDayValue: myInfo.myDayValue
+	// }
 }
