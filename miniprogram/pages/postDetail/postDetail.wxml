@@ -18,7 +18,7 @@
 	<!-- <rich-text class="content" nodes="{{post.content}}" /> -->
 	<text class="content">{{post.content}}</text>
 
-	<view class="media" wx:if="{{post.photoList.length!=0}}" wx:for="{{post.photoList}}" wx:for-item="item2"
+	<view class="media" wx:if="{{post.fileList.length!=0}}" wx:for="{{post.fileList}}" wx:for-item="item2"
 		wx:for-index="index2" wx:key="index2">
 		<video class="post-video" custom-cache="{{false}}" wx:if="{{item2.type=='video'}}"
 			show-fullscreen-btn="{{false}}" play-btn-position="center" muted="{{true}}" object-fit="cover"

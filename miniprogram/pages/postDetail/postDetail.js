@@ -132,7 +132,7 @@ Page({
 	previewMadia(e) {
 		var index2 = e.currentTarget.dataset.index2
 		wx.previewMedia({
-			sources: this.data.post.photoList,
+			sources: this.data.post.fileList,
 			current: index2,
 			showmenu: true,
 		})
@@ -222,7 +222,7 @@ Page({
 	// 保存
 	saveComment(content) {
 		wx.showLoading({
-		  title: '保存中',
+			title: '保存中',
 		})
 		wx.cloud.callFunction({
 			name: 'savePostComment',
@@ -291,7 +291,6 @@ Page({
 		var pages = getCurrentPages();
 		var prevPage = pages[pages.length - 2]; //上一个页面
 		var item = 'postList[' + this.data.postIndex + '].likeValue'
-		var item2 = 'this.data.postList[' + this.data.postIndex + '].likeValue'
 
 		// 给出了新点赞
 		if (now != -1 && origin == -1) {
@@ -304,9 +303,6 @@ Page({
 					valueIndex: now
 				}
 			})
-			prevPage.setData({
-				[item]: this.data.post.likeValue
-			});
 			// 取消了之前的点赞
 		} else if (now == -1 && origin != -1) {
 			wx.cloud.callFunction({
@@ -316,9 +312,6 @@ Page({
 					originValue: this.data.popupItem[origin].value
 				}
 			})
-			prevPage.setData({
-				[item]: this.data.post.likeValue
-			});
 			// 改变了点赞数量
 		} else if (now != origin) {
 			wx.cloud.callFunction({
@@ -330,31 +323,10 @@ Page({
 					originValue: this.data.popupItem[origin].value
 				}
 			})
-
-			prevPage.setData({
-				[item]: this.data.post.likeValue
-			});
 		}
-	},
 
-	/**
-	 * 页面相关事件处理函数--监听用户下拉动作
-	 */
-	onPullDownRefresh: function () {
-
-	},
-
-	/**
-	 * 页面上拉触底事件的处理函数
-	 */
-	onReachBottom: function () {
-
-	},
-
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {
-
+		prevPage.setData({
+			[item]: this.data.post.likeValue
+		});
 	}
 })

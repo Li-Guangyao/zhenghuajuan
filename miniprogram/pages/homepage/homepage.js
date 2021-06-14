@@ -1,7 +1,7 @@
 import getDateDiff from "../../utils/getDateDiff"
+import changeFileListFormat from "../../utils/changeFileListFormat"
 
 Page({
-
 	data: {
 		postList: []
 	},
@@ -21,15 +21,13 @@ Page({
 		wx.stopPullDownRefresh()
 	},
 
-	//触底加载
+	// 触底加载
 	async onReachBottom() {
 		wx.showLoading({
 			title: '加载中',
 		})
 
 		this.queryParams.pageNum++
-		// skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-
 		await wx.cloud.callFunction({
 			name: 'getPost',
 			data: {
@@ -37,14 +35,13 @@ Page({
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize
 			}
 		}).then(res => {
-			console.log(res)
 			if (res.result.listlength == 0) {
 				wx.showToast({
 					icon: 'error',
 					title: '没有更多了~',
 				})
 			} else {
-				var subPostList = this.dateDiffTrans(res.result.list)
+				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result.list))
 				this.setData({
 					postList: [...this.data.postList].concat(...subPostList)
 				})
@@ -66,7 +63,7 @@ Page({
 		}).then(res => {
 			if (res.result) {
 				this.setData({
-					postList: this.dateDiffTrans(res.result)
+					postList: changeFileListFormat(this.dateDiffTrans(res.result))
 				})
 			}
 		})
@@ -91,35 +88,21 @@ Page({
 
 	// 发帖的时间距离现在多久
 	dateDiffTrans(postList) {
-		var length = postList.length
-		for (var i = 0; i < length; i++) {
-			var originDate = postList[i].createdAt
-			postList[i].timeDiff = getDateDiff(originDate)
+		for (var i = 0; i < postList.length; i++) {
+			postList[i].timeDiff = getDateDiff(postList[i].createdAt)
 		}
 		return postList
 	},
 
 	// 点击视频或者图片预览
 	previewMadia(e) {
-		console.log(e)
-		// sources: this.data.postList.
 		var index1 = e.currentTarget.dataset.index1
 		var index2 = e.currentTarget.dataset.index2
 		wx.previewMedia({
-			sources: this.data.postList[index1].photoList,
+			sources: this.data.postList[index1].fileList,
 			current: index2,
 			showmenu: true,
 		})
-	},
-
-	test(){
-		wx.request({
-			url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=ACCESS_TOKEN',
-			method: 'POST',
-			data:{
-				
-			}
-		  })
 	}
 
 })

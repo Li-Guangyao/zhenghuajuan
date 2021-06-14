@@ -1,7 +1,7 @@
 import getDateDiff from "../../utils/getDateDiff"
+import changeFileListFormat from "../../utils/changeFileListFormat"
 
 Page({
-
 	data: {
 		postList: []
 	},
@@ -23,12 +23,14 @@ Page({
 		})
 
 		await wx.cloud.callFunction({
-			name: 'getMyPost'
+			name: 'getMyPost',
+			data:{
+				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
+			}
 		}).then(res => {
-			console.log(res)
 			if (res.result) {
 				this.setData({
-					postList: this.dateDiffTrans(res.result)
+					postList: changeFileListFormat(this.dateDiffTrans(res.result))
 				})
 			}
 		})
@@ -72,7 +74,6 @@ Page({
 		wx.stopPullDownRefresh()
 	},
 
-
 	//触底加载
 	async onReachBottom() {
 		console.log('ReachBottom')
@@ -81,14 +82,20 @@ Page({
 		})
 
 		this.queryParams.pageNum++
+		console.log(this.queryParams.pageNum)
 		await wx.cloud.callFunction({
 			name: 'getMyPost',
 			data: {
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
 			}
 		}).then(res => {
-			if (res.result.length == 0) {} else {
-				var subPostList = this.dateDiffTrans(res.result)
+			if (res.result.length == 0) {
+				wx.showToast({
+					icon: 'error',
+					title: '没有更多了~',
+				})
+			} else {
+				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
 				this.setData({
 					postList: [...this.data.postList].concat(...subPostList)
 				})
@@ -99,16 +106,6 @@ Page({
 	},
 
 	deletePost(e) {
-		// wx.cloud.callFunction({
-		// 	name: 'removePost',
-		// 	data: {
-		// 		postId: this.data.postList[e.currentTarget.dataset.index]._id
-		// 	},
-		// 	success: res => {
-		// 		console.log(res)
-		// 	}
-		// })
-
 		wx.showModal({
 			content: '确定删除',
 			success: async (res) => {
@@ -129,7 +126,7 @@ Page({
 								postList: this.data.postList
 							})
 						},
-						fail: err=>{
+						fail: err => {
 							console.log(err)
 						}
 					})

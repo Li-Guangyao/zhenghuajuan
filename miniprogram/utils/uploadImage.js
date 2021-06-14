@@ -13,10 +13,7 @@ export default async function uploadImage(fileList, savePath) {
 		var uploadedFileList = []
 		for (var i = 0; i < data.length; i++) {
 			// 选择顺序和上传顺序相同？
-			uploadedFileList.push({
-				url: data[i].fileID,
-				type: fileList[i].type
-			})
+			uploadedFileList.push(data[i].fileID)
 		}
 		//把固定地址返回，保存进数据库
 		return uploadedFileList;

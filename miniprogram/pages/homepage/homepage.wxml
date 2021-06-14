@@ -10,8 +10,8 @@
 				</view>
 			</view>
 			<view class="right">
-				<view class="juan-number"  wx:if="{{item.likeValue!=0}}">{{item.likeValue}}</view>
-				<view class="juan-number"  wx:if="{{item.likeValue==0}}">0</view>
+				<view class="juan-number" wx:if="{{item.likeValue!=0}}">{{item.likeValue}}</view>
+				<view class="juan-number" wx:if="{{item.likeValue==0}}">0</view>
 				<image class="juan-image" src="../../icon/roll2.png"></image>
 			</view>
 		</view>
@@ -19,7 +19,7 @@
 		<!-- <rich-text class="content" nodes="{{item.content}}" /> -->
 		<text class="content">{{item.content}}</text>
 
-		<view class="media" wx:if="{{item.photoList.length!=0}}" wx:for="{{item.photoList}}" wx:for-item="item2"
+		<view class="media" wx:if="{{item.fileList.length!=0}}" wx:for="{{item.fileList}}" wx:for-item="item2"
 			wx:for-index="index2" wx:key="index2">
 			<video class="post-video" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
 				play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}"

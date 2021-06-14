@@ -9,14 +9,19 @@ const db = cloud.database()
 exports.main = async (event, context) => {
 
 	return db.collection('t_post').add({
-		data:{
+		data: {
 			_openid: event.userInfo.openId,
 			avatar: event.avatarUrl,
 			nickname: event.nickname,
 
 			content: event.content,
 			location: event.location,
-			photoList: event.photoList,
+
+			photoList: event.uploadedFileList.uploadedPhotoList,
+			videoList: event.uploadedFileList.uploadedVideoList,
+			typeList: event.uploadedFileList.typeList,
+
+			status: event.uploadedFileList.uploadedPhotoList.length == 0 ? 1 : 0,
 			createdAt: new Date(),
 			likeValue: 0
 		}

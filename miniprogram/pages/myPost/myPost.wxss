@@ -14,6 +14,7 @@ page {
 .post .user-info .left {
   display: flex;
   flex-direction: row;
+  align-items: center;
   flex: 3;
 }
 .post .user-info .left .user-avatar {
@@ -33,6 +34,9 @@ page {
 .post .user-info .left .nickname-time .pub-time {
   font-size: 20rpx;
   color: #4b4b4b;
+}
+.post .user-info .left .check-info {
+  color: red;
 }
 .post .user-info .right {
   flex: 2;

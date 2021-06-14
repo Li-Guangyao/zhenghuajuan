@@ -11,7 +11,7 @@
 	<view class="upload-photo">
 		<van-uploader file-list="{{fileList}}" accept="media" bind:after-read="chosenImage" bind:delete="removeImage"
 			bind:click-preview="previewMedia" multiple preview-size="233rpx" image-fit="aspectFill" preview-image="{{true}}"
-			max-count="9" max-size="20000000" max-duration="30" />
+			max-count="9" max-size="10000000" compressed="{{true}}" max-duration="30" />
 	</view>
 
 	<view class="location" bindtap="getLocation">
@@ -24,5 +24,7 @@
 		<van-icon class="location-delete" name="cross" bindtap="removeLocation" />
 	</view>
 </view>
+
+<button bindtap="checkPost">checkPost</button>
 
 <view class="buttons" bindtap="publishPost">发布笔记</view>

@@ -1,6 +1,6 @@
 //获取标准的时间格式yyyy-mm-dd hh:mm，而非时间戳
 import judgeImageFormat from '../../utils/judgeImageFormat'
-import uploadImage from '../../utils/uploadImage'
+import uploadMedia from '../../utils/uploadImage'
 
 Page({
 	data: {
@@ -49,13 +49,6 @@ Page({
 		}
 	},
 
-	// 输入内容(editor富文本方式，已废弃)
-	// contentInput(e) {
-	// 	this.setData({
-	// 		content: e.detail.html
-	// 	})
-	// },
-
 	// 获取用户位置
 	getLocation() {
 		wx.chooseLocation({
@@ -99,7 +92,7 @@ Page({
 	// upload选择完会触发这个函数，把所有选择的图片生成临时地址
 	chosenImage(e) {
 
-		var nickname = this.data.userInfo.nickName
+		var openId = this.data.userInfo._openid
 		var fileList = e.detail.file
 		var oldArrayLength = this.data.fileList.length
 		var newArrayLength = fileList.length
@@ -113,7 +106,7 @@ Page({
 				[item]: {
 					type: fileList[i - oldArrayLength].type,
 					url: fileList[i - oldArrayLength].url,
-					name: nickname + '-' + Date.now() + '-' + i + '.' + imageFormat,
+					name: openId + '-' + Date.now() + '-' + i + '.' + imageFormat,
 				}
 			})
 		}
@@ -135,14 +128,6 @@ Page({
 			sources: this.data.fileList,
 			current: e.detail.index,
 			showmenu: true,
-
-			success: res => {
-				console.log(res)
-			},
-
-			fail: err => {
-				console.log(err)
-			}
 		})
 	},
 
@@ -161,56 +146,93 @@ Page({
 						wx.showLoading({
 							title: '保存中',
 						})
-
-						// 用户点击了确定
-						if (this.data.fileList.length != 0) {
-							var uploadedFileList = await uploadImage(this.data.fileList, 'postPhoto')
-						}
-
-						await wx.cloud.callFunction({
-							name: 'savePost',
-							data: {
-								avatarUrl: this.data.userInfo.avatarUrl,
-								nickname: this.data.userInfo.nickName,
-
-								content: this.data.content,
-								location: this.data.location,
-								photoList: uploadedFileList,
-							}
-						}).then(res => {
-							wx.hideLoading()
-
-							// 直接调用上一页的刷新，然后在返回
-							// 让新发布的帖子显示到主页
-							var pages = getCurrentPages()
-							var beforePage = pages[pages.length - 2]
-							beforePage.refreshPage()
-
-							setTimeout(() => {
-								wx.showToast({
-									title: '发布成功',
-									icon: "success",
-								});
-
-								setTimeout(() => {
-									wx.hideToast();
-								}, 2000)
-							}, 0);
-
-							wx.navigateBack({
-								delta: 1,
-							})
-
-							setTimeout(() => {
-								wx.removeStorageSync('tempPost')
-							}, 1000);
-						})
+						var uploadedFileList = await this.getFileID()
+						console.log(uploadedFileList)
+						this.savePost(uploadedFileList)
 					}
 				}
 			})
 		}
 	},
 
+	// 把fileList分成photo和video两个列表，分别上传
+	// 最后得到两个列表
+	async getFileID() {
+		var fileList = this.data.fileList
+		var photoList = []
+		var videoList = []
+		var typeList = []
+
+		for (var i = 0; i < fileList.length; i++) {
+			if (fileList[i].type == 'image') {
+				photoList.push(fileList[i])
+			} else if (fileList[i].type == 'video') {
+				videoList.push(fileList[i])
+			}
+			typeList.push(fileList[i].type)
+		}
+
+		var uploadedPhotoList = await uploadMedia(photoList, 'test1')
+		var uploadedVideoList = await uploadMedia(videoList, 'test2')
+
+		return {
+			uploadedPhotoList,
+			uploadedVideoList,
+			typeList
+		}
+	},
+
+	// 执行储存
+	async savePost(uploadedFileList) {
+		if (this.checkPost()) {
+			wx.cloud.callFunction({
+				name: 'savePost',
+				data: {
+					avatarUrl: this.data.userInfo.avatarUrl,
+					nickname: this.data.userInfo.nickName,
+
+					content: this.data.content,
+					location: this.data.location,
+
+					uploadedFileList: uploadedFileList,
+				}
+			}).then(res => {
+				// 直接调用上一页的刷新，然后再返回
+				// 让新发布的帖子显示到主页
+				var pages = getCurrentPages()
+				var beforePage = pages[pages.length - 2]
+				beforePage.refreshPage()
+
+				wx.hideLoading()
+
+				setTimeout(() => {
+					wx.showToast({
+						title: '发布成功，等待审核',
+						icon: "success",
+					});
+
+					setTimeout(() => {
+						wx.hideToast();
+					}, 2000)
+				}, 0);
+
+				wx.navigateBack({
+					delta: 1,
+				})
+
+				setTimeout(() => {
+					wx.removeStorageSync('tempPost')
+				}, 1000);
+			})
+		} else {
+			wx.showToast({
+				title: '内容没有通过审核！',
+			})
+		}
+
+	},
+
+	// 退出设置缓存
 	onUnload: function () {
 		wx.setStorage({
 			key: 'tempPost',
@@ -222,14 +244,43 @@ Page({
 		})
 	},
 
-	checkContent(){
-		wx.request({
-		  url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=ACCESS_TOKEN',
-		  method: 'POST',
-		  data:{
-			  
-		  }
+	// 内容安全检查
+	async checkPost() {
+		const res = await wx.cloud.callFunction({
+			name: 'checkPost',
+			data: {
+				postContent: this.data.content,
+			}
 		})
+		console.log(res)
+		if (res.result.errCode == 87014) {
+			return false
+		} else {
+			return true
+		}
 
+
+		// wx.request({
+		// 	url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=' + accessToken,
+		// 	data: {
+		// 		media_url: this.data.fileList[0].url,
+		// 		media_type: 2
+		// 	},
+		// 	method: 'POST',
+		// 	success: function(res){
+		// 		console.log(res)
+		// 	}
+		// })
+
+		// wx.request({
+		// 	url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token=' + accessToken,
+		// 	data: {
+		// 		content: this.data.content,
+		// 	},
+		// 	method: 'POST',
+		// 	success: function(res){
+		// 		console.log(res)
+		// 	}
+		// })
 	}
 })

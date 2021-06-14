@@ -26,18 +26,21 @@ exports.main = async (event, context) => {
 
 		return db.collection('t_post').aggregate().match({
 			// 小于最新日期的
-			createdAt: _.lt(newestDate)
+			createdAt: _.lt(newestDate),
+			status: 1
 		}).sort({
 			// 按照时间顺序排列
 			createdAt: -1
-		}).skip(event.skipNum-1).end().then(res => {
+		}).skip(event.skipNum - 1).end().then(res => {
 			return {
-				list:res.list,
+				list: res.list,
 				skipNum: event.skipNum
 			}
 		})
 	} else {
-		return db.collection('t_post').aggregate().sort({
+		return db.collection('t_post').aggregate().match({
+			status: 1
+		}).sort({
 			createdAt: -1
 		}).end().then(res => {
 			return res.list
