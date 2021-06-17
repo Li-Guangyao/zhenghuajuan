@@ -197,10 +197,6 @@ Page({
 	// 保存评论的评论
 	pubCommentComment() {
 		if (this.data.inputCommentComment) {
-			// this.setData({
-			// 	inputComment: this.data.commentSb + this.data.inputCommentComment
-			// })
-			// this.pubComment()
 			var content = this.data.commentSb + this.data.inputCommentComment
 			console.log(content)
 			this.saveComment(content)

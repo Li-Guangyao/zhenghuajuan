@@ -7,7 +7,7 @@ Page({
 		content: '',
 		location: null,
 		fileList: [],
-		userInfo: null
+		userInfo: wx.getStorageSync('userInfo')
 	},
 
 	onLoad: function (options) {
@@ -23,8 +23,8 @@ Page({
 		}
 	},
 
-	async judgeLogin() {
-		var userInfo = await wx.getStorageSync('userInfo')
+	judgeLogin() {
+		var userInfo = wx.getStorageSync('userInfo')
 		if (!userInfo) {
 			wx.showModal({
 				title: '卷王同志，请先登陆再来',
@@ -172,8 +172,8 @@ Page({
 			typeList.push(fileList[i].type)
 		}
 
-		var uploadedPhotoList = await uploadMedia(photoList, 'test1')
-		var uploadedVideoList = await uploadMedia(videoList, 'test2')
+		var uploadedPhotoList = await uploadMedia(photoList, 'postPhoto')
+		var uploadedVideoList = await uploadMedia(videoList, 'postVideo')
 
 		return {
 			uploadedPhotoList,
@@ -184,19 +184,15 @@ Page({
 
 	// 执行储存
 	async savePost(uploadedFileList) {
-		if (this.checkPost()) {
+		if (await this.checkPost(uploadedFileList.uploadedPhotoList)) {
 			wx.cloud.callFunction({
 				name: 'savePost',
 				data: {
-					avatarUrl: this.data.userInfo.avatarUrl,
-					nickname: this.data.userInfo.nickName,
-
 					content: this.data.content,
 					location: this.data.location,
-
 					uploadedFileList: uploadedFileList,
 				}
-			}).then(res => {
+			}).then(async (res) => {
 				// 直接调用上一页的刷新，然后再返回
 				// 让新发布的帖子显示到主页
 				var pages = getCurrentPages()
@@ -206,30 +202,24 @@ Page({
 				wx.hideLoading()
 
 				setTimeout(() => {
-					wx.showToast({
-						title: '发布成功，等待审核',
-						icon: "success",
-					});
-
-					setTimeout(() => {
-						wx.hideToast();
-					}, 2000)
-				}, 0);
+					wx.removeStorageSync('tempPost')
+				}, 1000);
 
 				wx.navigateBack({
 					delta: 1,
 				})
 
-				setTimeout(() => {
-					wx.removeStorageSync('tempPost')
-				}, 1000);
+				wx.showToast({
+					title: '发布成功',
+					icon: "success"
+				});
 			})
 		} else {
 			wx.showToast({
-				title: '内容没有通过审核！',
+				icon: 'error',
+				title: '没有通过审核',
 			})
 		}
-
 	},
 
 	// 退出设置缓存
@@ -245,20 +235,19 @@ Page({
 	},
 
 	// 内容安全检查
-	async checkPost() {
+	async checkPost(uploadedPhotoList) {
+		const postPhotoList = this.getPhotoPath(uploadedPhotoList)
+
 		const res = await wx.cloud.callFunction({
 			name: 'checkPost',
 			data: {
 				postContent: this.data.content,
+				postPhotoList: postPhotoList
 			}
 		})
+		
 		console.log(res)
-		if (res.result.errCode == 87014) {
-			return false
-		} else {
-			return true
-		}
-
+		return res.result
 
 		// wx.request({
 		// 	url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=' + accessToken,
@@ -282,5 +271,16 @@ Page({
 		// 		console.log(res)
 		// 	}
 		// })
+	},
+
+	getPhotoPath(photoList) {
+		var photoListTrans = []
+		for (var i = 0; i < photoList.length; i++) {
+			//获取最后一个/的位置
+			var index = photoList[i].indexOf("/", 10);
+			//获取后缀
+			photoListTrans.push(photoList[i].substr(index + 1))
+		}
+		return photoListTrans;
 	}
 })

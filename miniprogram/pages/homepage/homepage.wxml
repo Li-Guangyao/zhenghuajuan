@@ -3,7 +3,7 @@
 
 		<view class="user-info">
 			<view class="left">
-				<image class="user-avatar" mode="aspectFill" src="{{item.avatar}}"></image>
+				<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
 				<view class="nickname-time">
 					<view class="user-nickname">{{item.nickname}}</view>
 					<view class="pub-time">{{item.timeDiff}}</view>

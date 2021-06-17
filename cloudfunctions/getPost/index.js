@@ -6,20 +6,10 @@ cloud.init()
 const db = cloud.database()
 // 数据库操作符
 const _ = db.command
+const $ = db.command.aggregate
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-	// return db.collection('t_post').aggregate().sort({
-	// 	createdAt: -1
-	// }).end().then(res=>{
-	// 	return res.list
-	// })
-
-	// return db.collection('t_post').aggregate().sort({
-	// 	createdAt: -1
-	// }).skip(3).end().then(res => {
-	// 	return res.list
-	// })
 
 	if (event.skipNum) {
 		var newestDate = new Date(event.newestDate)
@@ -31,24 +21,36 @@ exports.main = async (event, context) => {
 		}).sort({
 			// 按照时间顺序排列
 			createdAt: -1
-		}).skip(event.skipNum - 1).end().then(res => {
-			return {
-				list: res.list,
-				skipNum: event.skipNum
-			}
+		}).skip(event.skipNum - 1).lookup({
+			from: 't_user',
+			localField: '_openid',
+			foreignField: '_openid',
+			as: 'userInfo'
+		}).replaceRoot({
+			newRoot: $.mergeObjects([$.arrayElemAt(['$userInfo', 0]), '$$ROOT'])
+		}).project({
+			userInfo: 0,
+		}).end().then(res => {
+			return res.list
 		})
 	} else {
 		return db.collection('t_post').aggregate().match({
 			status: 1
 		}).sort({
 			createdAt: -1
+		}).lookup({
+			from: 't_user',
+			localField: '_openid',
+			foreignField: '_openid',
+			as: 'userInfo'
+		}).replaceRoot({
+			newRoot: $.mergeObjects([$.arrayElemAt(['$userInfo', 0]), '$$ROOT'])
+		}).project({
+			userInfo: 0,
 		}).end().then(res => {
 			return res.list
 		})
 	}
-
-
-
 
 	// const db = cloud.database()
 	// const _ = db.command

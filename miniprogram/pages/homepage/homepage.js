@@ -35,13 +35,14 @@ Page({
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize
 			}
 		}).then(res => {
-			if (res.result.listlength == 0) {
+			console.log(res)
+			if (res.result.length == 0) {
 				wx.showToast({
 					icon: 'error',
 					title: '没有更多了~',
 				})
 			} else {
-				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result.list))
+				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
 				this.setData({
 					postList: [...this.data.postList].concat(...subPostList)
 				})

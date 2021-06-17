@@ -32,9 +32,23 @@ exports.main = async (event, context) => {
 				city: event.userInfo.city,
 				gender: event.userInfo.gender,
 				language: event.userInfo.language,
-				nickName: event.userInfo.nickName
+				nickname: event.userInfo.nickName
 			}
 		})
-	}else{}
+	}else{
+		return db.collection('t_user').where({
+			_openid: wxContext.OPENID
+		}).update({
+			data:{
+				avatarUrl: event.userInfo.avatarUrl,
+				country: event.userInfo.country,
+				province: event.userInfo.province,
+				city: event.userInfo.city,
+				gender: event.userInfo.gender,
+				language: event.userInfo.language,
+				nickname: event.userInfo.nickName
+			}
+		})
+	}
 
 }

@@ -28,6 +28,7 @@ Page({
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
 			}
 		}).then(res => {
+			console.log(res)
 			if (res.result) {
 				this.setData({
 					postList: changeFileListFormat(this.dateDiffTrans(res.result))

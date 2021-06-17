@@ -2,24 +2,23 @@
 	<image class="background-image" src="../../images/rankList.png" mode="widthFix" />
 	<view class="first">
 		<image class="avatar" src="{{weekRankList[0].avatarUrl}}"></image>
-		<view class="nickname">{{weekRankList[0].nickName}}</view>
+		<view class="nickname">{{weekRankList[0].nickname}}</view>
 		<view class="value">{{weekRankList[0].totalValue}}</view>
 	</view>
 	<view class="second">
 		<image class="avatar" src="{{weekRankList[1].avatarUrl}}"></image>
-		<view class="nickname">{{weekRankList[1].nickName}}</view>
+		<view class="nickname">{{weekRankList[1].nickname}}</view>
 		<view class="value">{{weekRankList[1].totalValue}}</view>
 	</view>
 	<view class="third">
 		<image class="avatar" src="{{weekRankList[2].avatarUrl}}"></image>
-		<view class="nickname">{{weekRankList[2].nickName}}</view>
+		<view class="nickname">{{weekRankList[2].nickname}}</view>
 		<view class="value">{{weekRankList[2].totalValue}}</view>
 	</view>
 	<view class="update-date">更新时间：{{updateDate}}</view>
 </view>
 
-<tabbar class="tabbar" tabbar="{{tabbar}}" bindtabbarChange="tabbarChange">
-</tabbar>
+<tabbar class="tabbar" tabbar="{{tabbar}}" bindtabbarChange="tabbarChange"></tabbar>
 
 <swiper style="height:{{wholeRankHeight?wholeRankHeight+'px':'auto'}}" current="{{chosenTabIndex}}"
 	class="swiper-region" bindchange="swiperChange">
@@ -30,7 +29,7 @@
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
 					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.nickName}}</view>
+					<view class="user-nickname">{{item.nickname}}</view>
 				</view>
 				<view class="right">
 					<view class="juan-number">{{item.totalValue}}</view>
@@ -46,7 +45,7 @@
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
 					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.nickName}}</view>
+					<view class="user-nickname">{{item.nickname}}</view>
 				</view>
 				<view class="right">
 					<view class="juan-number">{{item.totalValue}}</view>
@@ -63,7 +62,7 @@
 <view class="my-rank">
 	<!-- <view class="left">
 		<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-		<view class="user-nickname">{{userInfo.nickName}}</view>
+		<view class="user-nickname">{{userInfo.nickname}}</view>
 	</view>
 	<view class="right">
 		<text class="rank-info" wx:if="{{myRank!=-1}}">{{"No."+ myRank}}</text>
@@ -74,7 +73,7 @@
 		<view class="left">
 			<text class="rank-number" wx:if="{{myDayRank!=-1}}">{{myRank}}</text>
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-			<view class="user-nickname">{{userInfo.nickName}}</view>
+			<view class="user-nickname">{{userInfo.nickname}}</view>
 		</view>
 		<view class="right">
 			<view class="juan-number" wx:if="{{myDayRank!=-1}}">{{myDayValue}}</view>
@@ -87,7 +86,7 @@
 		<view class="left">
 			<text class="rank-number" wx:if="{{myWeekRank!=-1}}">{{myWeekRank}}</text>
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-			<view class="user-nickname">{{userInfo.nickName}}</view>
+			<view class="user-nickname">{{userInfo.nickname}}</view>
 		</view>
 		<view class="right">
 			<view class="juan-number" wx:if="{{myWeekRank!=-1}}">{{myWeekValue}}</view>

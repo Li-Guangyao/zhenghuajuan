@@ -1,4 +1,4 @@
-//app.js
+let tcb = require("./lib/tcb.js");
 App({
   onLaunch: function () {
     if (!wx.cloud) {
@@ -14,6 +14,19 @@ App({
       })
     }
 
-    this.globalData = {}
+    // const cloud = tcb.init({
+    //   env: "cloud1-1gpq51y7845e8d66",
+    //   appSign: "touristappid",
+    //   appSecret: {
+    //     appAccessKeyId: "1",
+    //     appAccessKey: "b96e08eaac870373f68761b1d8b74b0f"
+    //   }
+    // });
+
+    // this.globalData = {
+    //   cloud,
+    //   collection: "tcb_hello_world"
+    // };
+
   }
 })
