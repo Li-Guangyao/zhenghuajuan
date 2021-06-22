@@ -1,0 +1,24 @@
+page {
+  background-color: var(--themeBackgroundColor);
+}
+.no-record {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.no-record image {
+  width: 70%;
+}
+.no-record text {
+  font-size: 36rpx;
+  color: #7e7e7e;
+}
+.btn-add {
+  border-radius: 50rpx;
+  width: 100rpx;
+  height: 100rpx;
+  bottom: 20rpx;
+  right: 35rpx;
+  position: fixed;
+}

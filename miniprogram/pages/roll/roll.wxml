@@ -1,0 +1,8 @@
+<!-- <view class="no-record" style="top: {{pageHeight/2}}"> -->
+<view class="no-record" style="top:{{pageHeight/3+'rpx'}};">
+    <image src="../../icon2/noRollRecord.png"></image>
+    <text>还没有任何蒸花卷记录</text>
+    <text>点击右下角加号开始蒸花卷吧</text>
+</view>
+
+<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="addActivity"></image>
