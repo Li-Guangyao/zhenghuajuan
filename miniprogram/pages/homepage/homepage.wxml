@@ -42,4 +42,4 @@
 	</view>
 </view>
 
-<image class="btn-addpost" src="../../images/pen.png" mode="aspectFill" bindtap="toPostAdd"></image>
+<image class="btn-addpost" src="../../icon2/add.png" mode="aspectFill" bindtap="toPostAdd"></image>
