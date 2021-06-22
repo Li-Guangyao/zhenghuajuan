@@ -1,5 +1,9 @@
 const tcb = require("@cloudbase/node-sdk");
 const extCi = require("@cloudbase/extension-ci");
+const cloud = require('wx-server-sdk')
+
+cloud.init()
+ 
 
 const app = tcb.init({
 	env: "cloud1-1gpq51y7845e8d66"
@@ -9,6 +13,7 @@ app.registerExtension(extCi);
 exports.main = async (event, context) => {
 	var a = await contentSec(event.postContent)
 	var b = await imgSec(event.postPhotoList)
+
 	if (a == true && b == true) {
 		return true
 	} else {
