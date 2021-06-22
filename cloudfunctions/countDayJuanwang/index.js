@@ -19,17 +19,17 @@ function saveResult(result, now) {
 // 统计前一天的卷王名单
 exports.main = async (event, context) => {
 	var now = new Date()
-	var nowStamp = Date.parse(new Date())
-	//先统计出来一天有多少毫秒
-	var day = 24 * 60 * 60 * 1000
-	var dayAgoStamp = nowStamp - day
 
-	var dayAgo = new Date(dayAgoStamp)
+	var day = now.getDay()
+	var month = now.getMonth();
+	var year = now.getFullYear();
 
+	var dayStart = new Date(year, month, day);
+	var dayEnd = new Date(year, month, day + 1);
 
 	return db.collection('t_post_like').aggregate().match({
-		createdAt: _.lt(now),
-		createdAt: _.gt(dayAgo)
+		createdAt: _.lt(dayEnd),
+		createdAt: _.gt(dayStart)
 	}).group({
 		_id: '$postAuthor_openid',
 		totalValue: $.sum('$value')

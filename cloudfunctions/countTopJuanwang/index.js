@@ -16,30 +16,20 @@ function saveResult(result, now) {
 	})
 }
 
-// 统计本周的卷王名单
+// 统计前一周的卷王名单
 exports.main = async (event, context) => {
 	var now = new Date()
-
-	var day = now.getDay()
-	var month = now.getMonth();
-	var year = now.getFullYear();
-	var date = now.getDate();
-
-	var sDate = date - day + 1;
-	var eDate = sDate + 7;
-
-	var weekStart = new Date(year, month, sDate);
-	var weekEnd = new Date(year, month, eDate);
-
+	var nowStamp = Date.parse(new Date())
+	
 	//先统计出来一周有多少毫秒
-	// var week = 7 * 24 * 60 * 60 * 1000
-	// var endStamp = nowStamp - week
+	var week = 7 * 24 * 60 * 60 * 1000
+	var weekAgoStamp = nowStamp - week
 
-	// var end = new Date(endStamp)
+	var weekAgo = new Date(weekAgoStamp)
 	
 	return db.collection('t_post_like').aggregate().match({
-		createdAt: _.lt(weekEnd),
-		createdAt: _.gt(weekStart)
+		createdAt: _.lt(now),
+		createdAt: _.gt(weekAgo)
 	}).group({
 		_id: '$postAuthor_openid',
 		totalValue: $.sum('$value')

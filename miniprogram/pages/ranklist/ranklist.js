@@ -3,6 +3,7 @@ Page({
 		myUserInfo: null,
 		dayRankList: [],
 		weekRankList: [],
+		topList: [],
 		updateDate: null,
 
 		myDayRank: -1,

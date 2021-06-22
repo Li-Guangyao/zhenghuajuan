@@ -3,6 +3,12 @@ const cloud = require('wx-server-sdk')
 
 cloud.init()
 
+/*
+cloud.init({
+  env: 'dev-8g04el2md0da36c7',
+})
+*/
+
 const db = cloud.database()
 // 数据库操作符
 const _ = db.command
