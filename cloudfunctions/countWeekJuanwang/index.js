@@ -7,13 +7,22 @@ const db = cloud.database()
 const _ = db.command
 const $ = db.command.aggregate
 
-function saveResult(result, now) {
-	db.collection('t_rank_week').add({
+function updateResult(result, now, start, end) {
+	db.collection('t_rank_tmp')
+		.where({ type: "week" }).remove()
+		.then(_ => addResult(result, now, start, end))
+		.catch(_ => addResult(result, now, start, end))
+}
+
+function addResult(result, now, start, end) {
+	db.collection('t_rank_tmp').add({
 		data: {
+			type: "week",
 			weekRankList: result,
-			createdAt: now
+			createdAt: now,
+			start, end
 		}
-	})
+	})	
 }
 
 // 统计本周的卷王名单
@@ -28,8 +37,8 @@ exports.main = async (event, context) => {
 	var sDate = date - day + 1;
 	var eDate = sDate + 7;
 
-	var weekStart = new Date(year, month, sDate);
-	var weekEnd = new Date(year, month, eDate);
+	var weekStart = new Date(year, month, sDate, 0, 0, 0);
+	var weekEnd = new Date(year, month, eDate, 0, 0, 0);
 
 	//先统计出来一周有多少毫秒
 	// var week = 7 * 24 * 60 * 60 * 1000
@@ -58,6 +67,6 @@ exports.main = async (event, context) => {
 	}).project({
 		userInfo: 0
 	}).end().then(res => {
-		saveResult(res.list, now)
+		updateResult(res.list, now, weekStart, weekEnd)
 	})
 }

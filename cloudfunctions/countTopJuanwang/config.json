@@ -1,13 +1,10 @@
 {
   "permissions": {
-    "openapi": [
-    ]
+    "openapi": []
   },
-  "triggers": [
-    {
-      "name": "countWeekJuanwang",
-      "type": "timer",
-      "config": "0 0 0 * * MON *"
-    }
-  ]
+  "triggers": [{
+    "name": "countTopJuanwang",
+    "type": "timer",
+    "config": "0 0 0 * * MON *"
+  }]
 }

@@ -6,6 +6,6 @@
   "triggers": [{
     "name": "countDayJuanwang",
     "type": "timer",
-    "config": "0 0 0 * * * *"
+    "config": "0 * * * * * *"
   }]
 }

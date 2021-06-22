@@ -32,16 +32,14 @@ exports.main = async (event, context) => {
 	var rankList = []
 	var myInfo = null
 
-	await db.collection('t_rank_tmp').where({ type: "week" })
-		.get().then(res => {
-			// 只需要最新一期的排行榜就行了
-			rankList = res.data[0]
-			myInfo = getMyInfo(rankList.weekRankList, event.userInfo.openId)
-		})
+	await db.collection('t_rank_week').aggregate().sort({
+		createdAt: -1
+	}).end().then(res => {
+		// 只需要最新一期的排行榜就行了
+		rankList = res.list[0]
+	})
 
 	return {
-		rankList,
-		myWeekRank: myInfo.myWeekRank,
-		myWeekValue: myInfo.myWeekValue
+		rankList
 	}
 }

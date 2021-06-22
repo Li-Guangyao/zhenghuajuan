@@ -1,19 +1,19 @@
 <view class="background">
 	<image class="background-image" src="../../images/rankList.png" mode="widthFix" />
 	<view class="first">
-		<image class="avatar" src="{{topList[0].avatarUrl}}"></image>
-		<view class="nickname">{{topList[0].nickname}}</view>
-		<view class="value">{{topList[0].totalValue}}</view>
+		<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
+		<view class="nickname">{{topRankList[0].nickname}}</view>
+		<view class="value">{{topRankList[0].totalValue}}</view>
 	</view>
 	<view class="second">
-		<image class="avatar" src="{{topList[1].avatarUrl}}"></image>
-		<view class="nickname">{{topList[1].nickname}}</view>
-		<view class="value">{{topList[1].totalValue}}</view>
+		<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
+		<view class="nickname">{{topRankList[1].nickname}}</view>
+		<view class="value">{{topRankList[1].totalValue}}</view>
 	</view>
 	<view class="third">
-		<image class="avatar" src="{{topList[2].avatarUrl}}"></image>
-		<view class="nickname">{{topList[2].nickname}}</view>
-		<view class="value">{{topList[2].totalValue}}</view>
+		<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
+		<view class="nickname">{{topRankList[2].nickname}}</view>
+		<view class="value">{{topRankList[2].totalValue}}</view>
 	</view>
 	<view class="update-date">更新时间：{{updateDate}}</view>
 </view>
