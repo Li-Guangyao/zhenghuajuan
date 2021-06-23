@@ -7,28 +7,53 @@ const db = cloud.database()
 const _ = db.command
 const $ = db.command.aggregate
 
-function saveResult(result, now) {
-	db.collection('t_rank_week').add({
-		data: {
-			weekRankList: result,
-			createdAt: now
-		}
-	})
+function updateResult(result, now, start, end) {
+	db.collection('t_rank_tmp')
+		.where({ type: "week" }).remove()
+		.then(_ => addResult(result, now, start, end))
+		.catch(_ => addResult(result, now, start, end))
 }
 
-// 统计前一天的卷王名单
+function addResult(result, now, start, end) {
+	db.collection('t_rank_tmp').add({
+		data: {
+			type: "week",
+			weekRankList: result,
+			createdAt: now,
+			start, end
+		}
+	})	
+}
+
+// 统计本周的卷王名单
 exports.main = async (event, context) => {
 	var now = new Date()
-	var nowStamp = Date.parse(new Date())
-	//先统计出来一zhou有多少毫秒
-	var week =7* 24 * 60 * 60 * 1000
-	var weekAgoStamp = nowStamp - week
 
-	var weekAgo = new Date(weekAgoStamp)
+	var timeZone = 8;
+
+	var date = now.getDate();
+	var month = now.getMonth();
+	var year = now.getFullYear();
+
+	var day = now.getDay(); // 星期
+
+	var sDate = date - day + 1;
+	var eDate = sDate + 7;
+
+	var weekStart = new Date(
+		year, month, sDate, -timeZone, 0, 0);
+	var weekEnd = new Date(
+		year, month, eDate, -timeZone, 0, 0);
+
+	//先统计出来一周有多少毫秒
+	// var week = 7 * 24 * 60 * 60 * 1000
+	// var endStamp = nowStamp - week
+
+	// var end = new Date(endStamp)
 	
 	return db.collection('t_post_like').aggregate().match({
-		createdAt: _.lt(now),
-		createdAt: _.gt(weekAgo)
+		createdAt: _.lt(weekEnd),
+		createdAt: _.gt(weekStart)
 	}).group({
 		_id: '$postAuthor_openid',
 		totalValue: $.sum('$value')
@@ -47,6 +72,6 @@ exports.main = async (event, context) => {
 	}).project({
 		userInfo: 0
 	}).end().then(res => {
-		saveResult(res.list, now)
+		updateResult(res.list, now, weekStart, weekEnd)
 	})
 }

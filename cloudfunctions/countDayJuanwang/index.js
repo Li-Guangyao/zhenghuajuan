@@ -7,29 +7,42 @@ const db = cloud.database()
 const _ = db.command
 const $ = db.command.aggregate
 
-function saveResult(result, now) {
-	db.collection('t_rank_day').add({
+function updateResult(result, now, start, end) {
+	db.collection('t_rank_tmp')
+		.where({ type: "day" }).remove()
+		.then(_ => addResult(result, now, start, end))
+		.catch(_ => addResult(result, now, start, end))
+}
+
+function addResult(result, now, start, end) {
+	db.collection('t_rank_tmp').add({
 		data: {
+			type: "day",
 			dayRankList: result,
-			createdAt: now
+			createdAt: now,
+			start, end
 		}
-	})
+	})	
 }
 
 // 统计前一天的卷王名单
 exports.main = async (event, context) => {
 	var now = new Date()
-	var nowStamp = Date.parse(new Date())
-	//先统计出来一天有多少毫秒
-	var day = 24 * 60 * 60 * 1000
-	var dayAgoStamp = nowStamp - day
 
-	var dayAgo = new Date(dayAgoStamp)
+	var timeZone = 8;
 
+	var date = now.getDate()
+	var month = now.getMonth();
+	var year = now.getFullYear();
+
+	var dayStart = new Date(
+		year, month, date, -timeZone, 0, 0);
+	var dayEnd = new Date(
+		year, month, date + 1, -timeZone, 0, 0);
 
 	return db.collection('t_post_like').aggregate().match({
-		createdAt: _.lt(now),
-		createdAt: _.gt(dayAgo)
+		createdAt: _.lt(dayEnd),
+		createdAt: _.gt(dayStart)
 	}).group({
 		_id: '$postAuthor_openid',
 		totalValue: $.sum('$value')
@@ -48,7 +61,7 @@ exports.main = async (event, context) => {
 	}).project({
 		userInfo: 0
 	}).end().then(res => {
-		saveResult(res.list, now)
+		updateResult(res.list, now, dayStart, dayEnd)
 	})
 
 }

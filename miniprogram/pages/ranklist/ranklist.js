@@ -3,6 +3,7 @@ Page({
 		myUserInfo: null,
 		dayRankList: [],
 		weekRankList: [],
+		topRankList: [],
 		updateDate: null,
 
 		myDayRank: -1,
@@ -88,22 +89,30 @@ Page({
 			name: 'getDayJuanwang'
 		}).then(res => {
 			console.log(res)
-			// this.setData({
-			// 	dayRankList: res.result.rankList.dayRankList,
-			// 	myDayRank: res.result.myDayRank,
-			// 	myDayValue: res.result.myDayValue
-			// })
+			this.setData({
+				dayRankList: res.result.rankList.dayRankList,
+				myDayRank: res.result.myDayRank,
+				myDayValue: res.result.myDayValue
+			})
 		})
 
 		await wx.cloud.callFunction({
 			name: 'getWeekJuanwang'
 		}).then(res => {
 			console.log(res)
-			
 			this.setData({
 				weekRankList: res.result.rankList.weekRankList,
 				myWeekRank: res.result.myWeekRank,
-				myWeekValue: res.result.myWeekValue,
+				myWeekValue: res.result.myWeekValue
+			})
+		})
+
+		await wx.cloud.callFunction({
+			name: 'getTopJuanwang'
+		}).then(res => {
+			console.log(res)
+			this.setData({
+				topRankList: res.result.rankList.weekRankList,
 				updateDate: this.setDateFormat(res.result.rankList.createdAt)
 			})
 		})
