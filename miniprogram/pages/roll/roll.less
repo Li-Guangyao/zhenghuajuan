@@ -18,6 +18,63 @@ page {
     }
 }
 
+.set-activity{
+    text-align: center;
+
+    .van-dialog__header{
+        padding: 0;
+    }
+
+    .title{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 0 50rpx 0;
+        height: 80rpx;
+        background-color: var(--themeColor);
+        color: rgb(36, 36, 36);
+    }
+
+    .activity-name, .activity-time{
+        display:inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 0 50rpx 0;
+        height: 80rpx;
+        width: 90%;
+
+        border-radius: 50rpx;
+        background-color:rgb(255, 242, 219);
+        color: var(--themeColor);
+
+        .tip{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            width: 35%;
+            
+            height: inherit;
+            border-radius: inherit;
+            border: 5rpx solid rgb(254, 164, 3);
+        }
+
+        .input{
+            text-align: left;
+            flex:3;
+
+            margin: 0 20rpx;
+            color: rgb(47, 47, 47);
+        }
+
+        .minute{
+            flex: 1;
+        }
+    }
+
+}
+
 .btn-add {
     border-radius: 50rpx;
     width: 100rpx;

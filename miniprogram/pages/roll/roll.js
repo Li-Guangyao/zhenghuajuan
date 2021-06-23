@@ -1,7 +1,7 @@
 Page({
 	data: {
 		pageHeight: 0,
-		showPopup: false
+		showPopup: true
 	},
 
 	onLoad: function (options) {
