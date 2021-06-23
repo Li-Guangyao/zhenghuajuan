@@ -1,6 +1,6 @@
 <!-- <view class="no-record" style="top: {{pageHeight/2}}"> -->
-<view class="no-record" style="top:{{pageHeight/3+'rpx'}};">
-    <image src="../../icon2/noRollRecord.png"></image>
+<view class="no-record">
+    <image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
     <text>还没有任何蒸花卷记录</text>
     <text>点击右下角加号开始蒸花卷吧</text>
 </view>
