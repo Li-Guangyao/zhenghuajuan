@@ -35,6 +35,9 @@ exports.main = async (event, context) => {
 	var month = now.getMonth();
 	var year = now.getFullYear();
 
+	var hour = now.getHours();
+	if (hour + timeZone >= 24) date += 1;
+
 	var day = now.getDay(); // 星期
 
 	var sDate = date - day + 1;

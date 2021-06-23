@@ -31,14 +31,14 @@ async function imgSec(photoList) {
 		return true
 	}
 	for (var i = 0; i < photoList.length; i++) {
-		try {
+		// try {
 			const res = (await app.invokeExtension("CloudInfinite", {
 				action: "DetectType",
 				cloudPath: photoList[i],
 				operations: {
 					type: "porn,ads,terrorist,politics",
 				},
-			})).data.recognitionResult
+			})).data.RecognitionResult
 
 			if (res.AdsInfo.Code != 0 || res.PoliticsInfo.Code != 0 || res.PornInfo.Code != 0 || res.TerroristInfo.Code != 0) {
 				return false
@@ -47,9 +47,9 @@ async function imgSec(photoList) {
 			// return [res.status, res.statusText, res.headers, res.config, res.request, res.data] ;
 			// return Object.keys(res.request.res.req);
 			// return res; //错误，存在交叉引用
-		} catch (err) {
-			return err
-		}
+		// } catch (err) {
+		// 	return err
+		// }
 	}
 	return true
 }
