@@ -29,16 +29,21 @@ function addResult(result, now, start, end) {
 exports.main = async (event, context) => {
 	var now = new Date()
 
-	var day = now.getDay()
+	var timeZone = 8;
+
+	var date = now.getDate();
 	var month = now.getMonth();
 	var year = now.getFullYear();
-	var date = now.getDate();
+
+	var day = now.getDay(); // 星期
 
 	var sDate = date - day + 1;
 	var eDate = sDate + 7;
 
-	var weekStart = new Date(year, month, sDate, 0, 0, 0);
-	var weekEnd = new Date(year, month, eDate, 0, 0, 0);
+	var weekStart = new Date(
+		year, month, sDate, -timeZone, 0, 0);
+	var weekEnd = new Date(
+		year, month, eDate, -timeZone, 0, 0);
 
 	//先统计出来一周有多少毫秒
 	// var week = 7 * 24 * 60 * 60 * 1000

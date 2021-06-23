@@ -29,12 +29,16 @@ function addResult(result, now, start, end) {
 exports.main = async (event, context) => {
 	var now = new Date()
 
+	var timeZone = 8;
+
 	var date = now.getDate()
 	var month = now.getMonth();
 	var year = now.getFullYear();
 
-	var dayStart = new Date(year, month, date, 0, 0, 0);
-	var dayEnd = new Date(year, month, date + 1, 0, 0, 0);
+	var dayStart = new Date(
+		year, month, date, -timeZone, 0, 0);
+	var dayEnd = new Date(
+		year, month, date + 1, -timeZone, 0, 0);
 
 	return db.collection('t_post_like').aggregate().match({
 		createdAt: _.lt(dayEnd),
