@@ -2,7 +2,6 @@ Page({
 	data: {
 		pageHeight: 0,
 		showPopup: true,
-		showTimePopup: false,
 		timeIndex: 0,
 		times: [15, 30, 45, 60, 90, 120]
 	},
@@ -19,9 +18,19 @@ Page({
 	},
 
 	addActivity(){
-		this.setData({
-			showPopup: !this.data.showPopup
-		})
+		this.setData({ showPopup: true })
+	},
+
+	onDialogClose(e){
+		switch(e.detail) {
+			case "confirm":
+				wx.navigateTo({
+					url: '../rolling/rolling',
+				})
+				break;
+			default:
+				this.setData({ showPopup: false }); break;
+		}
 	},
 
 	onReady: function () {

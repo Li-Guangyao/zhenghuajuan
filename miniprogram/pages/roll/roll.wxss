@@ -33,7 +33,7 @@ page {
   margin: 0 0 32rpx 0;
   height: 80rpx;
   background-color: var(--themeColor);
-  color: #242424;
+  color: #ffffff;
 }
 .set-activity .small-tip {
   display: flex;
@@ -45,7 +45,7 @@ page {
 }
 .set-activity .small-tip image {
   height: 42rpx;
-  margin-left: 4rpx
+  margin-left: 8rpx
 }
 .set-activity .activity-name,
 .set-activity .activity-time {

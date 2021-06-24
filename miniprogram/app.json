@@ -6,7 +6,8 @@
 		"pages/my/my",
 		"pages/postAdd/postAdd",
 		"pages/postDetail/postDetail",
-		"pages/myPost/myPost"
+		"pages/myPost/myPost",
+		"pages/rolling/rolling"
 	],
 	"tabBar": {
 		"color": "#000",
@@ -50,10 +51,9 @@
 	},
 	"sitemapLocation": "sitemap.json",
 	"style": "v2",
-
 	"permission": {
 		"scope.userLocation": {
-		  "desc": "您的位置信息仅用于展示"
+			"desc": "您的位置信息仅用于展示"
 		}
-	  }
+	}
 }

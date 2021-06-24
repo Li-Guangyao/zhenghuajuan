@@ -5,7 +5,7 @@
 </view>
 
 <van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showPopup }}"
-	show-cancel-button="{{false}}" show-confirm-button bind:close="addActivity" close-on-click-overlay
+	show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
 	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa">
 	<view slot="title" class="title">蒸花卷</view>
 	<view class="activity-name">

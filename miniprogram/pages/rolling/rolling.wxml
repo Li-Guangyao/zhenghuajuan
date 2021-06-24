@@ -1,0 +1,19 @@
+<!--miniprogram/pages/rolling.wxml-->
+<view class="title">学习味花卷</view>
+<view class="content">
+	<view class="progress-bar">
+		<canvas id="canvasArcCir" type="2d" class="circle">
+			<image src="../../icon2/rolling.png" mode="heightFix"></image>
+		</canvas>
+		<text>蒸制中...</text>
+	</view>
+	<view class="total-content">
+		<progress class="total-progress" percent="32" border-radius="6" 
+			activeColor="#FEA403" backgroundColor="#FFFFFF" stroke-width="12"></progress>
+			<view class="small-tip">预计可获得
+				<text style="color: #FEA403">25</text>
+				<image src="../../icon/roll2.png" mode="heightFix"></image>
+				<text style="color: #FEA403; position: absolute; right: 0">5/25</text></view>
+
+	</view>
+</view>
