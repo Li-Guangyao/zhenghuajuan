@@ -20,6 +20,12 @@ page {
   font-size: 32rpx;
   color: #B3B3B3;
 }
+.record-list {
+    
+}
+.record-list .record {
+
+}
 .set-activity {
   text-align: center;
 }

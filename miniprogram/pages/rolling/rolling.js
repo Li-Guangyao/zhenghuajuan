@@ -1,7 +1,7 @@
 // miniprogram/pages/rolling.js
  
 var x = 128, y = 128, r = 120, w = 8;
-var updateInterval = 200;
+var updateInterval = 125;
 var lastStatusTime = 3;
 var aniCtx, updateId;
 
@@ -12,7 +12,7 @@ Page({
 	 */
 	data: {
 		name: "学习",
-		minute: 1,
+		minute: 15,
 
 		startTime: null,
 		curMinute: 0,
@@ -102,9 +102,10 @@ Page({
 	drawMinuteProgress(second) {
 		if (!aniCtx) return;
 
-		if (second <= 0.5)
+		// if (second <= 0.5)
+		// 	this.clearMinuteProgress();
+		// else {
 			this.clearMinuteProgress();
-		else {
 			var s = 1.5 * Math.PI;
 			var e = s + second / 60 * 2 * Math.PI;
 	
@@ -120,7 +121,7 @@ Page({
 			aniCtx.arc(x, y, r, s, e, false);
 			aniCtx.stroke();
 			aniCtx.closePath();
-		}
+		// }
 	},
 
 	clearMinuteProgress() {

@@ -1,6 +1,11 @@
 Page({
 	data: {
-		pageHeight: 0,
+		// recordList: [{
+		// 	name: "学习",
+		// 	minute: 30,
+		// 	createAt: new Date()
+		// }],
+		recordList: [],
 		showPopup: true,
 		timeIndex: 0,
 		times: [15, 30, 45, 60, 90, 120]

@@ -1,7 +1,13 @@
-<view class="no-record">
+<view class="no-record" wx:if="{{recordList.length <= 0}}">
     <image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
     <text>还没有任何蒸花卷记录</text>
     <text>点击右下角加号开始蒸花卷吧</text>
+</view>
+
+<view class="record-list" wx:if="{{recordList.length > 0}}">
+	<view class="record" wx:for="{{recordList}}">
+	
+	</view>
 </view>
 
 <van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showPopup }}"
