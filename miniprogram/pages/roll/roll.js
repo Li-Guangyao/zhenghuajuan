@@ -1,17 +1,9 @@
 Page({
 	data: {
-		pageHeight: 0,
 		showPopup: true
 	},
 
 	onLoad: function (options) {
-		wx.getSystemInfo({
-		  success: (res) => {
-			  this.setData({
-				  pageHeight: res.windowHeight
-			  })
-		  }, 
-		})
 
 	},
 
