@@ -5,8 +5,52 @@
 </view>
 
 <view class="record-list" wx:if="{{recordList.length > 0}}">
-	<view class="record" wx:for="{{recordList}}">
-	
+
+	<view class="post {{item.rollName ? 'roll-post' : ''}}" wx:for="{{recordList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
+		<view class="user-info">
+			<view class="left">
+				<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
+				<view class="nickname-time">
+					<view class="user-nickname">{{item.nickname}}</view>
+					<view class="pub-time">{{item.timeDiff}}</view>
+				</view>
+			</view>
+
+			<view class="right">
+				<view class="juan"> 
+					<view class="juan-number" wx:if="{{item.likeValue!=0}}">{{item.likeValue}}</view>
+					<view class="juan-number" wx:if="{{item.likeValue==0}}">0</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+				<view class="roll" wx:if="{{item.rollName}}">
+					{{item.rollName}}味花卷 × {{item.rollCount}}
+				</view>
+			</view>
+		</view>
+
+		<!-- <rich-text class="content" nodes="{{item.content}}" /> -->
+		<text class="content">{{item.content}}</text>
+
+		<view class="media" wx:if="{{item.fileList.length!=0}}" wx:for="{{item.fileList}}" wx:for-item="item2"
+			wx:for-index="index2" wx:key="index2">
+			<video class="post-video" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
+				play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}"
+				data-index1="{{index}}" data-index2="{{index2}}" catchtap="previewMadia"></video>
+			<image class="post-image" wx:if="{{item2.type=='image'}}" mode="aspectFill" src="{{item2.url}}"
+				data-index1="{{index}}" data-index2="{{index2}}" catchtap="previewMadia"></image>
+		</view>
+
+		<view class="post-info">
+			<view class="location" wx:if="{{item.location}}">
+				<van-icon name="location-o" size="20rpx" />
+				<view class="location-name">{{item.location.name}}</view>
+			</view>
+			<!-- <view class="interaction">
+				<image class="icon-huajuan" mode="aspectFit" src="../../icon/roll.png"></image>
+				<image class="icon-comment" mode="aspectFit" src="../../icon/comment.png"></image>
+			</view> -->
+		</view>
+
 	</view>
 </view>
 

@@ -2,6 +2,7 @@
   "usingComponents": {
 		"van-icon": "@vant/weapp/icon/index"
   },
+  "navigationBarTitleText": "动态",
   "navigationBarBackgroundColor": "#ffa600",
   "enablePullDownRefresh": true
 }

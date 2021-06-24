@@ -1,14 +1,41 @@
 Page({
 	data: {
-		// recordList: [{
-		// 	name: "学习",
-		// 	minute: 30,
-		// 	createAt: new Date()
-		// }],
-		recordList: [],
+		recordList: [{
+			rollName: "学习",
+			rollCount: 30,
+			rollTime: 30,
+
+			avatarUrl: "",
+			timeDiff: "1天前",
+			nickname: "我自己",
+			likeValue: 42,
+			content: "今天学了30分钟的Java的反射",
+			fileList: [],
+		},{
+			rollName: "编程",
+			rollCount: 15,
+			rollTime: 15,
+
+			avatarUrl: "",
+			timeDiff: "1天前",
+			nickname: "我自己",
+			likeValue: 28,
+			content: "专注了15分钟",
+			fileList: [],
+		},{
+
+			avatarUrl: "",
+			timeDiff: "1天前",
+			nickname: "我自己",
+			likeValue: 28,
+			content: "今天啥也没干",
+			fileList: [],
+		}],
+		// recordList: [],
 		showPopup: true,
 		timeIndex: 0,
-		times: [15, 30, 45, 60, 90, 120]
+		times: [15, 30, 45, 60, 90, 120],
+		rollCounts: [15, 30, 45, 60, 90, 120]
 	},
 
 	onLoad: function (options) {
