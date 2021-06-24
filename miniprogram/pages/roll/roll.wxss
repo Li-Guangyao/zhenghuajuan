@@ -30,17 +30,29 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0 50rpx 0;
+  margin: 0 0 32rpx 0;
   height: 80rpx;
   background-color: var(--themeColor);
   color: #242424;
+}
+.set-activity .small-tip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #808080;
+  font-size: 24rpx;
+  margin: 0 0 32rpx 0;
+}
+.set-activity .small-tip image {
+  height: 42rpx;
+  margin-left: 4rpx
 }
 .set-activity .activity-name,
 .set-activity .activity-time {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  margin: 0 0 50rpx 0;
+  margin: 24rpx 0 16rpx 0;
   height: 80rpx;
   width: 90%;
   border-radius: 50rpx;

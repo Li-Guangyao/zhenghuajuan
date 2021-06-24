@@ -7,16 +7,21 @@
 <van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showPopup }}"
 	show-cancel-button="{{false}}" show-confirm-button bind:close="addActivity" close-on-click-overlay
 	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa">
-	<view slot="title" class="title">设置时间</view>
+	<view slot="title" class="title">蒸花卷</view>
 	<view class="activity-name">
-		<view class="tip">花卷品牌</view>
-		<input class="input" align="left"></input>
+		<view class="tip">花卷口味</view>
+		<input class="input" value="学习" placeholder="写下你的专注内容吧"></input>
 	</view>
+	<view class="small-tip"></view>
 	<view class="activity-time">
 		<view class="tip">蒸制时间</view>
-		<input class="input"></input>
+        <picker class="input" bindchange="onTimeChange" value="{{timeIndex}}" range="{{times}}">		
+            <view>{{times[timeIndex]}}</view>
+        </picker>
+    
 		<view class="minute">min</view>
 	</view>
+	<view class="small-tip">预计可获{{times[timeIndex]}}个<image src="../../icon/roll2.png" mode="heightFix"></image></view>
 </van-dialog>
 
 <image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="addActivity"></image>

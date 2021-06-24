@@ -1,7 +1,10 @@
 Page({
 	data: {
 		pageHeight: 0,
-		showPopup: true
+		showPopup: true,
+		showTimePopup: false,
+		timeIndex: 0,
+		times: [15, 30, 45, 60, 90, 120]
 	},
 
 	onLoad: function (options) {
@@ -65,5 +68,12 @@ Page({
 	 */
 	onShareAppMessage: function () {
 
-	}
+	},
+
+  onTimeChange: function(e) {
+    console.log('picker发送选择改变，携带值为', e.detail.value)
+    this.setData({
+      timeIndex: e.detail.value
+    })
+  },
 })
