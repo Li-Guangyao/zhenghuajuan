@@ -1,9 +1,5 @@
 {
     "usingComponents": {
-        "van-icon": "@vant/weapp/icon/index",
-        "van-action-sheet": "@vant/weapp/action-sheet/index",
-        "van-popup": "@vant/weapp/popup/index",
-        "van-cell": "@vant/weapp/cell/index",
-        "van-cell-group": "@vant/weapp/cell-group/index"
+        "post-display": "../../components/postDisplay/postDisplay"
     }
 }

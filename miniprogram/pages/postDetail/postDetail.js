@@ -2,59 +2,60 @@ import getDateDiff from "../../utils/getDateDiff"
 
 Page({
 	data: {
-		userInfo: null,
 		post: {},
-		// 评论帖子的输入框
-		showInput: false,
-		// 点赞框
-		showPopup: false,
-		// 评论评论的输入框
-		showInputForComment: false,
-		// 针对帖子的评论
-		inputComment: null,
-		// 针对评论的评论
-		inputCommentComment: null,
-		// 回复+用户名+：
-		commentSb: null,
+		userInfo: null,
 		commentList: [],
 
-		chosenPopupItemIndex: -1,
-		originChosenPopupItemIndex: -1,
-		// 点赞的选项
-		popupItem: [{
-				name: '卷王非你莫属，我五体投地',
-				value: 8
-			},
-			{
-				name: '大佬太强了，不要再卷了',
-				value: 4
-			},
-			{
-				name: '给个鼓励~',
-				value: 2
-			},
-			{
-				name: '还不够卷啊！',
-				value: 1
-			},
-		],
+		// // 评论帖子的输入框
+		// showInput: false,
+		// // 点赞框
+		// showPopup: false,
+		// // 评论评论的输入框
+		// showInputForComment: false,
+		// // 针对帖子的评论
+		// inputComment: null,
+		// // 针对评论的评论
+		// inputCommentComment: null,
+		// // 回复+用户名+：
+		// commentSb: null,
+		// commentList: [],
+
+		// chosenPopupItemIndex: -1,
+		// originChosenPopupItemIndex: -1,
+		// // 点赞的选项
+		// popupItem: [{
+		// 		name: '卷王非你莫属，我五体投地',
+		// 		value: 8
+		// 	},
+		// 	{
+		// 		name: '大佬太强了，不要再卷了',
+		// 		value: 4
+		// 	},
+		// 	{
+		// 		name: '给个鼓励~',
+		// 		value: 2
+		// 	},
+		// 	{
+		// 		name: '还不够卷啊！',
+		// 		value: 1
+		// 	},
+		// ],
 
 		postIndex: null
 	},
 
-	onLoad: function (e) {
-		this.judgeLogin()
+	async onLoad(e) {
 
-		wx.showLoading({
-			title: '加载中',
-		})
+		wx.showLoading({ title: '加载中' })
 
-		var post = JSON.parse(e.post)
+		await this.judgeLogin();
+
 		this.setData({
-			post: post,
+			post: JSON.parse(e.post),
 			postIndex: e.postIndex
 		})
 
+		/*
 		wx.cloud.callFunction({
 			name: 'isPostLiked',
 			data: {
@@ -68,8 +69,8 @@ Page({
 				})
 			}
 		})
-
-		this.refreshComment()
+		*/
+		await this.refreshComment()
 
 		wx.hideLoading({
 			success: (res) => {},
@@ -102,8 +103,8 @@ Page({
 		}
 	},
 
-	refreshComment() {
-		wx.cloud.callFunction({
+	async refreshComment() {
+		await wx.cloud.callFunction({
 			name: 'getPostComment',
 			data: {
 				postId: this.data.post._id
@@ -128,6 +129,11 @@ Page({
 		}
 	},
 
+	async onUnload() {
+		var postDisplay = this.selectComponent('#postDisplay')
+		await postDisplay.uploadLikes();
+	}
+	/*
 	// 预览图片
 	previewMadia(e) {
 		var index2 = e.currentTarget.dataset.index2
@@ -325,4 +331,5 @@ Page({
 			[item]: this.data.post.likeValue
 		});
 	}
+	*/
 })

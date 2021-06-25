@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "tabbar": "../../components/Tabbar/Tabbar"
+    "tabbar": "../../components/tabbar/tabbar"
   },
   "navigationStyle": "custom",
   "enablePullDownRefresh": true

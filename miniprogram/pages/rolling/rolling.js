@@ -28,7 +28,6 @@ Page({
 	 * 生命周期函数--监听页面初次渲染完成
 	 */
 	onReady: function () {
-		this.setupBarCanvas();
 	},
 
 	// 配置Canvas
@@ -55,6 +54,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		this.setupBarCanvas();
 	},
 
 	// 正式开始计时
@@ -153,14 +153,14 @@ Page({
 	 * 生命周期函数--监听页面隐藏
 	 */
 	onHide: function () {
-
+		clearInterval(updateId)
 	},
 
 	/**
 	 * 生命周期函数--监听页面卸载
 	 */
 	onUnload: function () {
-
+		clearInterval(updateId)
 	},
 
 	/**

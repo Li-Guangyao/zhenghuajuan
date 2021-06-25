@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-		"van-icon": "@vant/weapp/icon/index"
+    "van-icon": "@vant/weapp/icon/index",
+    "post-display": "../../components/postDisplay/postDisplay"
   },
   "navigationBarTitleText": "动态",
   "navigationBarBackgroundColor": "#ffa600",

@@ -1,7 +1,4 @@
-page {
-  background-color: var(--themeBackgroundColor);
-}
-/*
+
 .post {
   background-color: white;
   margin: 10rpx 15rpx 5rpx 15rpx;
@@ -39,12 +36,23 @@ page {
   flex: 2;
   display: flex;
   justify-content: flex-end;
+  flex-direction:column;
+}
+.post .user-info .right .juan {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
 }
-.post .user-info .right .juan-image {
+.post .user-info .right .juan .juan-image {
   margin: 10rpx 15rpx;
   width: 45rpx;
   height: 45rpx;
+}
+.post .user-info .right .roll {
+  color: #FEA403;
+  font-size: 24rpx;
+  text-align: right;
 }
 .post .content {
   min-height: 30rpx;
@@ -52,6 +60,23 @@ page {
   font-size: 30rpx;
   margin: 10rpx 0;
   display: block;
+  /* 内容过长显示两行，多余为省略号 */
+  text-overflow: ellipsis;
+  /*设置隐藏部分为省略号*/
+  overflow: hidden;
+  /*设置隐藏*/
+  display: -webkit-box;
+  word-break: break-all;
+  -webkit-line-clamp: 5;
+  /*设置显示行数，此处为2行，可设置其他数字*/
+  -webkit-box-orient: vertical;
+}
+.post .content-full {
+  min-height: 30rpx;
+  width: 100%;
+  font-size: 30rpx;
+  margin: 10rpx 0;
+	display: block;
 }
 .post .media {
   margin: 15rpx 10rpx 0 0;
@@ -67,15 +92,6 @@ page {
   width: 100%;
   height: 100%;
 }
-.post .location {
-  margin: 10rpx 0;
-  display: flex;
-  flex-direction: row;
-}
-.post .location .location-name {
-  font-size: 20rpx;
-  color: #4b4b4b;
-}
 .post .post-info {
   display: flex;
   flex-direction: row;
@@ -84,7 +100,7 @@ page {
   margin: 10rpx 0;
   display: flex;
   flex-direction: row;
-  flex: 2;
+  flex: 6;
   align-items: center;
 }
 .post .post-info .location .location-name {
@@ -109,15 +125,8 @@ page {
   width: 45rpx;
   height: 45rpx;
 }
-.post .input {
-  border-top: #e6e6e6 1rpx solid;
-  margin: 25rpx 10rpx 10rpx 10rpx;
-}
-.post .input .input-textarea {
-  width: 100%;
-  height: 60rpx;
-  max-height: 600rpx;
-  overflow: scroll;
+.roll-post {
+  background-color: #FFF5EA;
 }
 .comment {
   background-color: white;
@@ -175,30 +184,9 @@ page {
   margin: 10rpx 0;
   display: block;
 }
-.input-for-comment {
-  padding: 15rpx 15rpx;
-  width: 100%;
-  border-radius: 10rpx;
-  bottom: 0;
-  background-color: white;
-  padding-bottom: env(safe-area-inset-bottom);
-  position: fixed;
-}
-.input-for-comment .input-for-comment-title {
-  margin: 10rpx 20rpx;
-  font-size: 30rpx;
-}
-.input-for-comment .input-for-comment-textarea {
-  margin: 10rpx 10rpx;
-  width: 100%;
-  height: 80rpx;
-  max-height: 600rpx;
-  overflow: scroll;
-}
 .van-cell__title {
   flex: 3;
 }
 .popup-image {
   width: 45rpx;
 }
-*/

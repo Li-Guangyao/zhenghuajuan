@@ -3,7 +3,8 @@ import changeFileListFormat from "../../utils/changeFileListFormat"
 
 Page({
 	data: {
-		postList: []
+		postList: [],
+		userInfo: null
 	},
 
 	queryParams: {
@@ -11,13 +12,28 @@ Page({
 		pageSize: 20
 	},
 
-	onLoad: function (options) {
-		this.refreshPage()
+	async onLoad(options) {
+		await this.judgeLogin()
+		await this.refreshPage()
+	},
+
+	onShow() {
+		if (this.data.userInfo) 
+			setTimeout(this.refreshPage.bind(this), 500);
+	},
+
+	async judgeLogin() {
+		this.setData({
+			userInfo: await wx.getStorageSync('userInfo')
+		})
 	},
 
 	// 下拉刷新
-	onPullDownRefresh() {
-		this.refreshPage()
+	async onPullDownRefresh() {
+		var postDisplay = this.selectComponent('#postDisplay')
+		await postDisplay.uploadLikes();
+
+		await this.refreshPage()
 		wx.stopPullDownRefresh()
 	},
 
@@ -32,7 +48,8 @@ Page({
 			name: 'getPost',
 			data: {
 				newestDate: this.data.postList[0].createdAt,
-				skipNum: this.queryParams.pageNum * this.queryParams.pageSize
+				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
+				userOpenId: this.data.userInfo._openid,
 			}
 		}).then(res => {
 			console.log(res)
@@ -60,7 +77,10 @@ Page({
 		})
 
 		await wx.cloud.callFunction({
-			name: 'getPost'
+			name: 'getPost',
+			data: {
+				userOpenId: this.data.userInfo._openid,
+			}
 		}).then(res => {
 			if (res.result) {
 				this.setData({
