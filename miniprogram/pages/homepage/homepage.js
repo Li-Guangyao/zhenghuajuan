@@ -12,20 +12,33 @@ Page({
 		pageSize: 20
 	},
 
-	async onLoad(options) {
+	// async onLoad(options) {
+	// },
+
+	async onShow() {
 		await this.judgeLogin()
 		await this.refreshPage()
 	},
 
-	onShow() {
-		if (this.data.userInfo) 
-			setTimeout(this.refreshPage.bind(this), 500);
-	},
-
 	async judgeLogin() {
-		this.setData({
-			userInfo: await wx.getStorageSync('userInfo')
-		})
+		var userInfo = await wx.getStorageSync('userInfo')
+		if (!userInfo) {
+			wx.showModal({
+				title: '卷王同志，请先登陆再来',
+				showCancel: true,
+				success(res) {
+					if (res.confirm) {
+						wx.switchTab({
+							url: '../my/my',
+						})
+					} else if (res.cancel) {
+						wx.navigateBack({
+							delta: 1,
+						})
+					}
+				}
+			})
+		} else this.setData({ userInfo })
 	},
 
 	// 下拉刷新
@@ -43,13 +56,16 @@ Page({
 			title: '加载中',
 		})
 
+		var openId = this.data.userInfo ? 
+			this.data.userInfo._openid : undefined;
+
 		this.queryParams.pageNum++
 		await wx.cloud.callFunction({
 			name: 'getPost',
 			data: {
 				newestDate: this.data.postList[0].createdAt,
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-				userOpenId: this.data.userInfo._openid,
+				userOpenId: openId,
 			}
 		}).then(res => {
 			console.log(res)
@@ -72,15 +88,16 @@ Page({
 	async refreshPage() {
 		this.queryParams.pageNum = 0
 
+		var openId = this.data.userInfo ? 
+			this.data.userInfo._openid : undefined;
+
 		wx.showLoading({
 			title: '加载中',
 		})
 
 		await wx.cloud.callFunction({
 			name: 'getPost',
-			data: {
-				userOpenId: this.data.userInfo._openid,
-			}
+			data: { userOpenId: openId }
 		}).then(res => {
 			if (res.result) {
 				this.setData({

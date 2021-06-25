@@ -27,37 +27,11 @@ exports.main = async (event, context) => {
 			}).sort({ // 按照时间顺序排列
 				createdAt: -1
 			}).skip(event.skipNum - 1), event.userOpenId)
-		
-		// .lookup({
-		// 	from: 't_user',
-		// 	localField: '_openid',
-		// 	foreignField: '_openid',
-		// 	as: 'userInfo'
-		// }).replaceRoot({
-		// 	newRoot: $.mergeObjects([$.arrayElemAt(['$userInfo', 0]), '$$ROOT'])
-		// }).project({
-		// 	userInfo: 0,
-		// }).end().then(res => {
-		// 	return res.list
-		// })
-
+			
 	} else {
 
 		return query(db.collection('t_post').aggregate()
 			.match({ status: 1 }).sort({ createdAt: -1 }), event.userOpenId)
-
-		// .lookup({
-		// 	from: 't_user',
-		// 	localField: '_openid',
-		// 	foreignField: '_openid',
-		// 	as: 'userInfo'
-		// }).replaceRoot({
-		// 	newRoot: $.mergeObjects([$.arrayElemAt(['$userInfo', 0]), '$$ROOT'])
-		// }).project({
-		// 	userInfo: 0,
-		// }).end().then(res => {
-		// 	return res.list
-		// })
 	}
 
 }

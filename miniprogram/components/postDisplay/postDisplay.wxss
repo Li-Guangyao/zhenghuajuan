@@ -27,6 +27,8 @@
 }
 .post .user-info .left .nickname-time .user-nickname {
   font-size: 30rpx;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .post .user-info .left .nickname-time .pub-time {
   font-size: 20rpx;

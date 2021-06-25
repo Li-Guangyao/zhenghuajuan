@@ -10,10 +10,11 @@
 </view>
 
 
-<van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showDialog }}" zIndex="1"
+<van-dialog class="set-activity" title="标题" 
+	use-slot use-title-slot show="{{ showDialog }}" zIndex="1"
 	show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
 	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa" style="z-index:-1;">
-	<view slot="dialog-title" class="title">蒸花卷</view>
+	<view class="dialog-title" slot="title">蒸花卷</view>
 	<view class="activity-name">
 		<view class="tip">花卷口味</view>
 		<input class="input" value="{{activityName}}" bindinput="inputActivityName" placeholder="写下你专注的内容吧"></input>

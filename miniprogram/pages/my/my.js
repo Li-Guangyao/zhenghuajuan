@@ -22,18 +22,16 @@ Page({
 	getUserInfo() {
 		wx.getUserProfile({
 			desc: '获取用户信息',
-			success: (res) => {
-				this.setData({
-					userInfo: res.userInfo
-				})
-				wx.setStorageSync('userInfo', res.userInfo)
+			success: async (res) => {
 
-				wx.cloud.callFunction({
+				var userInfo = (await wx.cloud.callFunction({
 					name: 'saveUserInfo',
-					data: {
-						userInfo: res.userInfo
-					},
-				})
+					data: { userInfo: res.userInfo },
+				})).result
+
+				wx.setStorageSync('userInfo', userInfo)
+
+				this.setData({ userInfo })
 			},
 			fail: res => {
 				console.log(res)
