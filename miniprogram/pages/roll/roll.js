@@ -1,5 +1,6 @@
 Page({
 	data: {
+		pageHeight: 0,
 		/*
 		recordList: [{
 			rollName: "学习",
