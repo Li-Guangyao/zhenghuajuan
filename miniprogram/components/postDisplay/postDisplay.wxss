@@ -117,13 +117,13 @@
 }
 .post .post-info .interaction .icon-huajuan {
   margin: 10rpx 15rpx;
-  width: 50rpx;
-  height: 50rpx;
+  width: 42rpx;
+  height: 42rpx;
 }
 .post .post-info .interaction .icon-comment {
   margin: 10rpx 20rpx;
-  width: 45rpx;
-  height: 45rpx;
+  width: 42rpx;
+  height: 42rpx;
 }
 .roll-post {
   background-color: #FFF5EA;

@@ -159,9 +159,7 @@ Component({
 									this.refreshPosts();
 								}
 							},
-							fail: err => {
-								console.log(err)
-							}
+							fail: console.log
 						})
 					}
 				}
