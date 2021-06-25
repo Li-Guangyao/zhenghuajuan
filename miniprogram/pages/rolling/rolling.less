@@ -1,0 +1,63 @@
+page {
+	background-color: var(--themeBackgroundColor);
+	text-align: center;
+}
+
+.title {
+	font-size: 64rpx;
+	color: #FEA403;
+	margin: 128rpx 0 0 0;
+}
+
+.content {
+	padding: 0 96rpx 0 96rpx;
+
+}
+.progress-bar {
+	margin: 64rpx auto 32rpx auto;
+	width: fit-content;
+
+	.circle {
+		width: 256px;
+		height: 256px;
+		margin: 0 0 32rpx 0;
+		
+		image {		
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 50%;
+			height: 35%;
+			margin: auto;
+			transform: translateY(-50%);
+		}
+	}
+
+	text {
+		font-size: 32rpx;
+		color: #515151;
+	}
+
+}
+.total-progress {
+	margin-top: 96rpx;
+	border: #FEA403 solid 1px;
+	border-radius: 12px;
+}
+
+.small-tip {
+	position: relative;
+	display: flex;
+	align-items: center;
+  justify-content: left;
+
+	color: #808080;
+	font-size: 24rpx;
+  margin: 12rpx 0 32rpx 0;
+
+	image {
+			height: 42rpx;
+			margin-left: 12rpx
+	}
+}
+ 

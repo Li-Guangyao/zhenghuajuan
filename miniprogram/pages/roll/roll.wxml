@@ -1,22 +1,77 @@
-<view class="no-record">
+<view class="no-record" wx:if="{{recordList.length <= 0}}">
     <image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
     <text>还没有任何蒸花卷记录</text>
     <text>点击右下角加号开始蒸花卷吧</text>
 </view>
 
-<van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showPopup }}"
-	show-cancel-button="{{false}}" show-confirm-button bind:close="addActivity" close-on-click-overlay
-	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa">
-	<view slot="title" class="title">设置时间</view>
-	<view class="activity-name">
-		<view class="tip">花卷品牌</view>
-		<input class="input" align="left"></input>
+<view class="record-list" wx:if="{{recordList.length > 0}}">
+
+	<view class="post {{item.rollName ? 'roll-post' : ''}}" wx:for="{{recordList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
+		<view class="user-info">
+			<view class="left">
+				<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
+				<view class="nickname-time">
+					<view class="user-nickname">{{item.nickname}}</view>
+					<view class="pub-time">{{item.timeDiff}}</view>
+				</view>
+			</view>
+
+			<view class="right">
+				<view class="juan"> 
+					<view class="juan-number" wx:if="{{item.likeValue!=0}}">{{item.likeValue}}</view>
+					<view class="juan-number" wx:if="{{item.likeValue==0}}">0</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+				<view class="roll" wx:if="{{item.rollName}}">
+					{{item.rollName}}味花卷 × {{item.rollCount}}
+				</view>
+			</view>
+		</view>
+
+		<!-- <rich-text class="content" nodes="{{item.content}}" /> -->
+		<text class="content">{{item.content}}</text>
+
+		<view class="media" wx:if="{{item.fileList.length!=0}}" wx:for="{{item.fileList}}" wx:for-item="item2"
+			wx:for-index="index2" wx:key="index2">
+			<video class="post-video" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
+				play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}"
+				data-index1="{{index}}" data-index2="{{index2}}" catchtap="previewMadia"></video>
+			<image class="post-image" wx:if="{{item2.type=='image'}}" mode="aspectFill" src="{{item2.url}}"
+				data-index1="{{index}}" data-index2="{{index2}}" catchtap="previewMadia"></image>
+		</view>
+
+		<view class="post-info">
+			<view class="location" wx:if="{{item.location}}">
+				<van-icon name="location-o" size="20rpx" />
+				<view class="location-name">{{item.location.name}}</view>
+			</view>
+			<!-- <view class="interaction">
+				<image class="icon-huajuan" mode="aspectFit" src="../../icon/roll.png"></image>
+				<image class="icon-comment" mode="aspectFit" src="../../icon/comment.png"></image>
+			</view> -->
+		</view>
+
 	</view>
+</view>
+
+<van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showPopup }}"
+	show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
+	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa">
+	<view slot="title" class="title">蒸花卷</view>
+	<view class="activity-name">
+		<view class="tip">花卷口味</view>
+		<input class="input" value="学习" placeholder="写下你的专注内容吧"></input>
+	</view>
+	<view class="small-tip"></view>
 	<view class="activity-time">
 		<view class="tip">蒸制时间</view>
-		<input class="input"></input>
+        <picker class="input" bindchange="onTimeChange" value="{{timeIndex}}" range="{{times}}">		
+            <view>{{times[timeIndex]}}</view>
+        </picker>
+    
 		<view class="minute">min</view>
 	</view>
+	<view class="small-tip">预计可获{{times[timeIndex]}}个<image src="../../icon/roll2.png" mode="heightFix"></image></view>
 </van-dialog>
 
 <image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="addActivity"></image>
