@@ -1,4 +1,6 @@
-<view class="post" wx:for="{{postList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
+<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
+
+<!-- <view class="post" wx:for="{{postList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
 
 	<view class="user-info">
 		<view class="left">
@@ -39,4 +41,4 @@
 		</view>
 	</view>
 
-</view>
+</view> -->

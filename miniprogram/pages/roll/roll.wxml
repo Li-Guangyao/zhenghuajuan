@@ -5,8 +5,9 @@
 </view>
 
 <view class="record-list" wx:if="{{recordList.length > 0}}">
+	<post-display id="postDisplay" postList="{{recordList}}" userInfo="{{userInfo}}"></post-display>
 
-	<view class="post {{item.rollName ? 'roll-post' : ''}}" wx:for="{{recordList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
+	<!-- <view class="post {{item.rollName ? 'roll-post' : ''}}" wx:for="{{recordList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
 		<view class="user-info">
 			<view class="left">
 				<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
@@ -28,7 +29,6 @@
 			</view>
 		</view>
 
-		<!-- <rich-text class="content" nodes="{{item.content}}" /> -->
 		<text class="content">{{item.content}}</text>
 
 		<view class="media" wx:if="{{item.fileList.length!=0}}" wx:for="{{item.fileList}}" wx:for-item="item2"
@@ -45,13 +45,10 @@
 				<van-icon name="location-o" size="20rpx" />
 				<view class="location-name">{{item.location.name}}</view>
 			</view>
-			<!-- <view class="interaction">
-				<image class="icon-huajuan" mode="aspectFit" src="../../icon/roll.png"></image>
-				<image class="icon-comment" mode="aspectFit" src="../../icon/comment.png"></image>
-			</view> -->
 		</view>
 
-	</view>
+	</view> -->
+
 </view>
 
 <van-dialog class="set-activity" use-slot use-title-slot title="标题" show="{{ showPopup }}"

@@ -3,7 +3,8 @@ import changeFileListFormat from "../../utils/changeFileListFormat"
 
 Page({
 	data: {
-		postList: []
+		postList: [],
+		userInfo: null,
 	},
 
 	queryParams: {
@@ -11,8 +12,35 @@ Page({
 		pageSize: 20
 	},
 
-	onLoad: function (options) {
-		this.refreshPage()
+	onLoad: async function (options) {
+		await this.judgeLogin();
+		await this.refreshPage();
+	},
+
+	async judgeLogin() {
+		var userInfo = await wx.getStorageSync('userInfo')
+		if (!userInfo) {
+			wx.showModal({
+				title: '卷王同志，请先登陆再来',
+				showCancel: true,
+
+				success(res) {
+					if (res.confirm) {
+						wx.switchTab({
+							url: '../my/my',
+						})
+					} else if (res.cancel) {
+						wx.navigateBack({
+							delta: 1,
+						})
+					}
+				}
+			})
+		} else {
+			this.setData({
+				userInfo: userInfo
+			})
+		}
 	},
 
 	async refreshPage() {

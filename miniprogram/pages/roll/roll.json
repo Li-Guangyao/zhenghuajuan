@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "van-dialog": "@vant/weapp/dialog/index"
+    "van-dialog": "@vant/weapp/dialog/index",
+    "post-display": "../../components/postDisplay/postDisplay"
   },
   "navigationBarBackgroundColor": "#ffa600",
   "enablePullDownRefresh": true

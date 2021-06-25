@@ -1,4 +1,5 @@
 <post-display id="postDisplay" post="{{post}}" commentList="{{commentList}}" userInfo="{{userInfo}}"></post-display>
+
 <!-- <view class="post">
 
 	<view class="user-info">

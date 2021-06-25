@@ -12,7 +12,7 @@
 			<image class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
 
 			<view class="nickname-time">
-				<view class="user-nickname">{{item.nickname}}</view>
+				<view class="user-nickname">{{item.nickName}}</view>
 				<view class="pub-time">{{item.timeDiff}}</view>
 			</view>
 
@@ -70,6 +70,11 @@
 
 		<!-- 交互 -->
 		<view class="interaction">
+
+			<!-- 删除 -->
+			<van-icon custom-style="icon-delete" name="delete-o" size="42rpx" 
+				data-index="{{index}}" style="margin-right: 20rpx"
+				catchtap="deletePost" wx:if="{{userInfo._openid==item._openid}}"/>
 
 			<!-- 点赞 likeIndex: 当前用户的点赞索引 oriLikeIndex: 保存记录 -->
 			<image class="icon-huajuan" wx:if="{{!(item.likeIndex >= 0)}}" 

@@ -134,6 +134,40 @@ Component({
 
 		// 交互
 
+		// 删除
+		deletePost(e) {
+			var post = this.currentPost(e);
+			var postList = this.properties.postList;
+			var index = e.currentTarget.dataset.index;
+
+			wx.showModal({
+				content: '确定删除',
+				success: (res) => {
+					if (res.confirm) {
+						wx.cloud.callFunction({
+							name: 'removePost',
+							data: { postId: post._id },
+							success: res => {
+								wx.showToast({
+									title: '删除成功', icon: 'none'
+								});
+	
+								if (this.properties.post) 
+									wx.navigateBack({ delta: 1 })
+								else if (postList) {
+									postList.splice(index, 1);
+									this.refreshPosts();
+								}
+							},
+							fail: err => {
+								console.log(err)
+							}
+						})
+					}
+				}
+			})
+		},
+
 		// 点赞
 		// 点击了点赞的按钮，弹出popup
 		giveLike(e) {

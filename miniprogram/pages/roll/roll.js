@@ -1,5 +1,6 @@
 Page({
 	data: {
+		/*
 		recordList: [{
 			rollName: "学习",
 			rollCount: 30,
@@ -31,22 +32,40 @@ Page({
 			content: "今天啥也没干",
 			fileList: [],
 		}],
-		// recordList: [],
+		*/
+		userInfo: null,
+		recordList: [],
 		showPopup: true,
+
 		timeIndex: 0,
 		times: [15, 30, 45, 60, 90, 120],
 		rollCounts: [15, 30, 45, 60, 90, 120]
 	},
 
-	onLoad: function (options) {
-		wx.getSystemInfo({
-		  success: (res) => {
-			  this.setData({
-				  pageHeight: res.windowHeight
-			  })
-		  }, 
-		})
+	onLoad: async function (options) {
+		await this.judgeLogin();
+	},
 
+	async judgeLogin() {
+		var userInfo = await wx.getStorageSync('userInfo')
+		if (!userInfo) {
+			wx.showModal({
+				title: '卷王同志，请先登陆再来',
+				showCancel: true,
+
+				success(res) {
+					if (res.confirm) {
+						wx.switchTab({
+							url: '../my/my',
+						})
+					} else if (res.cancel) {
+						wx.navigateBack({
+							delta: 1,
+						})
+					}
+				}
+			})
+		} else this.setData({ userInfo })
 	},
 
 	addActivity(){
