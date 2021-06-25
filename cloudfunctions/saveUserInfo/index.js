@@ -5,6 +5,7 @@ cloud.init()
 
 const db = cloud.database()
 
+// 检查这个用户是否已经存在了
 async function judgeUserExist(openId) {
 	return db.collection('t_user').where({
 		_openid: openId
@@ -32,7 +33,7 @@ exports.main = async (event, context) => {
 				city: event.userInfo.city,
 				gender: event.userInfo.gender,
 				language: event.userInfo.language,
-				nickname: event.userInfo.nickName
+				nickName: event.userInfo.nickName
 			}
 		})
 	}else{
@@ -46,7 +47,7 @@ exports.main = async (event, context) => {
 				city: event.userInfo.city,
 				gender: event.userInfo.gender,
 				language: event.userInfo.language,
-				nickname: event.userInfo.nickName
+				nickName: event.userInfo.nickName
 			}
 		})
 	}

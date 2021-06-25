@@ -1,9 +1,12 @@
 {
   "usingComponents": {
     "van-dialog": "@vant/weapp/dialog/index",
-    "van-popup": "@vant/weapp/popup/index",
-    "van-picker": "@vant/weapp/picker/index",
+<<<<<<< HEAD
     "post-display": "../../components/postDisplay/postDisplay"
+=======
+    "van-popup": "@vant/weapp/popup/index",
+    "van-picker": "@vant/weapp/picker/index"
+>>>>>>> e0a0ea329808a8d794246a40f6617ac5c962dc99
   },
   "navigationBarBackgroundColor": "#ffa600",
   "enablePullDownRefresh": true

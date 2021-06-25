@@ -1,15 +1,14 @@
 page {
   background-color: var(--themeBackgroundColor);
 }
-.no-record {    
+.no-record {
   top: 40%;
   position: absolute;
   transform: translateY(-50%);
   margin: 0;
   width: 100%;
-
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   align-items: center;
 }
 .no-record image {
@@ -26,16 +25,16 @@ page {
 .set-activity .van-dialog__header {
   padding: 0;
 }
-.set-activity .title {
+.set-activity .dialog-title {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 0 32rpx 0;
   height: 80rpx;
   background-color: var(--themeColor);
-  color: #ffffff;
+  color: white;
 }
-.set-activity .small-tip {
+.set-activity .dialog-tip {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,24 +42,24 @@ page {
   font-size: 24rpx;
   margin: 0 0 32rpx 0;
 }
-.set-activity .small-tip image {
+.set-activity .dialog-tip image {
   height: 42rpx;
-  margin-left: 8rpx
+  margin-left: 8rpx;
 }
 .set-activity .activity-name,
-.set-activity .activity-time {
+.set-activity .activity-duration {
   display: inline-flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin: 24rpx 0 16rpx 0;
   height: 80rpx;
-  width: 90%;
+  width: 85%;
   border-radius: 50rpx;
   background-color: #fff2db;
   color: var(--themeColor);
 }
 .set-activity .activity-name .tip,
-.set-activity .activity-time .tip {
+.set-activity .activity-duration .tip {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,15 +70,16 @@ page {
   border: 5rpx solid #fea403;
 }
 .set-activity .activity-name .input,
-.set-activity .activity-time .input {
+.set-activity .activity-duration .input {
   text-align: left;
   flex: 3;
   margin: 0 20rpx;
   color: #2f2f2f;
 }
 .set-activity .activity-name .minute,
-.set-activity .activity-time .minute {
+.set-activity .activity-duration .minute {
   flex: 1;
+  margin: 0 15rpx;
 }
 .btn-add {
   border-radius: 50rpx;

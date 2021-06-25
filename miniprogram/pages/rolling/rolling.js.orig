@@ -49,6 +49,16 @@ Page({
 			})
 	},
 
+<<<<<<< HEAD
+	/**
+	 * 生命周期函数--监听页面加载
+	 */
+	onLoad: function (options) {
+		this.setupBarCanvas();
+	},
+
+=======
+>>>>>>> e0a0ea329808a8d794246a40f6617ac5c962dc99
 	// 正式开始计时
 	startTimer() {
 		this.setData({

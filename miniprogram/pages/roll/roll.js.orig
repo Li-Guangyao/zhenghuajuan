@@ -1,6 +1,10 @@
 Page({
 	data: {
+<<<<<<< HEAD
+		pageHeight: 0,
 		/*
+=======
+>>>>>>> e0a0ea329808a8d794246a40f6617ac5c962dc99
 		recordList: [{
 			rollName: "学习",
 			rollCount: 30,
@@ -32,18 +36,15 @@ Page({
 			content: "今天啥也没干",
 			fileList: [],
 		}],
+<<<<<<< HEAD
 		*/
 		userInfo: null,
 		recordList: [],
+		showPopup: true,
 
-		name: '',
-
-		showDialog: false,
-		showPopup: false,
-
-		durationIndex: 0,
-		duration: [15, 30, 45, 60, 90, 120],
-		rollNumber: [15, 30, 45, 60, 90, 120]
+		timeIndex: 0,
+		times: [15, 30, 45, 60, 90, 120],
+		rollCounts: [15, 30, 45, 60, 90, 120]
 	},
 
 	onLoad: async function (options) {
@@ -56,6 +57,7 @@ Page({
 			wx.showModal({
 				title: '卷王同志，请先登陆再来',
 				showCancel: true,
+
 				success(res) {
 					if (res.confirm) {
 						wx.switchTab({
@@ -69,6 +71,16 @@ Page({
 				}
 			})
 		} else this.setData({ userInfo })
+=======
+
+		name: '',
+		// recordList: [],
+		showDialog: false,
+		showPopup: false,
+
+		durationIndex: 0,
+		duration: [15, 30, 45, 60, 90, 120],
+		rollNumber: [15, 30, 45, 60, 90, 120]
 	},
 
 	// 点击页面下方+按钮
@@ -83,6 +95,7 @@ Page({
 		this.setData({
 			showPopup: !this.data.showPopup
 		})
+>>>>>>> e0a0ea329808a8d794246a40f6617ac5c962dc99
 	},
 
 	inputActivityName(e) {
