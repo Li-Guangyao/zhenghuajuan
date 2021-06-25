@@ -1,7 +1,7 @@
 <view class="page">
 	<view class="user-info" wx:if="{{userInfo}}">
 		<image class="user-avatar" src="{{userInfo.avatarUrl}}" bindtap="getUserInfo"></image>
-		<view class="user-nickname" bindtap="getUserInfo">{{userInfo.nickname}}</view>
+		<view class="user-nickname" bindtap="getUserInfo">{{userInfo.nickName}}</view>
 	</view>
 
 	<view class="user-info" wx:if="{{!userInfo}}">

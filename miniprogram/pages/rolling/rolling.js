@@ -1,18 +1,12 @@
-// miniprogram/pages/rolling.js
- 
 var x = 128, y = 128, r = 120, w = 8;
 var updateInterval = 125;
 var lastStatusTime = 3;
 var aniCtx, updateId;
 
 Page({
-
-	/**
-	 * 页面的初始数据
-	 */
 	data: {
 		name: "学习",
-		minute: 15,
+		duration: 15,
 
 		startTime: null,
 		curMinute: 0,
@@ -24,20 +18,25 @@ Page({
 		finishText: "完成了！"
 	},
 
-	/**
-	 * 生命周期函数--监听页面初次渲染完成
-	 */
+	onLoad: function (e) {
+		this.setData({
+			name: e.name,
+			duration: e.duration
+		})
+	},
+
 	onReady: function () {
 		this.setupBarCanvas();
 	},
 
 	// 配置Canvas
 	setupBarCanvas() {
-		
 		const query = this.createSelectorQuery()
 		query.select('#canvasArcCir')
 			.fields({ node: true, size: true })
 			.exec((res) => {
+				console.log(res)
+
 				const canvas = res[0].node
 				aniCtx = canvas.getContext('2d')
 
@@ -49,12 +48,6 @@ Page({
 				this.clearMinuteProgress();
 				this.startTimer();
 			})
-	},
-
-	/**
-	 * 生命周期函数--监听页面加载
-	 */
-	onLoad: function (options) {
 	},
 
 	// 正式开始计时
@@ -85,7 +78,7 @@ Page({
 			statusIndex: sIndex
 		});
 
-		if (minute >= this.data.minute)
+		if (minute >= this.data.duration)
 			this.onFinished();
 	},
 

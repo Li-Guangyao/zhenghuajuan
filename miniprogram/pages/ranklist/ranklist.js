@@ -1,6 +1,6 @@
 Page({
 	data: {
-		myUserInfo: null,
+		userInfo: null,
 		dayRankList: [],
 		weekRankList: [],
 		topRankList: [],
