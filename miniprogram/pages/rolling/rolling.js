@@ -26,6 +26,7 @@ Page({
 	},
 
 	onReady: function () {
+		this.setupBarCanvas();
 	},
 
 	// 配置Canvas
