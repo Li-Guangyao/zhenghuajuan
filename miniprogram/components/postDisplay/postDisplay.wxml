@@ -78,7 +78,7 @@
 			<!-- 删除 -->
 			<van-icon custom-style="icon-delete" name="delete-o" size="42rpx" 
 				data-index="{{index}}" style="margin-right: 20rpx"
-				catchtap="deletePost" wx:if="{{userInfo._openid==item._openid}}"/>
+				catchtap="deletePost" wx:if="{{showDelete && userInfo._openid==item._openid}}"/>
 
 			<!-- 点赞 likeIndex: 当前用户的点赞索引 oriLikeIndex: 保存记录 -->
 			<image class="icon-huajuan" wx:if="{{!(item.likeIndex >= 0)}}" 

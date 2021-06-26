@@ -71,7 +71,7 @@
 
 	<view class="rank-item" wx:if="{{chosenTabIndex==0}}">
 		<view class="left">
-			<text class="rank-number" wx:if="{{myDayRank!=-1}}">{{myRank}}</text>
+			<text class="rank-number" wx:if="{{myDayRank!=-1}}">{{myDayRank}}</text>
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
 			<view class="user-nickname">{{userInfo.displayName}}</view>
 		</view>

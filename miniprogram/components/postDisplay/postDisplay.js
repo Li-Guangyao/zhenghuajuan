@@ -9,6 +9,11 @@ Component({
 			value: null
 		},
 
+		showDelete: {
+			type: Boolean,
+			value: false
+		},
+
 		postList: {
 			type: Array,
 			value: null

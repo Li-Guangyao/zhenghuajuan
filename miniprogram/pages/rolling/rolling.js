@@ -91,7 +91,7 @@ Page({
 
 		// TODO: 测试
 		// var dtTime = (nTime - sTime) / 1000;
-		var dtTime = (nTime - sTime) / 1000;
+		var dtTime = (nTime - sTime) / 10;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 

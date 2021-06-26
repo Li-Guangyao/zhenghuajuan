@@ -9,7 +9,6 @@ const $ = db.command.aggregate
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-	var likeValue = -event.originValue
 
 	// db.collection('t_post').doc(event.postId).update({
 	// 	data: {

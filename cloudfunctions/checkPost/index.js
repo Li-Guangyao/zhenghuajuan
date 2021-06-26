@@ -12,7 +12,8 @@ app.registerExtension(extCi);
 exports.main = async (event, context) => {
 	
 	var a = await contentSec(event.postContent)
-	var b = true; //await imgSec(event.postPhotoList)
+	var b = await imgSec(event.postPhotoList)
+	//var b = true; 
 
 	if (a == true && b == true) {
 		return true
