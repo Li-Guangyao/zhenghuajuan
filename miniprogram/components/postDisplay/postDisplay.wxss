@@ -131,7 +131,7 @@
   height: 42rpx;
 }
 .roll-post {
-  background-color: #FFF5EA;
+  background-color: #FFF5F1;
 }
 .comment {
   background-color: white;

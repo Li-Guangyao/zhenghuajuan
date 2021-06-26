@@ -1,4 +1,4 @@
-<post-display id="postDisplay" post="{{post}}" commentList="{{commentList}}" userInfo="{{userInfo}}"></post-display>
+<post-display id="postDisplay" post="{{post}}" commentList="{{commentList}}" userInfo="{{userInfo}}" showDelete="true" ></post-display>
 
 <!-- <view class="post">
 

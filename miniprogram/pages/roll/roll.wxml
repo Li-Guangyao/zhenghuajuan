@@ -5,7 +5,7 @@
 </view>
 
 <view class="record-list" wx:if="{{postList.length > 0}}">
-	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
+	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}" showDelete="true"></post-display>
 
 </view>
 
@@ -17,7 +17,7 @@
 	<view class="dialog-title" slot="title">蒸花卷</view>
 	<view class="activity-name">
 		<view class="tip">花卷口味</view>
-		<input class="input" value="{{activityName}}" bindinput="inputActivityName" placeholder="写下你专注的内容吧"></input>
+		<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5" placeholder="写下你专注的内容吧"></input>
 	</view>
 	<view class="activity-duration">
 		<view class="tip">蒸制时间</view>

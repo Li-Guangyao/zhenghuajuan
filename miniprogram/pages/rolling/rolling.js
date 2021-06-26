@@ -1,5 +1,5 @@
 var x = 128, y = 128, r = 120, w = 8;
-var updateInterval = 100;
+var updateInterval = 125;
 var lastStatusTime = 2;
 var aniCtx, updateId;
 
@@ -91,7 +91,7 @@ Page({
 
 		// TODO: 测试
 		// var dtTime = (nTime - sTime) / 1000;
-		var dtTime = (nTime - sTime) / 10;
+		var dtTime = (nTime - sTime) / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 
