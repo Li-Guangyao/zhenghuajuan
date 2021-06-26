@@ -144,7 +144,7 @@ Page({
 				success: async (e) => {
 					if (e.confirm) {
 						wx.showLoading({
-							title: '保存中',
+							title: '保存中', mask: true
 						})
 						var uploadedFileList = await this.getFileID()
 						console.log(uploadedFileList)

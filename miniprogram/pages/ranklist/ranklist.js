@@ -82,7 +82,7 @@ Page({
 
 	async initPageContent(){
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中'
 		})
 
 		await wx.cloud.callFunction({

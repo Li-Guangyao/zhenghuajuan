@@ -47,7 +47,7 @@ Page({
 		this.queryParams.pageNum = 0
 
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中', mask: true
 		})
 
 		await wx.cloud.callFunction({
@@ -107,7 +107,7 @@ Page({
 	async onReachBottom() {
 		console.log('ReachBottom')
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中', mask: true
 		})
 
 		this.queryParams.pageNum++

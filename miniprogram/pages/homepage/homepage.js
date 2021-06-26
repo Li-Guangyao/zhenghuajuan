@@ -13,6 +13,8 @@ Page({
 	},
 
 	// async onLoad(options) {
+	// 	await this.judgeLogin()
+	// 	await this.refreshPage()
 	// },
 
 	async onShow() {
@@ -53,7 +55,7 @@ Page({
 	// 触底加载
 	async onReachBottom() {
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中', mask: true
 		})
 
 		var openId = this.data.userInfo ? 
@@ -92,7 +94,7 @@ Page({
 			this.data.userInfo._openid : undefined;
 
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中', mask: true
 		})
 
 		await wx.cloud.callFunction({
