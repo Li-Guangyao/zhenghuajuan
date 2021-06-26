@@ -34,6 +34,9 @@
   font-size: 20rpx;
   color: #4b4b4b;
 }
+.post .user-info .left .check-info {
+  color: red !important;
+}
 .post .user-info .right {
   flex: 2;
   display: flex;

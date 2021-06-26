@@ -13,7 +13,11 @@
 
 			<view class="nickname-time">
 				<view class="user-nickname">{{item.displayName}}</view>
-				<view class="pub-time">{{item.timeDiff}}</view>
+
+				<view class="pub-time">{{item.timeDiff}} 
+					<text class="check-info" wx:if="{{item.status==0}}">正在审核</text>
+					<text class="check-info" wx:if="{{item.status==2}}">审核未通过</text>
+				</view>
 			</view>
 
 		</view>
