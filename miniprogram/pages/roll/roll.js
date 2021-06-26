@@ -95,15 +95,29 @@ Page({
 	onDialogClose(e) {
 		switch (e.detail) {
 			case "confirm":
-				wx.navigateTo({
-					url: '../rolling/rolling?duration=' + this.data.duration[this.data.durationIndex] + "&name=" + this.data.name,
-				})
+				if (!this.data.name) {
+					wx.showToast({
+						title: '花卷口味不能为空！',
+						icon: 'none'
+					});
+					this.setData({ showDialog: true });
+				} else 
+					wx.showModal({
+						title: '确定开始蒸花卷吗？',
+						showCancel: true,
+		
+						success: res => {
+							if (res.confirm) 
+								wx.navigateTo({
+									url: '../rolling/rolling?duration=' + this.data.duration[this.data.durationIndex] + "&name=" + this.data.name,
+								})
+							else if (res.cancel) 
+								this.setData({ showDialog: false });
+						}
+					})
 				break;
 			default:
-				this.setData({
-					showDialog: false,
-					durationIndex: 0
-				});
+				this.setData({ showDialog: false });
 				break;
 		}
 	},

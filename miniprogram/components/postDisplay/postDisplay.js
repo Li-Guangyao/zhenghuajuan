@@ -365,29 +365,57 @@ Component({
 		},
 
 		// 保存评论
-		saveComment(content) {
+		async saveComment(content) {
 			if (!this.properties.post) return;
-			
-			wx.showLoading({ title: '保存中', mask: true })
-			var commentList = this.properties.commentList;
 
-			wx.cloud.callFunction({
-				name: 'savePostComment',
-				data: {
-					postId: this.properties.post._id,
-					comment: content,
-				}
-			}).then(res => {
+			wx.showLoading({ title: '保存中', mask: true })
+			if (await this.checkComment(content)) {
+				var commentList = this.properties.commentList;
+	
+				var res = await wx.cloud.callFunction({
+					name: 'savePostComment',
+					data: {
+						postId: this.properties.post._id,
+						comment: content,
+					}
+				})
+				console.info(res);
+
 				wx.showToast({
-					title: '保存成功',
-					icon: 'none'
+					title: '保存成功', icon: 'none'
 				});
+
 				commentList.push({
 					...this.properties.userInfo,
-					timeDiff: "刚刚", content
+
+					_id: res.result._id,
+					content, timeDiff: "刚刚"
 				})
-				this.setData({ commentList })
-			}).finally(wx.hideLoading);
+				
+				this.properties.post.commentCount++;
+				this.setData({ 
+					post: this.properties.post,
+					commentList
+				})
+			} else {
+				wx.hideLoading();
+				wx.showToast({
+					title: '没有通过审核', icon: 'error'
+				})
+			}
+		},
+
+		// 内容安全检查
+		async checkComment(content) {
+			const res = await wx.cloud.callFunction({
+				name: 'checkPost',
+				data: {
+					postContent: content,
+					postPhotoList: []
+				}
+			})
+			
+			return res.result
 		},
 
 		// 删除评论
@@ -406,7 +434,12 @@ Component({
 					data: { commentId: comment._id },
 					success: res => {
 						commentList.splice(cIndex, 1)
-						this.setData({ commentList })
+				
+						this.properties.post.commentCount--;
+						this.setData({ 
+							post: this.properties.post,
+							commentList
+						})
 					}
 				})
 			}
