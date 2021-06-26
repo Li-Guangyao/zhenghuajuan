@@ -9,7 +9,7 @@ const $ = db.command.aggregate
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-	
+
 	await db.collection('t_post_like').add({
 		data:{
 			_openid: event.userInfo.openId,
@@ -30,7 +30,7 @@ exports.main = async (event, context) => {
 		})
 		.end()
 	
-	await db.collection('t_post').doc(event.postId).update({
+	db.collection('t_post').doc(event.postId).update({
 		data: {
 			likeValue: res.list[0].likeValue
 		}

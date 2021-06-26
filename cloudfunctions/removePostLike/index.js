@@ -30,7 +30,7 @@ exports.main = async (event, context) => {
 		})
 		.end()
 	
-	await db.collection('t_post').doc(event.postId).update({
+	db.collection('t_post').doc(event.postId).update({
 		data: {
 			likeValue: res.list[0].likeValue
 		}
