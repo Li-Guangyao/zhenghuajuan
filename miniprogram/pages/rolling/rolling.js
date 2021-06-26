@@ -170,7 +170,7 @@ Page({
 		this.stopRolling();
 		// TODO: 完成了
 		wx.showModal({
-			title: '恭喜完成本次蒸花卷！发布到动态后将获得' + this.data.duration + '个花卷，快去分享努力成果吧！',
+			title: '恭喜完成本次蒸花卷！发布到动态后将获得' + this.data.count + '个花卷，快去分享努力成果吧！',
 			showCancel: false,
 
 			success: res => {
