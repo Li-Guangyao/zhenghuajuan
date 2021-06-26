@@ -3,6 +3,8 @@ var updateInterval = 125;
 var lastStatusTime = 2;
 var aniCtx, updateId;
 
+const MaxExitTime = 5 * 1000;
+
 Page({
 	data: {
 		name: "学习",
@@ -19,7 +21,9 @@ Page({
 		statusIndex: 0,
 		finishText: "完成了！",
 
-		stopped: false
+		stopped: false,
+
+		exitTime: null
 	},
 
 	onLoad: function (e) {
@@ -42,12 +46,21 @@ Page({
 	},
 
 	onShow: function() {
-		if (this.data.stopped) this.onStopped();
+		if (!this.data.exitTime) return;
+
+		var now = new Date();		
+		if (now - this.data.exitTime >= MaxExitTime) {
+			this.setData({ stopped: true })
+			this.stopRolling();
+			this.onStopped();
+		} else 
+			wx.showToast({
+				title: '蒸花卷过程中不要分心哦~', icon: 'none'
+			});
 	},
 
 	onHide: function () {
-		this.setData({ stopped: true })
-		this.stopRolling()
+		this.setData({ exitTime: new Date() });
 	},
 
 	onUnload: function() {
@@ -91,7 +104,7 @@ Page({
 
 		// TODO: 测试
 		// var dtTime = (nTime - sTime) / 1000;
-		var dtTime = (nTime - sTime) / 1000;
+		var dtTime = (nTime - sTime) / 10;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 
@@ -167,10 +180,14 @@ Page({
 	},
 
 	onFinished() {
+		if (this.data.stopped) return;
+
+		this.drawMinuteProgress(60);
 		this.stopRolling();
+
 		// TODO: 完成了
 		wx.showModal({
-			title: '恭喜完成本次蒸花卷！发布到动态后将获得' + this.data.count + '个花卷，快去分享努力成果吧！',
+			title: '蒸花卷完成了！发布到动态后将获得' + this.data.count + '个花卷，快去分享努力成果吧！',
 			showCancel: false,
 
 			success: res => {
@@ -187,7 +204,7 @@ Page({
 		wx.disableAlertBeforeUnload({
 			success: (res) => {
 				wx.showModal({
-					title: '非常抱歉，由于您在蒸花卷过程中分心，花卷全都坏掉了，再来一次吧！下次记得不要分心了哦~',
+					title: '太可惜了，由于您在蒸花卷过程中分心，花卷全坏掉了，再来一次吧！下次记得不要分心了哦~',
 					showCancel: false,
 		
 					success: res => {

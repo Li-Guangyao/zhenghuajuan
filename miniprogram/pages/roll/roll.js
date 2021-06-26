@@ -185,15 +185,16 @@ Page({
 						icon: 'none'
 					});
 					this.setData({ showDialog: true });
-				} else 
+				} else {
+					var duration = this.data.durations[this.data.durationIndex];
+					var count = this.data.counts[this.data.durationIndex];
+
 					wx.showModal({
-						title: '确定开始蒸花卷吗？',
+						title: '确定要蒸' + duration + '分钟花卷吗？蒸花卷过程中不可退出、切换页面和熄屏哦！',
 						showCancel: true,
 		
 						success: res => {
 							if (res.confirm) {
-								var duration = this.data.durations[this.data.durationIndex];
-								var count = this.data.counts[this.data.durationIndex];
 								wx.navigateTo({
 									url: '../rolling/rolling?name=' + this.data.name + 
 									"&duration=" + duration + "&count=" + count,
@@ -202,6 +203,7 @@ Page({
 								this.setData({ showDialog: false });
 						}
 					})
+				}
 				break;
 			default:
 				this.setData({ showDialog: false });
