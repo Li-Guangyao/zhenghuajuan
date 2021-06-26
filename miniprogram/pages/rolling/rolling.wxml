@@ -12,9 +12,9 @@
 		<progress class="total-progress" percent="{{curMinute/duration*100}}" border-radius="6" 
 			activeColor="#FEA403" backgroundColor="#FFFFFF" stroke-width="12"></progress>
 			<view class="small-tip">预计可获得
-				<text style="color: #FEA403">{{duration}}</text>
+				<text style="color: #FEA403">{{count}}</text>
 				<image src="../../icon/roll2.png" mode="heightFix"></image>
-				<text style="color: #FEA403; position: absolute; right: 0">{{curMinuteInt}}/{{duration}}</text></view>
+				<text style="color: #FEA403; position: absolute; right: 0">{{curCount}}/{{count}}</text></view>
 
 	</view>
 </view>

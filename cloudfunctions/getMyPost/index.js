@@ -9,9 +9,12 @@ const $ = db.command.aggregate
 // 云函数入口函数
 exports.main = async (event, context) => {
 
+	var matcher = { _openid: event.userInfo.openId };
+
+	if (event.roll) matcher.rollName = _.neq(null);
+
 	return query(db.collection('t_post').aggregate()
-		.match({ _openid: event.userInfo.openId })
-		.sort({ createdAt: -1 })
+		.match(matcher).sort({ createdAt: -1 })
 		.skip(event.skipNum))
 	
 	// .lookup({

@@ -27,7 +27,7 @@
 
 			<!-- 花卷数量显示 -->
 			<view class="juan"> 
-				<view class="juan-number">{{item.likeValue || 0}}</view>
+				<view class="juan-number">{{item.likeValue}}</view>
 				<image class="juan-image" src="../../icon/roll2.png"></image>
 			</view>
 

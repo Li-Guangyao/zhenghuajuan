@@ -1,32 +1,57 @@
 var x = 128, y = 128, r = 120, w = 8;
-var updateInterval = 125;
-var lastStatusTime = 3;
+var updateInterval = 100;
+var lastStatusTime = 2;
 var aniCtx, updateId;
 
 Page({
 	data: {
 		name: "学习",
 		duration: 15,
+		count: 15,
 
 		startTime: null,
 		curMinute: 0,
-		curMinuteInt: 0,
 		curSecond: 0,
+		curCount: 0,
 
-		statuses: ["制作中1...", "制作中2...", "制作中3...", "蒸制中...", "熟了"],
+		// 和面，发面，切段，蒸制，出锅
+		statuses: ["和面中...", "发面中...", "切段中...", "蒸制中...", "出锅！"],
 		statusIndex: 0,
-		finishText: "完成了！"
+		finishText: "完成了！",
+
+		stopped: false
 	},
 
 	onLoad: function (e) {
 		this.setData({
 			name: e.name,
-			duration: e.duration
+			duration: e.duration,
+			count: e.count,
+			stopped: false
 		})
+
+		wx.enableAlertBeforeUnload({
+      message: "退出后将丢失目前已经蒸好的花卷！您确定要退出吗？",
+      success: function(res) { },
+      fail: function(errMsg) { }
+		})		
 	},
 
 	onReady: function () {
 		this.setupBarCanvas();
+	},
+
+	onShow: function() {
+		if (this.data.stopped) this.onStopped();
+	},
+
+	onHide: function () {
+		this.setData({ stopped: true })
+		this.stopRolling()
+	},
+
+	onUnload: function() {
+		this.stopRolling();
 	},
 
 	// 配置Canvas
@@ -64,22 +89,33 @@ Page({
 		var nTime = now.getTime();
 		var sTime = s.getTime();
 
+		// TODO: 测试
+		// var dtTime = (nTime - sTime) / 1000;
 		var dtTime = (nTime - sTime) / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 
 		var sIndex = this.getStatusIndex(second);
+		var curCount = this.getCurCount(minute);
+
 		this.drawMinuteProgress(second);
 
 		this.setData({
+			curCount,
 			curMinute: minute,
 			curSecond: second,
-			curMinuteInt: parseInt(minute),
 			statusIndex: sIndex
 		});
 
 		if (minute >= this.data.duration)
 			this.onFinished();
+	},
+
+	getCurCount(minute) {
+		var count = this.data.count;
+		var duration = this.data.duration;
+		
+		return parseInt(minute * count / duration);
 	},
 
 	// 根据秒数获取状态名称
@@ -131,49 +167,39 @@ Page({
 	},
 
 	onFinished() {
-		clearInterval(updateId)
+		this.stopRolling();
 		// TODO: 完成了
+		wx.showModal({
+			title: '恭喜完成本次蒸花卷！发布到动态后将获得' + this.data.duration + '个花卷，快去分享努力成果吧！',
+			showCancel: false,
+
+			success: res => {
+				wx.redirectTo({
+					url: '../postAdd/postAdd?rollName=' + this.data.name + 
+						"&rollCount=" + this.data.count + 
+						"&rollDuration=" + this.data.duration,
+				})
+			}
+		})
 	},
 	
-	/**
-	 * 生命周期函数--监听页面显示
-	 */
-	onShow: function () {
-
+	onStopped() {
+		wx.disableAlertBeforeUnload({
+			success: (res) => {
+				wx.showModal({
+					title: '非常抱歉，由于您在蒸花卷过程中分心，花卷全都坏掉了，再来一次吧！下次记得不要分心了哦~',
+					showCancel: false,
+		
+					success: res => {
+						wx.navigateBack({ delta: 1 })
+					}
+				})		
+			},
+		})
 	},
 
-	/**
-	 * 生命周期函数--监听页面隐藏
-	 */
-	onHide: function () {
+	stopRolling() {
 		clearInterval(updateId)
 	},
 
-	/**
-	 * 生命周期函数--监听页面卸载
-	 */
-	onUnload: function () {
-		clearInterval(updateId)
-	},
-
-	/**
-	 * 页面相关事件处理函数--监听用户下拉动作
-	 */
-	onPullDownRefresh: function () {
-
-	},
-
-	/**
-	 * 页面上拉触底事件的处理函数
-	 */
-	onReachBottom: function () {
-
-	},
-
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {
-
-	}
 })

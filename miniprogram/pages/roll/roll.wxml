@@ -1,11 +1,11 @@
-<view class="no-record" wx:if="{{recordList.length <= 0}}">
+<view class="no-record" wx:if="{{postList.length <= 0}}">
 	<image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
 	<text>还没有任何蒸花卷记录</text>
 	<text>点击右下角加号开始蒸花卷吧</text>
 </view>
 
-<view class="record-list" wx:if="{{recordList.length > 0}}">
-	<post-display id="postDisplay" postList="{{recordList}}" userInfo="{{userInfo}}"></post-display>
+<view class="record-list" wx:if="{{postList.length > 0}}">
+	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
 
 </view>
 
@@ -21,16 +21,16 @@
 	</view>
 	<view class="activity-duration">
 		<view class="tip">蒸制时间</view>
-		<view class="input" bindtap="showPopup">{{duration[durationIndex]}}</view>
+		<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
 		<view class="minute">min</view>
 	</view>
-	<view class="dialog-tip">预计可获得{{duration[durationIndex]}}个
+	<view class="dialog-tip">预计可获得{{counts[durationIndex]}}个
 		<image src="../../icon/roll2.png" mode="heightFix"></image>
 	</view>
 </van-dialog>
 
 <van-popup show="{{ showPopup }}" position="bottom" z-index="2" round="{{true}}" close-on-click-overlay="{{true}}">
-	<van-picker show-toolbar title="选择时间" columns="{{ duration }}" bind:cancel="showPopup"
+	<van-picker show-toolbar title="选择时间" columns="{{ durations }}" bind:cancel="showPopup"
 		bind:confirm="choseDuration" />
 </van-popup>
 

@@ -23,6 +23,10 @@ exports.main = async (event, context) => {
 			videoList: event.uploadedFileList.uploadedVideoList,
 			typeList: event.uploadedFileList.typeList,
 
+			rollName: event.rollName,
+			rollCount: parseInt(event.rollCount),
+			rollDuration: parseInt(event.rollDuration),
+
 			// 图片自动审核，通过了才会保存帖子
 			// 如果有视频，就必须人工审核，状态为0
 			status: event.uploadedFileList.uploadedVideoList.length == 0 ? 1 : 0,

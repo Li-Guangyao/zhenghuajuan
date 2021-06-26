@@ -7,46 +7,55 @@ Page({
 		content: '',
 		location: null,
 		fileList: [],
-		userInfo: wx.getStorageSync('userInfo')
+		userInfo: null,
+
+		rollName: null,
+		rollCount: null,
+		rollDuration: null,
 	},
 
-	onLoad: function (options) {
+	onLoad: function (e) {
 		this.judgeLogin()
 
-		var tempPost = wx.getStorageSync('tempPost')
-		if (tempPost) {
+		if (e.rollName && e.rollCount && e.rollDuration) {
+			var rollName = e.rollName;
+			var rollCount = e.rollCount;
+			var rollDuration = e.rollDuration;
+
+			var content = "我花了" + rollDuration + "分钟，蒸了" + 
+				rollCount + "个" + rollName + "味花卷~";
+
 			this.setData({
-				content: tempPost.content,
-				location: tempPost.location,
-				fileList: tempPost.fileList,
+				content, rollName, rollCount, rollDuration
 			})
+		} else {
+			var tempPost = wx.getStorageSync('tempPost')
+			if (tempPost) {
+				this.setData({
+					content: tempPost.content,
+					location: tempPost.location,
+					fileList: tempPost.fileList,
+				})
+			}
 		}
 	},
 
 	judgeLogin() {
 		var userInfo = wx.getStorageSync('userInfo')
-		if (!userInfo) {
+
+		if (!userInfo)
 			wx.showModal({
 				title: '卷王同志，请先登陆再来',
 				showCancel: true,
 
-				success(res) {
-					if (res.confirm) {
-						wx.switchTab({
-							url: '../my/my',
-						})
-					} else if (res.cancel) {
-						wx.navigateBack({
-							delta: 1,
-						})
-					}
+				success: (res) => {
+					if (res.confirm) 
+						wx.switchTab({ url: '../my/my' })
+					else if (res.cancel) 
+						wx.navigateBack({ delta: 1 })
 				}
 			})
-		} else {
-			this.setData({
-				userInfo: userInfo
-			})
-		}
+		else this.setData({ userInfo })
 	},
 
 	// 获取用户位置
@@ -185,35 +194,53 @@ Page({
 	// 执行储存
 	async savePost(uploadedFileList) {
 		if (await this.checkPost(uploadedFileList.uploadedPhotoList)) {
-			wx.cloud.callFunction({
+			var res = (await wx.cloud.callFunction({
 				name: 'savePost',
 				data: {
 					content: this.data.content,
 					location: this.data.location,
+
+					rollName: this.data.rollName,
+					rollCount: this.data.rollCount,
+					rollDuration: this.data.rollDuration,
+
 					uploadedFileList: uploadedFileList,
 				}
-			}).then(async (res) => {
-				// 直接调用上一页的刷新，然后再返回
-				// 让新发布的帖子显示到主页
-				var pages = getCurrentPages()
-				var beforePage = pages[pages.length - 2]
-				beforePage.refreshPage()
+			})).result;
 
-				wx.hideLoading()
+			console.log(res);
 
-				setTimeout(() => {
-					wx.removeStorageSync('tempPost')
-				}, 1000);
+			// 直接调用上一页的刷新，然后再返回
+			// 让新发布的帖子显示到主页
+			// var pages = getCurrentPages()
+			// var beforePage = pages[pages.length - 2]
+			// beforePage.refreshPage()
 
-				wx.navigateBack({
-					delta: 1,
-				})
-
-				wx.showToast({
-					title: '发布成功',
-					icon: "success"
+			if (this.data.rollName && this.data.rollCount && 
+				this.data.rollDuration) {
+				
+				await wx.cloud.callFunction({
+					name: 'saveRollRecord',
+					data: {
+						postId: res._id,
+						postAuthorOpenId: this.data.userInfo._openid,
+						count: this.data.rollCount,
+						duration: this.data.rollDuration,
+					}
 				});
-			})
+			}
+
+			setTimeout(() => {
+				wx.removeStorageSync('tempPost')
+			}, 1000);
+
+			wx.hideLoading()
+			wx.showToast({
+				title: '发布成功', icon: "success"
+			});
+
+			wx.navigateBack({ delta: 1 })
+
 		} else {
 			wx.showToast({
 				icon: 'error',

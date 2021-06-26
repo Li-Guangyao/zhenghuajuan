@@ -12,11 +12,11 @@ exports.main = async (event, context) => {
 	
 	await db.collection('t_post_like').add({
 		data:{
-			_openid: event.userInfo.openId,
+			_openid: "system_roll",
 			postAuthor_openid: event.postAuthorOpenId,
 			postId: event.postId,
-			value: event.value,
-			valueIndex: event.valueIndex,
+			value: parseInt(event.count),
+			valueIndex: parseInt(event.duration),
 			createdAt: new Date()
 		}
 	})
@@ -31,11 +31,8 @@ exports.main = async (event, context) => {
 		.end()
 	
 	await db.collection('t_post').doc(event.postId).update({
-		data: {
-			likeValue: res.list[0].likeValue
-		}
+		data: { likeValue: res.list[0].likeValue }
 	})
 
 	return res.list[0].likeValue
-
 }
