@@ -12,7 +12,7 @@
 	</view>
 	<view class="third">
 		<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[1].displayName}}</view>
+		<view class="nickname">{{topRankList[2].displayName}}</view>
 		<view class="value">{{topRankList[2].totalValue}}</view>
 	</view>
 	<view class="update-date">更新时间：{{updateDate}}</view>
