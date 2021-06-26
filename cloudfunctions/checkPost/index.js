@@ -12,7 +12,7 @@ app.registerExtension(extCi);
 exports.main = async (event, context) => {
 	
 	var a = await contentSec(event.postContent)
-	var b = await imgSec(event.postPhotoList)
+	var b = true; //await imgSec(event.postPhotoList)
 
 	if (a == true && b == true) {
 		return true
@@ -37,11 +37,11 @@ async function imgSec(photoList) {
 				action: "DetectType",
 				cloudPath: photoList[i],
 				operations: {
-					type: "porn,ads,terrorist,politics",
+					type: "porn,politics",
 				},
 			})).data.RecognitionResult
 
-			if (res.AdsInfo.Code != 0 || res.PoliticsInfo.Code != 0 || res.PornInfo.Code != 0 || res.TerroristInfo.Code != 0) {
+			if (res.PoliticsInfo.Code != 0 || res.PornInfo.Code != 0) {
 				return false
 			}
 
