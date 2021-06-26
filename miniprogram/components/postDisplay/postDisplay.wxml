@@ -52,13 +52,13 @@
 		<video class="post-video" wx:if="{{item2.type=='video'}}" 
 			show-fullscreen-btn="{{false}}" play-btn-position="center" 
 			muted="{{true}}" object-fit="cover" src="{{item2.url}}"
-			data-index1="{{index}}" data-index2="{{index2}}" catchtap="{{videotap}}">
+			data-index="{{index}}" data-index2="{{index2}}" catchtap="{{videotap}}">
 		</video>
 		
 		<!-- 显示图片 -->
 		<image class="post-image" wx:if="{{item2.type=='image'}}" 
 			mode="aspectFill" src="{{item2.url}}"
-			data-index1="{{index}}" data-index2="{{index2}}" catchtap="{{imagetap}}">
+			data-index="{{index}}" data-index2="{{index2}}" catchtap="{{imagetap}}">
 		</image>
 	
 	</view>
