@@ -39,6 +39,7 @@ exports.main = async (event, context) => {
 	if (hour + timeZone >= 24) date += 1;
 
 	var day = now.getDay(); // 星期
+	if (day == 0) day = 7;
 
 	var sDate = date - day + 1;
 	var eDate = sDate + 7;

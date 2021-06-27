@@ -3,6 +3,10 @@ var updateInterval = 125;
 var lastStatusTime = 2;
 var aniCtx, updateId;
 
+var lastAngle = null;
+var accumulate = 0;
+const MaxDeltaAngle = 0.5;
+
 const MaxExitTime = 5 * 1000;
 
 Page({
@@ -21,12 +25,15 @@ Page({
 		statusIndex: 0,
 		finishText: "完成了！",
 
+		finished: false,
 		stopped: false,
 
 		exitTime: null
 	},
 
 	onLoad: function (e) {
+		wx.setKeepScreenOn({keepScreenOn: true});
+
 		this.setData({
 			name: e.name,
 			duration: e.duration,
@@ -45,8 +52,21 @@ Page({
 		this.setupBarCanvas();
 	},
 
-	onShow: function() {
+	onShow: function(e) {
 		if (!this.data.exitTime) return;
+		
+		/*
+		wx.stopDeviceMotionListening({})
+
+		if (this.data.stopped) {
+			this.setData({ stopped: true })
+			this.stopRolling();
+			this.onStopped();
+		} else 
+			wx.showToast({
+				title: accumulate + '蒸花卷过程中不要分心哦~', icon: 'none'
+			});
+		*/
 
 		var now = new Date();		
 		if (now - this.data.exitTime >= MaxExitTime) {
@@ -57,9 +77,36 @@ Page({
 			wx.showToast({
 				title: '蒸花卷过程中不要分心哦~', icon: 'none'
 			});
+		
 	},
 
 	onHide: function () {
+		if (this.data.finished) return;
+
+		/*
+		lastAngle = null;
+		accumulate = 0;
+
+		wx.startDeviceMotionListening({})
+		wx.onDeviceMotionChange((result) => {
+			if (lastAngle) {
+				var dA = result.alpha - lastAngle.alpha;
+				var dB = result.beta - lastAngle.beta;
+				var dG = result.gamma - lastAngle.gamma;
+				var delta2 = dA * dA + dB * dB + dG * dG;
+				
+				var now = new Date();
+
+				console.info("diff: ", delta2, 
+					delta2 >= MaxDeltaAngle * MaxDeltaAngle);
+				if (delta2 >= MaxDeltaAngle * MaxDeltaAngle) accumulate += (now - this.data.exitTime) / 1000;
+				if (accumulate >= 250)
+					this.setData({ stopped: true })
+			}
+			lastAngle = result;
+		})
+		*/
+
 		this.setData({ exitTime: new Date() });
 	},
 
@@ -97,6 +144,7 @@ Page({
 	},
 
 	update() {
+		
 		var now = new Date();
 		var s = this.data.startTime;
 		var nTime = now.getTime();
@@ -104,7 +152,7 @@ Page({
 
 		// TODO: 测试
 		// var dtTime = (nTime - sTime) / 1000;
-		var dtTime = (nTime - sTime) / 10;
+		var dtTime = (nTime - sTime) / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 
@@ -182,6 +230,8 @@ Page({
 	onFinished() {
 		if (this.data.stopped) return;
 
+		this.setData({finished: true});
+
 		this.drawMinuteProgress(60);
 		this.stopRolling();
 
@@ -198,6 +248,8 @@ Page({
 				})
 			}
 		})
+
+		wx.setKeepScreenOn({keepScreenOn: false});
 	},
 	
 	onStopped() {
