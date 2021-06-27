@@ -29,13 +29,11 @@ exports.main = async (event, context) => {
 			likeValue: $.sum('$value')
 		})
 		.end()
-	
-	db.collection('t_post').doc(event.postId).update({
-		data: {
-			likeValue: res.list[0] ? 
-				res.list[0].likeValue : 0
-		}
-	})
 
-	return res.list[0].likeValue
+	var likeValue = res.list[0] ? 
+		res.list[0].likeValue : 0;
+	
+	db.collection('t_post').doc(event.postId).update({ data: { likeValue } })
+
+	return likeValue
 }
