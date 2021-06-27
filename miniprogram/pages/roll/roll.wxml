@@ -24,8 +24,12 @@
 		<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
 		<view class="minute">min</view>
 	</view>
-	<view class="dialog-tip">预计可获得{{counts[durationIndex]}}个
-		<image src="../../icon/roll2.png" mode="heightFix"></image>
+	<view class="dialog-tip">预计可获得{{counts[durationIndex] * (strictMode ? 2 : 1)}}个
+		<image src="../../icon/roll2.png" mode="heightFix">
+		</image>
+		<checkbox-group bindchange="onStrictChange">		
+			<checkbox style="margin-left: 32rpx">严格模式</checkbox>
+		</checkbox-group>
 	</view>
 </van-dialog>
 

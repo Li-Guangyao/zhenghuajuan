@@ -14,6 +14,7 @@ Page({
 		name: "学习",
 		duration: 15,
 		count: 15,
+		strict: false,
 
 		startTime: null,
 		curMinute: 0,
@@ -38,6 +39,7 @@ Page({
 			name: e.name,
 			duration: e.duration,
 			count: e.count,
+			strict: e.strict == 1,
 			stopped: false
 		})
 
@@ -54,7 +56,7 @@ Page({
 
 	onShow: function(e) {
 		if (!this.data.exitTime) return;
-		
+
 		/*
 		wx.stopDeviceMotionListening({})
 
@@ -69,7 +71,7 @@ Page({
 		*/
 
 		var now = new Date();		
-		if (now - this.data.exitTime >= MaxExitTime) {
+		if (this.data.strict && now - this.data.exitTime >= MaxExitTime) {
 			this.setData({ stopped: true })
 			this.stopRolling();
 			this.onStopped();

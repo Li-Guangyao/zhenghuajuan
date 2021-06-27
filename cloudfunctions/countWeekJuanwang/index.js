@@ -34,11 +34,12 @@ exports.main = async (event, context) => {
 	var date = now.getDate();
 	var month = now.getMonth();
 	var year = now.getFullYear();
+	var day = now.getDay(); // 星期
 
 	var hour = now.getHours();
-	if (hour + timeZone >= 24) date += 1;
-
-	var day = now.getDay(); // 星期
+	if (hour + timeZone >= 24) {
+		date += 1; day = day + 1 % 7;
+	}
 	if (day == 0) day = 7;
 
 	var sDate = date - day + 1;
