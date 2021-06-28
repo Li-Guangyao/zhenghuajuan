@@ -47,7 +47,7 @@ Page({
 		this.queryParams.pageNum = 0
 
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中', mask: true
 		})
 
 		await wx.cloud.callFunction({
@@ -77,27 +77,6 @@ Page({
 		return postList
 	},
 
-	// 点击视频或者图片预览
-	previewMadia(e) {
-		console.log(e)
-		// sources: this.data.postList.
-		var index1 = e.currentTarget.dataset.index1
-		var index2 = e.currentTarget.dataset.index2
-		wx.previewMedia({
-			sources: this.data.postList[index1].photoList,
-			current: index2,
-			showmenu: true,
-		})
-	},
-
-	tapPost(e) {
-		var index = e.currentTarget.dataset.index
-		var post = JSON.stringify(this.data.postList[index])
-		wx.navigateTo({
-			url: '../postDetail/postDetail?post=' + post + '&postIndex=' + index,
-		})
-	},
-
 	onPullDownRefresh: function () {
 		this.refreshPage()
 		wx.stopPullDownRefresh()
@@ -107,7 +86,7 @@ Page({
 	async onReachBottom() {
 		console.log('ReachBottom')
 		wx.showLoading({
-			title: '加载中',
+			title: '加载中', mask: true
 		})
 
 		this.queryParams.pageNum++
@@ -134,33 +113,4 @@ Page({
 		wx.hideLoading()
 	},
 
-	deletePost(e) {
-		wx.showModal({
-			content: '确定删除',
-			success: async (res) => {
-				if (res.confirm) {
-					wx.cloud.callFunction({
-						name: 'removePost',
-						data: {
-							postId: this.data.postList[e.currentTarget.dataset.index]._id
-						},
-						success: res => {
-							wx.showToast({
-								title: '删除成功',
-								icon: 'none'
-							});
-
-							this.data.postList.splice(e.currentTarget.dataset.index, 1)
-							this.setData({
-								postList: this.data.postList
-							})
-						},
-						fail: err => {
-							console.log(err)
-						}
-					})
-				}
-			}
-		})
-	}
 })

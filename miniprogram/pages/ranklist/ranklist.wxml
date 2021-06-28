@@ -2,17 +2,17 @@
 	<image class="background-image" src="../../images/rankList.png" mode="widthFix" />
 	<view class="first">
 		<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[0].nickname}}</view>
+		<view class="nickname">{{topRankList[0].displayName}}</view>
 		<view class="value">{{topRankList[0].totalValue}}</view>
 	</view>
 	<view class="second">
 		<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[1].nickname}}</view>
+		<view class="nickname">{{topRankList[1].displayName}}</view>
 		<view class="value">{{topRankList[1].totalValue}}</view>
 	</view>
 	<view class="third">
 		<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[2].nickname}}</view>
+		<view class="nickname">{{topRankList[2].displayName}}</view>
 		<view class="value">{{topRankList[2].totalValue}}</view>
 	</view>
 	<view class="update-date">更新时间：{{updateDate}}</view>
@@ -29,7 +29,7 @@
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
 					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.nickName}}</view>
+					<view class="user-nickname">{{item.displayName}}</view>
 				</view>
 				<view class="right">
 					<view class="juan-number">{{item.totalValue}}</view>
@@ -45,7 +45,7 @@
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
 					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.nickName}}</view>
+					<view class="user-nickname">{{item.displayName}}</view>
 				</view>
 				<view class="right">
 					<view class="juan-number">{{item.totalValue}}</view>
@@ -71,9 +71,9 @@
 
 	<view class="rank-item" wx:if="{{chosenTabIndex==0}}">
 		<view class="left">
-			<text class="rank-number" wx:if="{{myDayRank!=-1}}">{{myRank}}</text>
+			<text class="rank-number" wx:if="{{myDayRank!=-1}}">{{myDayRank}}</text>
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-			<view class="user-nickname">{{userInfo.nickName}}</view>
+			<view class="user-nickname">{{userInfo.displayName}}</view>
 		</view>
 		<view class="right">
 			<view class="juan-number" wx:if="{{myDayRank!=-1}}">{{myDayValue}}</view>
@@ -86,7 +86,7 @@
 		<view class="left">
 			<text class="rank-number" wx:if="{{myWeekRank!=-1}}">{{myWeekRank}}</text>
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-			<view class="user-nickname">{{userInfo.nickName}}</view>
+			<view class="user-nickname">{{userInfo.displayName}}</view>
 		</view>
 		<view class="right">
 			<view class="juan-number" wx:if="{{myWeekRank!=-1}}">{{myWeekValue}}</view>

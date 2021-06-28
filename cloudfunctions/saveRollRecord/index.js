@@ -9,17 +9,17 @@ const $ = db.command.aggregate
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-
-	// db.collection('t_post').doc(event.postId).update({
-	// 	data: {
-	// 		likeValue: _.inc(likeValue)
-	// 	}
-	// })
-
-	await db.collection('t_post_like').where({
-		_openid: event.userInfo.openId,
-		postId: event.postId,
-	}).remove()
+	
+	await db.collection('t_post_like').add({
+		data:{
+			_openid: "system_roll",
+			postAuthor_openid: event.postAuthorOpenId,
+			postId: event.postId,
+			value: parseInt(event.count),
+			valueIndex: parseInt(event.duration),
+			createdAt: new Date()
+		}
+	})
 
 	// 更新
 	var res = await db.collection('t_post_like').aggregate()
@@ -29,11 +29,10 @@ exports.main = async (event, context) => {
 			likeValue: $.sum('$value')
 		})
 		.end()
-
-	var likeValue = res.list[0] ? 
-		res.list[0].likeValue : 0;
 	
-	db.collection('t_post').doc(event.postId).update({ data: { likeValue } })
+	await db.collection('t_post').doc(event.postId).update({
+		data: { likeValue: res.list[0].likeValue }
+	})
 
-	return likeValue
+	return res.list[0].likeValue
 }

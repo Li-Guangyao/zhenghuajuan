@@ -12,8 +12,12 @@
 			<image class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
 
 			<view class="nickname-time">
-				<view class="user-nickname">{{item.nickname || item.nickName}}</view>
-				<view class="pub-time">{{item.timeDiff}}</view>
+				<view class="user-nickname">{{item.displayName}}</view>
+
+				<view class="pub-time">{{item.timeDiff}} 
+					<text class="check-info" wx:if="{{item.status==0}}">正在审核</text>
+					<text class="check-info" wx:if="{{item.status==2}}">审核未通过</text>
+				</view>
 			</view>
 
 		</view>
@@ -23,7 +27,7 @@
 
 			<!-- 花卷数量显示 -->
 			<view class="juan"> 
-				<view class="juan-number">{{item.likeValue || 0}}</view>
+				<view class="juan-number">{{item.likeValue}}</view>
 				<image class="juan-image" src="../../icon/roll2.png"></image>
 			</view>
 
@@ -48,13 +52,13 @@
 		<video class="post-video" wx:if="{{item2.type=='video'}}" 
 			show-fullscreen-btn="{{false}}" play-btn-position="center" 
 			muted="{{true}}" object-fit="cover" src="{{item2.url}}"
-			data-index1="{{index}}" data-index2="{{index2}}" catchtap="{{videotap}}">
+			data-index="{{index}}" data-index2="{{index2}}" catchtap="{{videotap}}">
 		</video>
 		
 		<!-- 显示图片 -->
 		<image class="post-image" wx:if="{{item2.type=='image'}}" 
 			mode="aspectFill" src="{{item2.url}}"
-			data-index1="{{index}}" data-index2="{{index2}}" catchtap="{{imagetap}}">
+			data-index="{{index}}" data-index2="{{index2}}" catchtap="{{imagetap}}">
 		</image>
 	
 	</view>
@@ -74,7 +78,7 @@
 			<!-- 删除 -->
 			<van-icon custom-style="icon-delete" name="delete-o" size="42rpx" 
 				data-index="{{index}}" style="margin-right: 20rpx"
-				catchtap="deletePost" wx:if="{{userInfo._openid==item._openid}}"/>
+				catchtap="deletePost" wx:if="{{showDelete && userInfo._openid==item._openid}}"/>
 
 			<!-- 点赞 likeIndex: 当前用户的点赞索引 oriLikeIndex: 保存记录 -->
 			<image class="icon-huajuan" wx:if="{{!(item.likeIndex >= 0)}}" 
@@ -116,7 +120,7 @@
 			<view class="left">
 				<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
 				<view class="nickname-time">
-					<view class="user-nickname">{{item.nickname}}</view>
+					<view class="user-nickname">{{item.displayName}}</view>
 					<view class="pub-time">{{item.timeDiff}}</view>
 				</view>
 			</view>

@@ -9,6 +9,11 @@ Component({
 			value: null
 		},
 
+		showDelete: {
+			type: Boolean,
+			value: false
+		},
+
 		postList: {
 			type: Array,
 			value: null
@@ -181,15 +186,22 @@ Component({
 		},
 
 		// 给出赞之后，图标变为彩色，再次点击直接变为无色，即取消点赞
-		cancelLike(e) {
-			console.info(e);
+		async cancelLike(e) {
+			if (this.data.loading) return;
+
 			var post = this.currentPost(e);
 			if (post.likeIndex == -1) return;
 
 			var likeItem = this.data.likeItems[post.likeIndex];
 
 			post.likeIndex = -1;
-			post.likeValue -= likeItem.value;
+			// post.likeValue -= likeItem.value;
+
+			wx.showLoading({ title: '加载中', mask: true })
+
+			await this.uploadLike(post);
+
+			wx.hideLoading()
 
 			this.refreshPosts();
 		},
@@ -205,7 +217,7 @@ Component({
 		},
 	
 		// 在popup中选择一项
-		tapLikeItem(e) {
+		async tapLikeItem(e) {
 			var post = this.data.curLikePost;
 			var likeIndex = e.currentTarget.dataset.index;
 
@@ -217,7 +229,11 @@ Component({
 				var oriLikeValue = oriLikeItem ? oriLikeItem.value : 0;
 
 				post.likeIndex = likeIndex;
-				post.likeValue += likeItem.value;
+				// post.likeValue += likeItem.value;
+
+				wx.showLoading({ title: '加载中', mask: true })
+				await this.uploadLike(post);
+				wx.hideLoading()
 
 				this.refreshPosts();
 			}
@@ -226,12 +242,12 @@ Component({
 		
 		// 上传所有点赞数据
 		async uploadLikes() {
-			var postList = this.properties.postList;
-			if (this.properties.post) 
-				await this.uploadLike(this.properties.post);
-			else 
-				for (var i = 0; i < postList.length; ++i)
-					await this.uploadLike(postList[i]);
+			// var postList = this.properties.postList;
+			// if (this.properties.post) 
+			// 	await this.uploadLike(this.properties.post);
+			// else 
+			// 	for (var i = 0; i < postList.length; ++i)
+			// 		await this.uploadLike(postList[i]);
 		},
 
 		// 上传点赞数据
@@ -245,16 +261,19 @@ Component({
 
 			if (oriLikeValue == likeValue) return;
 
+			var totalLikeValue = 0;
+			post.oriLikeIndex = post.likeIndex;
+
 			if (likeValue == 0) { // 取消点赞
-				await wx.cloud.callFunction({
+				totalLikeValue = (await wx.cloud.callFunction({
 					name: 'removePostLike',
 					data: {
 						postId: post._id,
 						originValue: oriLikeValue
 					}
-				})
+				})).result;
 			} else if (oriLikeValue == 0) { // 新增点赞
-				await wx.cloud.callFunction({
+				totalLikeValue = (await wx.cloud.callFunction({
 					name: 'savePostLike',
 					data: {
 						postId: post._id,
@@ -262,9 +281,9 @@ Component({
 						valueIndex: post.likeIndex,
 						value: likeValue,
 					}
-				})
+				})).result;
 			} else { // 修改点赞
-				await wx.cloud.callFunction({
+				totalLikeValue = (await wx.cloud.callFunction({
 					name: 'updatePostLike',
 					data: {
 						postId: post._id,
@@ -272,8 +291,10 @@ Component({
 						value: likeValue,
 						originValue: oriLikeValue
 					}
-				})
+				})).result;
 			}
+
+			post.likeValue = totalLikeValue
 		},
 		
 		// 评论
@@ -307,7 +328,7 @@ Component({
 
 			var comment = this.currentComment(e);
 			this.setData({
-				commentSb: "回复 " + comment.nickname + ' : ',
+				commentSb: "回复 " + comment.nickName + ' : ',
 				showInputForComment: true
 			})
 		},
@@ -349,29 +370,57 @@ Component({
 		},
 
 		// 保存评论
-		saveComment(content) {
+		async saveComment(content) {
 			if (!this.properties.post) return;
-			
-			wx.showLoading({ title: '保存中' })
-			var commentList = this.properties.commentList;
 
-			wx.cloud.callFunction({
-				name: 'savePostComment',
-				data: {
-					postId: this.properties.post._id,
-					comment: content,
-				}
-			}).then(res => {
+			wx.showLoading({ title: '保存中', mask: true })
+			if (await this.checkComment(content)) {
+				var commentList = this.properties.commentList;
+	
+				var res = await wx.cloud.callFunction({
+					name: 'savePostComment',
+					data: {
+						postId: this.properties.post._id,
+						comment: content,
+					}
+				})
+				console.info(res);
+
 				wx.showToast({
-					title: '保存成功',
-					icon: 'none'
+					title: '保存成功', icon: 'none'
 				});
+
 				commentList.push({
 					...this.properties.userInfo,
-					timeDiff: "刚刚", content
+
+					_id: res.result._id,
+					content, timeDiff: "刚刚"
 				})
-				this.setData({ commentList })
-			}).finally(wx.hideLoading);
+				
+				this.properties.post.commentCount++;
+				this.setData({ 
+					post: this.properties.post,
+					commentList
+				})
+			} else {
+				wx.hideLoading();
+				wx.showToast({
+					title: '没有通过审核', icon: 'error'
+				})
+			}
+		},
+
+		// 内容安全检查
+		async checkComment(content) {
+			const res = await wx.cloud.callFunction({
+				name: 'checkPost',
+				data: {
+					postContent: content,
+					postPhotoList: []
+				}
+			})
+			
+			return res.result
 		},
 
 		// 删除评论
@@ -390,7 +439,12 @@ Component({
 					data: { commentId: comment._id },
 					success: res => {
 						commentList.splice(cIndex, 1)
-						this.setData({ commentList })
+				
+						this.properties.post.commentCount--;
+						this.setData({ 
+							post: this.properties.post,
+							commentList
+						})
 					}
 				})
 			}
