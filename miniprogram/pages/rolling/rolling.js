@@ -1,4 +1,7 @@
-var x = 128, y = 128, r = 120, w = 8;
+var x = 128,
+	y = 128,
+	r = 120,
+	w = 8;
 var updateInterval = 125;
 var lastStatusTime = 2;
 var aniCtx, updateId;
@@ -22,9 +25,9 @@ Page({
 		curCount: 0,
 
 		// 和面，发面，切段，蒸制，出锅
-		statuses: ["和面中...", "发面中...", "切段中...", "蒸制中...", "出锅！"],
+		status: ["和面中...", "发面中...", "切段中...", "蒸制中...", "出锅！"],
 		statusIndex: 0,
-		finishText: "完成了！",
+		finishedText: "完成了！",
 
 		finished: false,
 		stopped: false,
@@ -33,7 +36,9 @@ Page({
 	},
 
 	onLoad: function (e) {
-		wx.setKeepScreenOn({keepScreenOn: true});
+		wx.setKeepScreenOn({
+			keepScreenOn: true
+		});
 
 		this.setData({
 			name: e.name,
@@ -44,17 +49,17 @@ Page({
 		})
 
 		wx.enableAlertBeforeUnload({
-      message: "退出后将丢失目前已经蒸好的花卷！您确定要退出吗？",
-      success: function(res) { },
-      fail: function(errMsg) { }
-		})		
+			message: "退出后将丢失目前已经蒸好的花卷！您确定要退出吗？",
+			success: function (res) {},
+			fail: function (errMsg) {}
+		})
 	},
 
 	onReady: function () {
 		this.setupBarCanvas();
 	},
 
-	onShow: function(e) {
+	onShow: function (e) {
 		if (!this.data.exitTime) return;
 
 		/*
@@ -70,16 +75,18 @@ Page({
 			});
 		*/
 
-		var now = new Date();		
+		var now = new Date();
 		if (this.data.strict && now - this.data.exitTime >= MaxExitTime) {
-			this.setData({ stopped: true })
+			this.setData({
+				stopped: true
+			})
 			this.stopRolling();
 			this.onStopped();
-		} else 
+		} else
 			wx.showToast({
-				title: '蒸花卷过程中不要分心哦~', icon: 'none'
+				title: '蒸花卷过程中不要分心哦~',
+				icon: 'none'
 			});
-		
 	},
 
 	onHide: function () {
@@ -109,18 +116,25 @@ Page({
 		})
 		*/
 
-		this.setData({ exitTime: new Date() });
+		// 退出设置exitTime，下次进入用于判断
+		this.setData({
+			exitTime: new Date()
+		});
 	},
 
-	onUnload: function() {
+	onUnload: function () {
 		this.stopRolling();
 	},
 
 	// 配置Canvas
 	setupBarCanvas() {
 		const query = this.createSelectorQuery()
+		// 获取canvas
 		query.select('#canvasArcCir')
-			.fields({ node: true, size: true })
+			.fields({
+				node: true,
+				size: true
+			})
 			.exec((res) => {
 				console.log(res)
 
@@ -130,8 +144,9 @@ Page({
 				const dpr = wx.getSystemInfoSync().pixelRatio
 				canvas.width = res[0].width * dpr
 				canvas.height = res[0].height * dpr
+				// 缩放
 				aniCtx.scale(dpr, dpr);
-				
+
 				this.clearMinuteProgress();
 				this.startTimer();
 			})
@@ -146,7 +161,6 @@ Page({
 	},
 
 	update() {
-		
 		var now = new Date();
 		var s = this.data.startTime;
 		var nTime = now.getTime();
@@ -154,6 +168,7 @@ Page({
 
 		// TODO: 测试
 		// var dtTime = (nTime - sTime) / 1000;
+		// 现在距离计时开始的毫秒数
 		var dtTime = (nTime - sTime) / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
@@ -177,13 +192,13 @@ Page({
 	getCurCount(minute) {
 		var count = this.data.count;
 		var duration = this.data.duration;
-		
+
 		return parseInt(minute * count / duration);
 	},
 
 	// 根据秒数获取状态名称
 	getStatusIndex(second) {
-		var cnt = this.data.statuses.length;
+		var cnt = this.data.status.length;
 		var total = 60 - lastStatusTime;
 		if (second >= total) return cnt - 1;
 
@@ -191,34 +206,35 @@ Page({
 		return parseInt(second / delta);
 	},
 
+
 	drawMinuteProgress(second) {
 		if (!aniCtx) return;
 
 		// if (second <= 0.5)
 		// 	this.clearMinuteProgress();
 		// else {
-			this.clearMinuteProgress();
-			var s = 1.5 * Math.PI;
-			var e = s + second / 60 * 2 * Math.PI;
-	
-			const grd = aniCtx.createLinearGradient(0, 0, x * 2, 0)
-			grd.addColorStop(0, '#FEA403')
-			grd.addColorStop(1, '#FF6464')
-	
-			aniCtx.lineWidth = w - 2;
-			aniCtx.strokeStyle = grd;
-			aniCtx.lineCap = 'round';
-	
-			aniCtx.beginPath();
-			aniCtx.arc(x, y, r, s, e, false);
-			aniCtx.stroke();
-			aniCtx.closePath();
+		this.clearMinuteProgress();
+		var s = 1.5 * Math.PI;
+		var e = s + second / 60 * 2 * Math.PI;
+
+		const grd = aniCtx.createLinearGradient(0, 0, x * 2, 0)
+		grd.addColorStop(0, '#FEA403')
+		grd.addColorStop(1, '#FF6464')
+
+		aniCtx.lineWidth = w - 2;
+		aniCtx.strokeStyle = grd;
+		aniCtx.lineCap = 'round';
+
+		aniCtx.beginPath();
+		aniCtx.arc(x, y, r, s, e, false);
+		aniCtx.stroke();
+		aniCtx.closePath();
 		// }
 	},
 
 	clearMinuteProgress() {
 		if (!aniCtx) return;
-				
+
 		aniCtx.lineWidth = w;
 		aniCtx.strokeStyle = '#eaeaea';
 		aniCtx.lineCap = 'round';
@@ -232,7 +248,9 @@ Page({
 	onFinished() {
 		if (this.data.stopped) return;
 
-		this.setData({finished: true});
+		this.setData({
+			finished: true
+		});
 
 		this.drawMinuteProgress(60);
 		this.stopRolling();
@@ -244,27 +262,31 @@ Page({
 
 			success: res => {
 				wx.redirectTo({
-					url: '../postAdd/postAdd?rollName=' + this.data.name + 
-						"&rollCount=" + this.data.count + 
+					url: '../postAdd/postAdd?rollName=' + this.data.name +
+						"&rollCount=" + this.data.count +
 						"&rollDuration=" + this.data.duration,
 				})
 			}
 		})
 
-		wx.setKeepScreenOn({keepScreenOn: false});
+		wx.setKeepScreenOn({
+			keepScreenOn: false
+		});
 	},
-	
+
 	onStopped() {
 		wx.disableAlertBeforeUnload({
 			success: (res) => {
 				wx.showModal({
 					title: '太可惜了，由于您在蒸花卷过程中分心，花卷全坏掉了，再来一次吧！下次记得不要分心了哦~',
 					showCancel: false,
-		
+
 					success: res => {
-						wx.navigateBack({ delta: 1 })
+						wx.navigateBack({
+							delta: 1
+						})
 					}
-				})		
+				})
 			},
 		})
 	},

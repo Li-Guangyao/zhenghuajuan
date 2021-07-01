@@ -86,19 +86,22 @@ Page({
 					}
 				}
 			})
-		} else this.setData({ userInfo })
+		} else this.setData({
+			userInfo
+		})
 	},
 
 	async refreshPage() {
 		this.queryParams.pageNum = 0
 
 		wx.showLoading({
-			title: '加载中', mask: true
+			title: '加载中',
+			mask: true
 		})
 
 		await wx.cloud.callFunction({
 			name: 'getMyPost',
-			data:{
+			data: {
 				roll: true,
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
 			}
@@ -128,7 +131,8 @@ Page({
 	async onReachBottom() {
 		console.log('ReachBottom')
 		wx.showLoading({
-			title: '加载中', mask: true
+			title: '加载中',
+			mask: true
 		})
 
 		this.queryParams.pageNum++
@@ -177,11 +181,15 @@ Page({
 		})
 	},
 
+	// 是否选择严格模式
 	onStrictChange(e) {
 		console.log(e)
-		this.setData({strictMode: e.detail.value.length > 0})
+		this.setData({
+			strictMode: !this.data.strictMode
+		})
 	},
 
+	// 输入完蒸花卷信息之后
 	onDialogClose(e) {
 		switch (e.detail) {
 			case "confirm":
@@ -190,7 +198,9 @@ Page({
 						title: '花卷口味不能为空！',
 						icon: 'none'
 					});
-					this.setData({ showDialog: true });
+					this.setData({
+						showDialog: true
+					});
 				} else {
 					var duration = this.data.durations[this.data.durationIndex];
 					var count = this.data.counts[this.data.durationIndex];
@@ -200,21 +210,25 @@ Page({
 					wx.showModal({
 						title: '确定要蒸' + duration + '分钟花卷吗？在严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！',
 						showCancel: true,
-		
+
 						success: res => {
 							if (res.confirm) {
 								wx.navigateTo({
-									url: '../rolling/rolling?name=' + this.data.name + 
-									"&duration=" + duration + "&count=" + count + "&strict=" + (this.data.strictMode ? 1 : 0),
+									url: '../rolling/rolling?name=' + this.data.name +
+										"&duration=" + duration + "&count=" + count + "&strict=" + (this.data.strictMode ? 1 : 0),
 								})
-							} else if (res.cancel) 
-								this.setData({ showDialog: false });
+							} else if (res.cancel)
+								this.setData({
+									showDialog: false
+								});
 						}
 					})
 				}
 				break;
 			default:
-				this.setData({ showDialog: false });
+				this.setData({
+					showDialog: false
+				});
 				break;
 		}
 	},

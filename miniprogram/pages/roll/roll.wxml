@@ -8,15 +8,14 @@
 	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}" showDelete="true"></post-display>
 </view>
 
-
-<van-dialog class="set-activity" title="标题" 
-	use-slot use-title-slot show="{{ showDialog }}" zIndex="1"
+<van-dialog class="set-activity" title="标题" use-slot use-title-slot show="{{ showDialog }}" zIndex="1"
 	show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
 	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa" style="z-index:-1;">
-	<view slot="title" class="dialog-title">蒸花卷</view>	
+	<view slot="title" class="dialog-title">蒸花卷</view>
 	<view class="activity-name">
 		<view class="tip">花卷口味</view>
-		<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5" placeholder="写下你专注的内容吧"></input>
+		<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5"
+			placeholder="写下你专注的内容吧"></input>
 	</view>
 	<view class="activity-duration">
 		<view class="tip">蒸制时间</view>
@@ -24,11 +23,10 @@
 		<view class="minute">min</view>
 	</view>
 	<view class="dialog-tip">预计可获得{{counts[durationIndex] * (strictMode ? 2 : 1)}}个
-		<image src="../../icon/roll2.png" mode="heightFix">
-		</image>
-		<checkbox-group bindchange="onStrictChange">		
-			<checkbox style="margin-left: 32rpx">严格模式</checkbox>
-		</checkbox-group>
+		<image src="../../icon/roll2.png" mode="heightFix"></image>
+		<van-checkbox value="{{ strictMode }}" bind:change="onStrictChange" shape="round" checked-color="#ffa600"
+			style="margin-left: 32rpx">严格模式
+		</van-checkbox>
 	</view>
 </van-dialog>
 

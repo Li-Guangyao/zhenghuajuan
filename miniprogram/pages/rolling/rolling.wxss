@@ -1,44 +1,44 @@
 page {
-	background-color: var(--themeBackgroundColor);
-	text-align: center;
+  background-color: var(--themeBackgroundColor);
+  text-align: center;
 }
 .title {
-	font-size: 64rpx;
-	color: #FEA403;
-	margin: 128rpx 0 0 0;
+  font-size: 64rpx;
+  color: #FEA403;
+  margin: 128rpx 0 0 0;
 }
 .content {
-	padding: 0 96rpx 0 96rpx;
-}	
-.progress-bar {
-	margin: 64rpx auto 32rpx auto;
-	width: fit-content;
+  padding: 0 96rpx 0 96rpx;
 }
-.progress-bar	.circle {
-	width: 256px;
-	height: 256px;
-	margin: 0 0 32rpx 0;
+.progress-bar {
+  margin: 64rpx auto 32rpx auto;
+  width: fit-content;
+}
+.progress-bar .circle {
+  width: 256px;
+  height: 256px;
+  margin: 0 0 32rpx 0;
 }
 .progress-bar .circle image {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 50%;
-	height: 35%;
-	margin: auto;
-	transform: translateY(-50%);
+  position: absolute;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 35%;
+  margin: auto;
 }
 .progress-bar text {
-	font-size: 32rpx;
-	color: #515151;
+  font-size: 32rpx;
+  color: #515151;
 }
 .total-progress {
-	margin-top: 96rpx;
-	border: #FEA403 solid 1px;
-	border-radius: 12px;
+  margin-top: 96rpx;
+  border: #FEA403 solid 1px;
+  border-radius: 12px;
 }
 .small-tip {
-	position: relative;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -46,8 +46,15 @@ page {
   font-size: 24rpx;
   margin: 12rpx 0 32rpx 0;
 }
+.small-tip .number1 {
+  color: #FEA403;
+}
 .small-tip image {
   height: 42rpx;
-  margin-left: 12rpx
+  margin-left: 12rpx;
 }
-
+.small-tip .number2 {
+  position: absolute;
+  color: #FEA403;
+  right: 0;
+}

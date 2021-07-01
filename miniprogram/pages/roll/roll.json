@@ -3,6 +3,7 @@
     "van-dialog": "@vant/weapp/dialog/index",
     "van-popup": "@vant/weapp/popup/index",
     "van-picker": "@vant/weapp/picker/index",
+    "van-checkbox": "@vant/weapp/checkbox/index",
     "post-display": "../../components/postDisplay/postDisplay"
   },
   "navigationBarBackgroundColor": "#ffa600",
