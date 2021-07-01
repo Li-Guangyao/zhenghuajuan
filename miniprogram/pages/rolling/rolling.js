@@ -167,7 +167,6 @@ Page({
 		var sTime = s.getTime();
 
 		// TODO: 测试
-		// var dtTime = (nTime - sTime) / 1000;
 		// 现在距离计时开始的毫秒数
 		var dtTime = (nTime - sTime) / 1000;
 		var minute = dtTime / 60;
