@@ -13,6 +13,7 @@ page {
 	padding: 0 96rpx 0 96rpx;
 
 }
+
 .progress-bar {
 	margin: 64rpx auto 32rpx auto;
 	width: fit-content;
@@ -21,15 +22,16 @@ page {
 		width: 256px;
 		height: 256px;
 		margin: 0 0 32rpx 0;
-		
-		image {		
+
+		image {
 			position: absolute;
+			transform: translateY(-50%);
+
 			left: 0;
 			right: 0;
 			top: 50%;
 			height: 35%;
 			margin: auto;
-			transform: translateY(-50%);
 		}
 	}
 
@@ -39,6 +41,7 @@ page {
 	}
 
 }
+
 .total-progress {
 	margin-top: 96rpx;
 	border: #FEA403 solid 1px;
@@ -49,15 +52,25 @@ page {
 	position: relative;
 	display: flex;
 	align-items: center;
-  justify-content: left;
+	justify-content: left;
 
 	color: #808080;
 	font-size: 24rpx;
-  margin: 12rpx 0 32rpx 0;
+	margin: 12rpx 0 32rpx 0;
+
+	.number1 {
+		color: #FEA403
+	}
 
 	image {
-			height: 42rpx;
-			margin-left: 12rpx
+		height: 42rpx;
+		margin-left: 12rpx
+	}
+
+	.number2 {
+		position: absolute;
+		
+		color: #FEA403;
+		right: 0
 	}
 }
- 
