@@ -158,7 +158,6 @@ Page({
 		// var sTime = s.getTime();
 
 		// TODO: 测试
-		// var dtTime = (nTime - sTime) / 1000;
 		var dtTime = ms / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
