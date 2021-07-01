@@ -20,6 +20,7 @@ Page({
 		strict: false,
 
 		startTime: null,
+		curMilliSecond: 0,
 		curMinute: 0,
 		curSecond: 0,
 		curCount: 0,
@@ -155,20 +156,24 @@ Page({
 	// 正式开始计时
 	startTimer() {
 		this.setData({
-			startTime: new Date()
+			startTime: new Date(),
+			curMilliSecond: 0
 		});
 		updateId = setInterval(this.update, updateInterval);
 	},
 
 	update() {
-		var now = new Date();
-		var s = this.data.startTime;
-		var nTime = now.getTime();
-		var sTime = s.getTime();
+		// var now = new Date();
+		// var s = this.data.startTime;
+
+		var ms = this.data.curMilliSecond + updateInterval;
+
+		// var nTime = now.getTime();
+		// var sTime = s.getTime();
 
 		// TODO: 测试
 		// 现在距离计时开始的毫秒数
-		var dtTime = (nTime - sTime) / 1000;
+		var dtTime = ms / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 
@@ -181,7 +186,8 @@ Page({
 			curCount,
 			curMinute: minute,
 			curSecond: second,
-			statusIndex: sIndex
+			statusIndex: sIndex,
+			curMilliSecond: ms
 		});
 
 		if (minute >= this.data.duration)
