@@ -15,9 +15,6 @@ Component({
      */
     data: {},
 
-    /**
-     * 组件的方法列表
-     */
     methods: {
         handleTabbarTap(e) {
             // 组件触发事件时,逻辑层绑定该事件的处理函数会收到一个事件对象,在这里就是e
