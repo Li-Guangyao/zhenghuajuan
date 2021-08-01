@@ -187,6 +187,11 @@ Page({
 		this.setData({
 			strictMode: !this.data.strictMode
 		})
+		// if (this.data.strictMode)
+		// 	wx.showToast({
+		// 		title: '严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！',
+		// 		icon: 'none'
+		// 	});
 	},
 
 	// 输入完蒸花卷信息之后
@@ -205,12 +210,15 @@ Page({
 					var duration = this.data.durations[this.data.durationIndex];
 					var count = this.data.counts[this.data.durationIndex];
 
-					if (this.data.strictMode) count *= 2;
+					if (!this.data.strictMode) 
+						count = Math.floor(count / 2);
+
+					var title = '确定要蒸' + duration + '分钟花卷吗？';
+					if (this.data.strictMode)
+						title += "严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！";
 
 					wx.showModal({
-						title: '确定要蒸' + duration + '分钟花卷吗？在严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！',
-						showCancel: true,
-
+						title, showCancel: true,
 						success: res => {
 							if (res.confirm) {
 								wx.navigateTo({

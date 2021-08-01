@@ -1,3 +1,13 @@
+<!--wxml-->
+<wxs module="m1">
+var calcCount = function(count, strictMode) {
+	if (strictMode) return count;
+	return Math.floor(count / 2);
+};
+
+module.exports.calcCount = calcCount;
+</wxs>
+
 <view class="no-record" wx:if="{{postList.length <= 0}}">
 	<image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
 	<text>还没有任何蒸花卷记录</text>
@@ -22,7 +32,7 @@
 		<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
 		<view class="minute">min</view>
 	</view>
-	<view class="dialog-tip">预计可获得{{counts[durationIndex] * (strictMode ? 2 : 1)}}个
+	<view class="dialog-tip">预计可获得{{m1.calcCount(counts[durationIndex], strictMode)}}个
 		<image src="../../icon/roll2.png" mode="heightFix"></image>
 		<van-checkbox value="{{ strictMode }}" bind:change="onStrictChange" shape="round" checked-color="#ffa600"
 			style="margin-left: 32rpx">严格模式
