@@ -16,6 +16,12 @@
 		</view>
 	</van-cell>
 
+	<van-cell custom-class="my-page" icon="orders-o" size="large" is-link bindtap="toMyPost">
+		<view slot="title">
+			<view class="van-cell-text">统计数据</view>
+		</view>
+	</van-cell>
+
 </view>
 
 <!-- <button bindtap="test">测试</button> -->
