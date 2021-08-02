@@ -9,6 +9,7 @@ const $ = db.command.aggregate
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+	// UPDATE
 	
 	await db.collection('t_post_like').where({
 			_openid: event.userInfo.openId,

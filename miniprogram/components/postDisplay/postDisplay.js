@@ -264,6 +264,18 @@ Component({
 			var totalLikeValue = 0;
 			post.oriLikeIndex = post.likeIndex;
 
+			totalLikeValue = (await wx.cloud.callFunction({
+				name: 'savePostLike',
+				data: {
+					postId: post._id,
+					_openid: this.openId(),
+					postAuthorOpenId: post._openid,
+					valueIndex: post.likeIndex,
+					value: likeValue,
+				}
+			})).result;
+
+			/*
 			if (likeValue == 0) { // 取消点赞
 				totalLikeValue = (await wx.cloud.callFunction({
 					name: 'removePostLike',
@@ -293,6 +305,7 @@ Component({
 					}
 				})).result;
 			}
+			*/
 
 			post.likeValue = totalLikeValue
 		},

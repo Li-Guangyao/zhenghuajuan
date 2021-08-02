@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "triggers": [{
+    "name": "updateTotalRoll",
+    "type": "timer",
+    "config": "0 * * * * * *"
+  }]
+}
