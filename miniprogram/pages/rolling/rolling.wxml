@@ -1,20 +1,18 @@
-<!--miniprogram/pages/rolling.wxml-->
 <view class="title">{{name}}味花卷</view>
 <view class="content">
 	<view class="progress-bar">
 		<canvas id="canvasArcCir" type="2d" class="circle">
 			<image src="../../icon2/rolling.png" mode="heightFix"></image>
 		</canvas>
-		<text>{{curMinute < duration ? 
-			statuses[statusIndex] : finishText}}</text>
+		<text>{{curMinute < duration ? status[statusIndex] : finishedText}}</text>
 	</view>
-	<view class="total-content">
-		<progress class="total-progress" percent="{{curMinute/duration*100}}" border-radius="6" 
-			activeColor="#FEA403" backgroundColor="#FFFFFF" stroke-width="12"></progress>
-			<view class="small-tip">预计可获得
-				<text style="color: #FEA403">{{count}}</text>
-				<image src="../../icon/roll2.png" mode="heightFix"></image>
-				<text style="color: #FEA403; position: absolute; right: 0">{{curCount}}/{{count}}</text></view>
-
+	<view class="total-content"> 
+		<progress class="total-progress" percent="{{curMinute/duration*100}}" border-radius="6" activeColor="#FEA403"
+			backgroundColor="#FFFFFF" stroke-width="12"></progress>
+		<view class="small-tip">预计可获得
+			<text class="number1">{{count}}</text>
+			<image src="../../icon/roll2.png" mode="heightFix"></image>
+			<text class="number2">{{curCount}}/{{count}}</text>
+		</view>
 	</view>
 </view>
