@@ -17,16 +17,16 @@
 		"borderStyle": "black",
 		"list": [
 			{
-				"pagePath": "pages/homepage/homepage",
-				"iconPath": "icon2/homepage.png",
-				"selectedIconPath": "icon2/homepage2.png",
-				"text": "动态"
-			},
-			{
 				"pagePath": "pages/roll/roll",
 				"iconPath": "icon2/roll.png",
 				"selectedIconPath": "icon2/roll2.png",
 				"text": "蒸花卷"
+			},
+			{
+				"pagePath": "pages/homepage/homepage",
+				"iconPath": "icon2/homepage.png",
+				"selectedIconPath": "icon2/homepage2.png",
+				"text": "动态"
 			},
 			{
 				"pagePath": "pages/ranklist/ranklist",

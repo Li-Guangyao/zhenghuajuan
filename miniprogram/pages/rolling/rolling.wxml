@@ -1,12 +1,14 @@
 <view class="title">{{name}}味花卷</view>
 <view class="content">
 	<view class="progress-bar">
+		<!-- 旋转 -->
 		<canvas id="canvasArcCir" type="2d" class="circle">
 			<image src="../../icon2/rolling.png" mode="heightFix"></image>
 		</canvas>
 		<text>{{curMinute < duration ? status[statusIndex] : finishedText}}</text>
 	</view>
 	<view class="total-content"> 
+		<!-- 进度条 -->
 		<progress class="total-progress" percent="{{curMinute/duration*100}}" border-radius="6" activeColor="#FEA403"
 			backgroundColor="#FFFFFF" stroke-width="12"></progress>
 		<view class="small-tip">预计可获得
