@@ -50,3 +50,12 @@ page {
   text-align: center;
   position: fixed;
 }
+.set-anonymous {
+  margin: 10rpx 20rpx;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.set-anonymous .tip {
+  margin: 0 10rpx;
+}

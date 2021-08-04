@@ -9,14 +9,18 @@ const $ = db.command.aggregate
 // 云函数入口函数
 exports.main = async (event, context) => {
 
-	var matcher = { _openid: event.userInfo.openId };
+	var matcher = {
+		_openid: event.userInfo.openId
+	};
 
 	if (event.roll) matcher.rollName = _.neq(null);
 
 	return query(db.collection('t_post').aggregate()
-		.match(matcher).sort({ createdAt: -1 })
+		.match(matcher).sort({
+			createdAt: -1
+		})
 		.skip(event.skipNum))
-	
+
 	// .lookup({
 	// 	from: 't_user',
 	// 	localField: '_openid',
@@ -59,7 +63,7 @@ function query(q) {
 	}).project({
 		_commentCount: 0,
 	})
-	
+
 	// if (userOpenId) 
 	// 	res = res.lookup({
 	// 		from: 't_post_like',

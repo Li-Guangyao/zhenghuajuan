@@ -1,15 +1,24 @@
+// 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
 var x = 128,
 	y = 128,
 	r = 120,
 	w = 8;
-var updateInterval = 125;
-var lastStatusTime = 2;
-var aniCtx, updateId;
 
+// 每隔125毫秒重绘图形
+var updateInterval = 125;
+// 最后一个状态“出锅”的持续时间
+var lastStatusTime = 2;
+// canvas的context
+var aniCtx;
+// 一个循环任务的句柄
+var updateId;
+
+// 检测手机运动状态用到的变量
 var lastAngle = null;
 var accumulate = 0;
 const MaxDeltaAngle = 0.5;
 
+// 退出时间不能超过5秒，否则花卷坏掉
 const MaxExitTime = 5 * 1000;
 
 Page({
@@ -93,7 +102,7 @@ Page({
 	onHide: function () {
 		if (this.data.finished) return;
 
-		/*
+		/* 尝试检测手机运动状态的代码
 		lastAngle = null;
 		accumulate = 0;
 
@@ -214,28 +223,30 @@ Page({
 	drawMinuteProgress(second) {
 		if (!aniCtx) return;
 
-		// if (second <= 0.5)
-		// 	this.clearMinuteProgress();
-		// else {
 		this.clearMinuteProgress();
+		// s代表start，定义绘制弧线的开始点
 		var s = 1.5 * Math.PI;
+		// e代表end，定义绘制弧线的结束点
 		var e = s + second / 60 * 2 * Math.PI;
-
+		// API，创建一个渐变颜色
 		const grd = aniCtx.createLinearGradient(0, 0, x * 2, 0)
 		grd.addColorStop(0, '#FEA403')
 		grd.addColorStop(1, '#FF6464')
 
+		// 橙色弧线的宽度小于灰色弧线（背景）
 		aniCtx.lineWidth = w - 2;
 		aniCtx.strokeStyle = grd;
 		aniCtx.lineCap = 'round';
 
 		aniCtx.beginPath();
+		// 弧线
 		aniCtx.arc(x, y, r, s, e, false);
 		aniCtx.stroke();
 		aniCtx.closePath();
 		// }
 	},
 
+	// 绘制一个灰色的圆圈
 	clearMinuteProgress() {
 		if (!aniCtx) return;
 

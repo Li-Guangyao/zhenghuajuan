@@ -8,7 +8,9 @@ Page({
 		location: null,
 		fileList: [],
 		userInfo: null,
+		isAnonymous: false,
 
+		// 蒸花卷之后，导航到发帖页面
 		rollName: null,
 		rollCount: null,
 		rollDuration: null,
@@ -40,6 +42,7 @@ Page({
 		}
 	},
 
+	// 判断用户是否登录
 	judgeLogin() {
 		var userInfo = wx.getStorageSync('userInfo')
 
@@ -62,7 +65,6 @@ Page({
 	getLocation() {
 		wx.chooseLocation({
 			success: res => {
-				console.log(res)
 				if (res.name) {
 					this.setData({
 						location: res
@@ -72,7 +74,6 @@ Page({
 				}
 			},
 			fail: res => {
-				console.log(res)
 				if (res.errMsg == "chooseLocation:fail auth deny") {
 					wx.showModal({
 						title: '点击右上角，授权获取位置信息',
@@ -100,7 +101,6 @@ Page({
 	// 选择一些图片
 	// upload选择完会触发这个函数，把所有选择的图片生成临时地址
 	chosenImage(e) {
-
 		var openId = this.data.userInfo._openid
 		var fileList = e.detail.file
 		var oldArrayLength = this.data.fileList.length
@@ -156,7 +156,6 @@ Page({
 							title: '保存中', mask: true
 						})
 						var uploadedFileList = await this.getFileID()
-						console.log(uploadedFileList)
 						this.savePost(uploadedFileList)
 					}
 				}
@@ -199,12 +198,13 @@ Page({
 				data: {
 					content: this.data.content,
 					location: this.data.location,
+					uploadedFileList: uploadedFileList,
+					isAnonymous: this.data.isAnonymous,
 
+					// 如果帖子属性包含这3个，就是蒸花卷记录
 					rollName: this.data.rollName,
 					rollCount: this.data.rollCount,
 					rollDuration: this.data.rollDuration,
-
-					uploadedFileList: uploadedFileList,
 				}
 			})).result;
 
@@ -249,7 +249,7 @@ Page({
 		}
 	},
 
-	// 退出设置缓存
+	// 退出，把已经输入的内容缓存起来
 	onUnload: function () {
 		wx.setStorage({
 			key: 'tempPost',
@@ -276,28 +276,6 @@ Page({
 		console.log(res)
 		return res.result
 
-		// wx.request({
-		// 	url: 'https://api.weixin.qq.com/wxa/media_check_async?access_token=' + accessToken,
-		// 	data: {
-		// 		media_url: this.data.fileList[0].url,
-		// 		media_type: 2
-		// 	},
-		// 	method: 'POST',
-		// 	success: function(res){
-		// 		console.log(res)
-		// 	}
-		// })
-
-		// wx.request({
-		// 	url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token=' + accessToken,
-		// 	data: {
-		// 		content: this.data.content,
-		// 	},
-		// 	method: 'POST',
-		// 	success: function(res){
-		// 		console.log(res)
-		// 	}
-		// })
 	},
 
 	getPhotoPath(photoList) {
@@ -309,5 +287,12 @@ Page({
 			photoListTrans.push(photoList[i].substr(index + 1))
 		}
 		return photoListTrans;
-	}
+	},
+
+	// 是否匿名发帖
+	changeAnonymous(e) {
+		this.setData({
+			isAnonymous: e.detail
+		})
+	},
 })

@@ -1,7 +1,7 @@
 {
 	"pages": [
-		"pages/homepage/homepage",
 		"pages/roll/roll",
+		"pages/homepage/homepage",
 		"pages/ranklist/ranklist",
 		"pages/my/my",
 		"pages/postAdd/postAdd",

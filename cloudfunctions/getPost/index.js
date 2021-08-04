@@ -33,7 +33,6 @@ exports.main = async (event, context) => {
 		return query(db.collection('t_post').aggregate()
 			.match({ status: 1 }).sort({ createdAt: -1 }), event.userOpenId)
 	}
-
 }
 
 function query(q, userOpenId) {

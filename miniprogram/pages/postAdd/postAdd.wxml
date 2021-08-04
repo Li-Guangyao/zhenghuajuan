@@ -10,13 +10,18 @@
 
 	<view class="upload-photo">
 		<van-uploader file-list="{{fileList}}" accept="media" bind:after-read="chosenImage" bind:delete="removeImage"
-			bind:click-preview="previewMedia" multiple preview-size="233rpx" image-fit="aspectFill" preview-image="{{true}}"
-			max-count="9" max-size="10000000" compressed="{{true}}" max-duration="30" />
+			bind:click-preview="previewMedia" multiple preview-size="233rpx" image-fit="aspectFill"
+			preview-image="{{true}}" max-count="9" max-size="10000000" compressed="{{true}}" max-duration="30" />
 	</view>
 
 	<view class="location" bindtap="getLocation">
 		<van-icon name="location-o" />
 		<view style="font-size: 30rpx">添加位置</view>
+	</view>
+
+	<view class="set-anonymous">
+		<view class="tip">匿名发布</view>
+		<van-switch checked="{{ isAnonymous }}" active-color="#ffa600" bind:change="changeAnonymous" />
 	</view>
 
 	<view class="show-location" wx:if="{{location}}">
