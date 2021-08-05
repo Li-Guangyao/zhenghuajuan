@@ -1,70 +1,70 @@
 {
-    "miniprogramRoot": "miniprogram/",
-    "cloudfunctionRoot": "cloudfunctions/",
-    "setting": {
-        "urlCheck": false,
-        "es6": true,
-        "enhance": true,
-        "postcss": true,
-        "preloadBackgroundData": false,
-        "minified": true,
-        "newFeature": true,
-        "coverView": true,
-        "nodeModules": true,
-        "autoAudits": false,
-        "showShadowRootInWxmlPanel": true,
-        "scopeDataCheck": false,
-        "uglifyFileName": false,
-        "checkInvalidKey": true,
-        "checkSiteMap": true,
-        "uploadWithSourceMap": true,
-        "compileHotReLoad": true,
-        "useMultiFrameRuntime": true,
-        "useApiHook": true,
-        "useApiHostProcess": true,
-        "babelSetting": {
-            "ignore": [],
-            "disablePlugins": [],
-            "outputPath": ""
-        },
-        "enableEngineNative": false,
-        "useIsolateContext": true,
-        "userConfirmedBundleSwitch": false,
-        "packNpmManually": true,
-        "packNpmRelationList": [
-            {
-                "packageJsonPath": "./miniprogram/package.json",
-                "miniprogramNpmDistDir": "./miniprogram/"
-            }
-        ],
-        "minifyWXSS": true,
-        "showES6CompileOption": false
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": true,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "uglifyFileName": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": true,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
     },
-    "appid": "wx8bfdd5aaea4938d5",
-    "projectname": "蒸花卷",
-    "libVersion": "2.17.3",
-    "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
-    "condition": {
-        "search": {
-            "list": []
-        },
-        "conversation": {
-            "list": []
-        },
-        "plugin": {
-            "list": []
-        },
-        "game": {
-            "list": []
-        },
-        "miniprogram": {
-            "list": [
-                {
-                    "id": -1,
-                    "name": "db guide",
-                    "pathName": "pages/databaseGuide/databaseGuide"
-                }
-            ]
+    "enableEngineNative": false,
+    "useIsolateContext": true,
+    "userConfirmedBundleSwitch": false,
+    "packNpmManually": true,
+    "packNpmRelationList": [
+      {
+        "packageJsonPath": "./miniprogram/package.json",
+        "miniprogramNpmDistDir": "./miniprogram/"
+      }
+    ],
+    "minifyWXSS": true,
+    "showES6CompileOption": false
+  },
+  "appid": "wx8bfdd5aaea4938d5",
+  "projectname": "%E8%92%B8%E8%8A%B1%E5%8D%B7",
+  "libVersion": "2.17.3",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
+  "condition": {
+    "search": {
+      "list": []
+    },
+    "conversation": {
+      "list": []
+    },
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "id": -1,
+          "name": "db guide",
+          "pathName": "pages/databaseGuide/databaseGuide"
         }
+      ]
     }
+  }
 }
