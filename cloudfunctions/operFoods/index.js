@@ -4,6 +4,7 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+const _ = db.command
 const $ = db.command.aggregate
 
 const TOKEN = "dOXi^w$7D0BOwG!UIA";
@@ -11,9 +12,12 @@ const TOKEN = "dOXi^w$7D0BOwG!UIA";
 // 云函数入口函数
 exports.main = async (event, context) => {
 	switch (event.method.toUpperCase()) {
-		case "GET": return await getFoods(event.cond);
-		case "BUY": return await buyFood(event.userInfo, event.foodId);
-		case "UPDATE": updateFoods(event.token, event.foods);
+		case "GET":
+			return await getFoods(event.cond);
+		case "BUY":
+			return await buyFood(event.userInfo, event.foodId);
+		case "UPDATE":
+			updateFoods(event.token, event.foods);
 	}
 }
 
@@ -21,17 +25,52 @@ async function getFoods(cond) {
 	// cond: 判断条件，为空则获取全部
 	if (cond)
 		return await db.collection('t_food').where(cond).get();
-	else 
+	else
 		return await db.collection('t_food').get();
 }
 
 async function buyFood(userInfo, foodId) {
-	// TODO: 写购买食谱的逻辑
+	var {
+		rollCount,
+		unlockFoods
+	} = await getRollCountAndTools(userInfo.openId)
+	var cost = await getCost(foodId)
+	if (rollCount < cost) {
+		return
+	} else {
+		return db.collection('t_user').where({
+			_openid: userInfo.openId
+		}).update({
+			data: {
+				rollCount: _.inc(-cost),
+				unlockFoods: unlockFoods.push(foodId)
+			}
+		})
+	}
 }
 
 function updateFoods(token, foods) {
 	if (token != TOKEN) return;
-	foods.forEach(food => 
-		db.collection('t_food').where({_id: food._id}).update(food)
+	foods.forEach(food =>
+		db.collection('t_food').where({
+			_id: food._id
+		}).update(food)
 	);
+}
+
+function getRollCountAndTools(openId) {
+	return db.collection('t_user').where({
+		_openid: openId
+	}).get().then(res => {
+		return {
+			rollCount: res.data.rollCount,
+			unlockFoods: res.data.unlockFoods
+		}
+	})
+}
+
+function getCost(foodId) {
+	return db.collection('t_user').doc(foodId).get().then(res => {
+		return res.data.cost
+	})
 }

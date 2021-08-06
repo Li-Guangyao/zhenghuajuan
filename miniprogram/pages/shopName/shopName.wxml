@@ -1,0 +1,3 @@
+<input model:value="{{shopName}}"></input>
+<button bindtap="editShopName">修改店铺名称</button>
+<button bindtap="test">测试修改数据库字段名</button>

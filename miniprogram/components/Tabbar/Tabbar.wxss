@@ -1,23 +1,15 @@
-.tabbar{
-  padding: 10rpx 0;
-  background-color: white;
-}
-
 .tabbar_title {
-  font-size: 30rpx;
-
   display: flex;
-  padding: 5rpx;
+  padding: 5 rpx;
+  font-size: 40 rpx;
 }
-
 .title_item {
-
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-.isChosen {
-  color:#ffa600;
+.chosen {
+  color: aqua;
+  border-bottom: 10 rpx solid currentColor;
 }

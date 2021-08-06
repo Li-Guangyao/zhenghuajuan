@@ -22,6 +22,12 @@
 		</view>
 	</van-cell>
 
+	<van-cell custom-class="my-page" icon="orders-o" size="large" is-link bindtap="toShopName">
+		<view slot="title">
+			<view class="van-cell-text">修改店铺名称</view>
+		</view>
+	</van-cell>
+
 </view>
 
 <!-- <button bindtap="test">测试</button> -->

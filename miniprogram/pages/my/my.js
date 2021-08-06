@@ -45,6 +45,12 @@ Page({
 			url: '../myPost/myPost',
 		})
 	},
+
+	toShopName(){
+		wx.navigateTo({
+		  url: '../shopName/shopName',
+		})
+	},
 	
 	test() {
 		// wx.cloud.callFunction({
