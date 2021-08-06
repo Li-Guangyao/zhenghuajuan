@@ -1,1 +1,15 @@
-/* pages/rollRecord/rollRecord.wxss */
+page {
+  background-color: var(--themeBackgroundColor);
+  width: 100%;
+  height: 100%;
+}
+.table {
+  position: absolute;
+  width: 100%;
+  height: 75%;
+}
+.foods {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}

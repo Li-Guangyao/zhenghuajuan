@@ -1,14 +1,31 @@
 <!--pages/rollRecord/rollRecord.wxml-->
+<view class="page">
 
-<tabbar class="tabbar" tabbar="{{tabbar}}" bindtabbarChange="tabbarChange"></tabbar>
+	<tabbar class="tabbar" tabbar="{{cate}}" bindtabbarChange="onTabbarChange"></tabbar>
 
-<swiper current="{{chosenTabIndex}}"
-	class="swiper-region" bindchange="swiperChange">
+	<view class="table">
+		<canvas id="foods" type="2d" class="foods">
+		</canvas>
+		
+		<!-- <van-grid column-num="6">
+			<view class="food" wx:for="{{records}}">
+				<image src="{{foods[item.foodId].images[item.quality]}}" mode="aspectFit"></image>
+			</view>
 
-	<swiper-item class="swiper-item">
-	</swiper-item>
+		</van-grid> -->
 
-	<swiper-item class="swiper-item">
-	</swiper-item>
+	</view>
+	<!-- 
+	<swiper current="{{chosenTabIndex}}"
+		class="swiper-region" bindchange="swiperChange">
 
-</swiper>
+		<swiper-item class="swiper-item">
+		</swiper-item>
+
+		<swiper-item class="swiper-item">
+		</swiper-item>
+
+	</swiper> 
+	-->
+
+</view>

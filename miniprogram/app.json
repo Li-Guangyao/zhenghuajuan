@@ -1,5 +1,6 @@
 {
 	"pages": [
+		"pages/rollRecord/rollRecord",
 		"pages/roll/roll",
 		"pages/homepage/homepage",
 		"pages/ranklist/ranklist",
@@ -7,8 +8,7 @@
 		"pages/postAdd/postAdd",
 		"pages/postDetail/postDetail",
 		"pages/myPost/myPost",
-		"pages/rolling/rolling",
-		"pages/rollRecord/rollRecord"
+		"pages/rolling/rolling"
 	],
 	"tabBar": {
 		"color": "#000",
