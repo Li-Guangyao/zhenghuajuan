@@ -1,0 +1,14 @@
+<!--pages/rollRecord/rollRecord.wxml-->
+
+<tabbar class="tabbar" tabbar="{{tabbar}}" bindtabbarChange="tabbarChange"></tabbar>
+
+<swiper current="{{chosenTabIndex}}"
+	class="swiper-region" bindchange="swiperChange">
+
+	<swiper-item class="swiper-item">
+	</swiper-item>
+
+	<swiper-item class="swiper-item">
+	</swiper-item>
+
+</swiper>

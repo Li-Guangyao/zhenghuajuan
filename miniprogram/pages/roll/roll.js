@@ -99,7 +99,7 @@ Page({
 			mask: true
 		})
 
-		await wx.cloud.callFunction({
+		wx.cloud.callFunction({
 			name: 'getMyPost',
 			data: {
 				roll: true,
@@ -137,25 +137,26 @@ Page({
 
 		this.queryParams.pageNum++
 		console.log(this.queryParams.pageNum)
-		await wx.cloud.callFunction({
+
+		var res = await wx.cloud.callFunction({
 			name: 'getMyPost',
 			data: {
 				roll: true,
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
 			}
-		}).then(res => {
-			if (res.result.length == 0) {
-				wx.showToast({
-					icon: 'error',
-					title: '没有更多了~',
-				})
-			} else {
-				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
-				this.setData({
-					postList: [...this.data.postList].concat(...subPostList)
-				})
-			}
 		})
+
+		if (res.result.length == 0) {
+			wx.showToast({
+				icon: 'error',
+				title: '没有更多了~',
+			})
+		} else {
+			var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
+			this.setData({
+				postList: [...this.data.postList].concat(...subPostList)
+			})
+		}
 
 		wx.hideLoading()
 	},
