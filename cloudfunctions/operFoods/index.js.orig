@@ -12,9 +12,18 @@ const TOKEN = "dOXi^w$7D0BOwG!UIA";
 // 云函数入口函数
 exports.main = async (event, context) => {
 	switch (event.method.toUpperCase()) {
+<<<<<<< HEAD
 		case "GET": return (await getFoods(event.cond)).data;
 		case "BUY": return await buyFood(event.userInfo, event.foodId);
 		case "UPDATE": updateFoods(event.token, event.foods);
+=======
+		case "GET":
+			return await getFoods(event.cond);
+		case "BUY":
+			return await buyFood(event.userInfo, event.foodId);
+		case "UPDATE":
+			updateFoods(event.token, event.foods);
+>>>>>>> ecfe94855b4c789c86823cb0f0f8b2d08354fcad
 	}
 }
 

@@ -8,8 +8,11 @@
 		"pages/postDetail/postDetail",
 		"pages/myPost/myPost",
 		"pages/rolling/rolling",
-		"pages/shopName/shopName"
+<<<<<<< HEAD
 		"pages/rollRecord/rollRecord"
+=======
+		"pages/shopName/shopName"
+>>>>>>> ecfe94855b4c789c86823cb0f0f8b2d08354fcad
 	],
 	"tabBar": {
 		"color": "#000",

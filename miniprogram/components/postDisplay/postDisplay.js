@@ -1,8 +1,5 @@
-// components/postDisplay/postDisplay.js
 Component({
-	/**
-	 * 组件的属性列表
-	 */
+
 	properties: {
 		userInfo: {
 			type: Object,
@@ -90,11 +87,7 @@ Component({
 		},
 	},
 
-	/**
-	 * 组件的方法列表
-	 */
 	methods: {
-
 		openId() {
 			return this.properties.userInfo._openid;
 		},
