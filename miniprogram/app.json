@@ -8,7 +8,7 @@
 		"pages/postDetail/postDetail",
 		"pages/myPost/myPost",
 		"pages/rolling/rolling",
-		"pages/shopName/shopName"
+		"pages/shopName/shopName",
 		"pages/rollRecord/rollRecord"
 	],
 	"tabBar": {
