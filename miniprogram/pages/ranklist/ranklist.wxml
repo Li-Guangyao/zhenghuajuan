@@ -1,4 +1,11 @@
 <view>
+
+	<view class="back-button">
+		<image src="../../icon/backArrow.png" mode="widthFix"></image>
+		排行榜
+	</view>
+
+	<!-- 背景 -->
 	<image class="background" src="../../images/rankListBackground.png" mode="widthFix" />
 
 	<!-- 主页 -->
@@ -56,52 +63,9 @@
 				</view>
 			</view>
 		</view>
-
-		<!-- 		
-		<view class="first">
-			<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
-			<view class="nickname">{{topRankList[0].displayName}}</view>
-			<view class="value">{{topRankList[0].totalValue}}</view>
-		</view>
-		<view class="second">
-			<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
-			<view class="nickname">{{topRankList[1].displayName}}</view>
-			<view class="value">{{topRankList[1].totalValue}}</view>
-		</view>
-		<view class="third">
-			<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
-			<view class="nickname">{{topRankList[2].displayName}}</view>
-			<view class="value">{{topRankList[2].totalValue}}</view>
-		</view>
-		<view class="update-date">更新时间：{{updateDate}}</view> 
-		-->
-
-		<!-- 
-		<view class="whole-rank">
-			<view class="rank-item" wx:for="{{dayRankList}}" wx:key="index">
-				<view class="left">
-					<text class="rank-number">{{index+1}}</text>
-					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.displayName}}</view>
-				</view>
-				<view class="right">
-					<view class="juan-number">{{item.totalValue}}</view>
-					<image class="juan-image" src="../../icon/roll2.png"></image>
-				</view>
-			</view>
-		</view> 
-		-->
 		
+		<!-- 我的页面 -->
 		<view class="my-rank">
-			<!-- <view class="left">
-				<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-				<view class="user-nickname">{{userInfo.nickname}}</view>
-			</view>
-			<view class="right">
-				<text class="rank-info" wx:if="{{myRank!=-1}}">{{"No."+ myRank}}</text>
-				<text class="rank-info" wx:if="{{myRank==-1}}">您未上榜</text>
-			</view> -->
-
 			<view class="rank-item">
 				<view class="left">
 					<text class="rank-number" wx:if="{{myWeekRank!=-1}}">{{myWeekRank}}</text>

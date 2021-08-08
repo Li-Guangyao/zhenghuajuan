@@ -4,6 +4,19 @@ page {
   --thirdSize: 36rpx;
   background-color: var(--themeBackgroundColor);
 }
+.back-button {
+  position: absolute;
+  display: flex;
+  top: 92rpx;
+  left: 40rpx;
+  color: white;
+  font-size: 36rpx;
+  line-height: 42rpx;
+}
+.back-button image {
+  width: 24rpx;
+  margin-right: 20rpx;
+}
 .background {
   width: 100%;
 }
