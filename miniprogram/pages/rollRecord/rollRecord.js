@@ -6,15 +6,16 @@ Page({
 		foods: [],
 
 		// 自己蒸花卷的记录
-		records: [],
+		records: {},
 	},
 
 	timeRanges: null,
 
-	// canvas
 	foodsCanvas: null,
 	// canvas的context属性
 	foodsCtx: null,
+	// 图片缓存
+	imageCache: {},
 
 	onLoad: async function (options) {
 		this.setupTimeRanges();
@@ -133,19 +134,22 @@ Page({
 	 * 刷新数据
 	 */
 	refreshData: async function () {
-		// 现在选择的那个时间段
-		var range = this.curTimeRange();
-		var res = await wx.cloud.callFunction({
-			name: "getMyRollRecord",
-			data: {
-				beginDate: range[0].getTime(),
-				endDate: range[1].getTime(),
-				skipNum: 0
-			}
-		});
-		this.setData({
-			records: res.result
-		});
+		if (!this.data.records[this.data.chosenTabIndex]) {
+			// 现在选择的那个时间段
+			var range = this.curTimeRange();
+			var res = await wx.cloud.callFunction({
+				name: "getMyRollRecord",
+				data: {
+					beginDate: range[0].getTime(),
+					endDate: range[1].getTime(),
+					skipNum: 0
+				}
+			});
+			var recordItemName = 'records[' + this.data.chosenTabIndex + ']'
+			this.setData({
+				[recordItemName]: res.result
+			});
+		}
 		this.drawData();
 	},
 
@@ -161,30 +165,20 @@ Page({
 		const h = w;
 
 		// 自己在某个时间段所有的蒸花卷记录
-		this.data.records.forEach((rec, i) => {
+		this.data.records[this.data.chosenTabIndex].forEach(async (rec, i) => {
 			var x = i % colCount * w;
 			var y = Math.floor(i / colCount) * h;
-			var url = this.data.foods[rec.foodId].images[rec.quality];
+			var src = this.data.foods[rec.foodId].images[rec.quality];
+			var cache = this.imageCache[src] ||= await wx.getImageInfo({src})
 
-			// 返回的path是图片的本地路径
-			wx.getImageInfo({
-				src: url,
-				success: res => {
-					console.info(this, i, x, y, w, h);
-					// 先创建，才能绘制图片
-					var img = this.foodsCanvas.createImage();
-					img.src = res.path;
-					img.onload = () =>
-						this.foodsCtx.drawImage(img, 0, 0, res.width, res.height, x, y, w, h);
-				}
-			});
+			var draw = () =>
+				this.foodsCtx.drawImage(cache.img, 0, 0, cache.width, cache.height, x, y, w, h);
 
-			// this.foodsCtx.drawImage(url, x, y, w, h);
-			/*
-			var img = this.foodsCanvas.createImage();
-			img.src = url;
-			img.onLoad = this.foodsCtx.drawImage.bind(this, img, x, y, w, h);
-			*/
+			if (!cache.img) {
+				cache.img = this.foodsCanvas.createImage();
+				cache.img.src = cache.path;
+				cache.img.onload = draw;
+			} else draw();
 		})
 	},
 
