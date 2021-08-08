@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "tabbar": "../../components/tabbar/tabbar"
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index"
   },
   "navigationStyle": "custom",
   "enablePullDownRefresh": true

@@ -4,6 +4,9 @@
 page {
   --themeColor: #ffa600;
   --themeBackgroundColor: #f6f6f6;
+
+  --fontColor: #0d0d0d;
+
   font-size: 28rpx;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
     Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',

@@ -1,76 +1,151 @@
 page {
+  --firstSize: 48rpx;
+  --secondSize: 36rpx;
+  --thirdSize: 36rpx;
   background-color: var(--themeBackgroundColor);
 }
-.background .background-image {
-  width: 750rpx;
-  overflow-y: hidden;
+.background {
+  width: 100%;
 }
-.background .first,
-.background .second,
-.background .third,
-.background .update-date {
+.main {
+  position: absolute;
+  width: 100%;
+  height: 80%;
+  bottom: 0;
+  background-color: #F7F7F7;
+  border-radius: 32rpx;
+}
+.main .foreground {
+  position: absolute;
+  width: 100%;
+  top: -10%;
+}
+.main .tab {
+  display: block;
+  width: 80%;
+  margin-top: 16rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+.main .tab-title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.main .top3 {
   position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 45%;
+  top: 0;
+  background-color: white;
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
 }
-.background .first .avatar,
-.background .second .avatar,
-.background .third .avatar,
-.background .update-date .avatar {
-  width: 128rpx;
-  height: 128rpx;
-  z-index: -1;
+.main .top3 .first,
+.main .top3 .second,
+.main .top3 .third {
+  position: absolute;
+  text-align: center;
+  width: 192rpx;
 }
-.background .first .nickname,
-.background .second .nickname,
-.background .third .nickname,
-.background .update-date .nickname,
-.background .first .value,
-.background .second .value,
-.background .third .value,
-.background .update-date .value {
-  z-index: 1;
+.main .top3 .first .avatar,
+.main .top3 .second .avatar,
+.main .top3 .third .avatar {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 100%;
+}
+.main .top3 .first .nickname,
+.main .top3 .second .nickname,
+.main .top3 .third .nickname {
+  width: 160rpx;
+  color: var(--fontColor);
+  margin-top: 4rpx;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 32rpx;
+}
+.main .top3 .first .value,
+.main .top3 .second .value,
+.main .top3 .third .value {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  margin-top: 8rpx;
+  color: var(--themeColor);
+  font-size: 32rpx;
+}
+.main .top3 .first .value image,
+.main .top3 .second .value image,
+.main .top3 .third .value image {
+  width: 36rpx;
+  height: 36rpx;
+}
+.main .top3 .first {
+  top: 25%;
+}
+.main .top3 .first .rank {
+  position: absolute;
+  width: var(--firstSize);
+  height: var(--firstSize);
+  padding: 4rpx;
   color: white;
+  background-color: var(--themeColor);
+  border-radius: 100%;
+  font-size: var(--firstSize);
+  line-height: var(--firstSize);
 }
-.background .first .nickname,
-.background .second .nickname,
-.background .third .nickname,
-.background .update-date .nickname {
-  margin: 30rpx 0 0 0;
-  font-size: 35rpx;
+.main .top3 .first .text {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #b2b2b2;
 }
-.background .first .value,
-.background .second .value,
-.background .third .value,
-.background .update-date .value {
-  margin: 10rpx 0 0 0;
+.main .top3 .second {
+  top: 40%;
+  left: 8%;
 }
-.background .first {
-  top: 301rpx;
-  left: 313rpx;
+.main .top3 .second .rank {
+  position: absolute;
+  width: var(--secondSize);
+  height: var(--secondSize);
+  padding: 2rpx;
+  color: var(--fontColor);
+  background-color: white;
+  border-radius: 100%;
+  border-color: #b2b2b2;
+  border-style: solid;
+  font-size: var(--secondSize);
+  line-height: var(--secondSize);
 }
-.background .second {
-  top: 347rpx;
-  left: 125rpx;
+.main .top3 .third {
+  top: 45%;
+  right: 8%;
 }
-.background .third {
-  top: 375rpx;
-  left: 501rpx;
+.main .top3 .third .rank {
+  position: absolute;
+  width: var(--thirdSize);
+  height: var(--thirdSize);
+  padding: 2rpx;
+  color: var(--fontColor);
+  background-color: white;
+  border-radius: 100%;
+  border-color: #b2b2b2;
+  border-style: solid;
+  font-size: var(--thirdSize);
+  line-height: var(--thirdSize);
 }
-.background .update-date {
-  top: 665rpx;
-  right: 10rpx;
-  color: #4b4b4b;
-  font-size: 20rpx;
-}
-.swiper-region {
-  overflow: scroll;
-}
-.whole-rank {
-  height: 100%;
-  overflow: scroll;
+.main .content {
+  position: absolute;
+  width: 100%;
+  height: 42%;
+  bottom: 12%;
+  background-color: white;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 .rank-item {
   background-color: white;
@@ -79,6 +154,8 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-left: 16rpx;
+  margin-right: 16rpx;
 }
 .rank-item .left {
   flex: 3;
@@ -86,18 +163,20 @@ page {
   align-items: center;
 }
 .rank-item .left .rank-number {
-  width: 50rpx;
+  width: 72rpx;
+  font-size: 48rpx;
   text-align: center;
 }
 .rank-item .left .user-avatar {
-  width: 90rpx;
-  height: 90rpx;
-  border-radius: 45rpx;
-  margin: 15rpx;
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 100%;
+  margin: 16rpx;
   display: inline-block;
 }
 .rank-item .left .user-nickname {
-  font-size: 35rpx;
+  margin-left: 16rpx;
+  font-size: 36rpx;
   display: inline-block;
   overflow: hidden;
 }
@@ -108,23 +187,27 @@ page {
   justify-content: flex-end;
   align-items: center;
 }
+.rank-item .right .juan-number {
+  color: var(--themeColor);
+  font-size: 36rpx;
+}
 .rank-item .right .juan-image {
-  margin: 10rpx 15rpx;
-  width: 55rpx;
-  height: 55rpx;
+  margin: 12rpx 20rpx;
+  width: 48rpx;
+  height: 48rpx;
 }
 .my-rank {
-  background-color: white;
-  padding: 10rpx;
+  position: absolute;
   width: 100%;
-  position: fixed;
+  height: 12%;
   bottom: 0;
+  background-color: white;
 }
 .my-rank .rank-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.my-rank .rank-item .rank-info {
-  margin-right: 20rpx;
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  border-radius: 24rpx;
+  box-shadow: 0 0 16rpx rgba(0, 0, 0, 0.25);
 }

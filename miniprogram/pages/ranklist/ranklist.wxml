@@ -1,46 +1,49 @@
-<view class="background">
-	<image class="background-image" src="../../images/rankList.png" mode="widthFix" />
-	<view class="first">
-		<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[0].displayName}}</view>
-		<view class="value">{{topRankList[0].totalValue}}</view>
-	</view>
-	<view class="second">
-		<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[1].displayName}}</view>
-		<view class="value">{{topRankList[1].totalValue}}</view>
-	</view>
-	<view class="third">
-		<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
-		<view class="nickname">{{topRankList[2].displayName}}</view>
-		<view class="value">{{topRankList[2].totalValue}}</view>
-	</view>
-	<view class="update-date">更新时间：{{updateDate}}</view>
-</view>
+<view>
+	<image class="background" src="../../images/rankListBackground.png" mode="widthFix" />
 
-<tabbar class="tabbar" tabbar="{{tabbar}}" bindtabbarChange="tabbarChange"></tabbar>
+	<!-- 主页 -->
+	<view class="main">
+		<!-- 标题前景 -->
+		<image class="foreground" src="../../images/rankListForeground.png" mode="widthFix" />
+			
+		<!-- 榜单切换 -->
+		<van-tabs custom-class="tab" tab-class="tab-title" active="{{ active }}" animated color="#ffa600" bind:change="onTabbarChange">
+			<van-tab title="日榜" name="day"></van-tab>
+			<van-tab title="周榜" name="week"></van-tab>
+			<van-tab title="月榜" name="month"></van-tab>
+		</van-tabs>
 
-<swiper style="height:{{wholeRankHeight?wholeRankHeight+'px':'auto'}}" current="{{chosenTabIndex}}"
-	class="swiper-region" bindchange="swiperChange">
-
-	<swiper-item class="swiper-item">
-		<view class="whole-rank">
-			<view class="rank-item" wx:for="{{dayRankList}}" wx:key="index">
-				<view class="left">
-					<text class="rank-number">{{index+1}}</text>
-					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.displayName}}</view>
+		<!-- 前三名 -->
+		<view class="top3">
+			<view class="first">
+				<view class="rank">1</view>
+				<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
+				<view class="nickname">{{topRankList[0].displayName}}</view>
+				<view class="value">{{topRankList[0].totalValue}}
+					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
-				<view class="right">
-					<view class="juan-number">{{item.totalValue}}</view>
-					<image class="juan-image" src="../../icon/roll2.png"></image>
+				<view class="text">恭迎卷王！</view>
+			</view>
+			<view class="second">
+				<view class="rank">2</view>
+				<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
+				<view class="nickname">{{topRankList[1].displayName}}</view>
+				<view class="value">{{topRankList[1].totalValue}}
+					<image class="icon" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+			<view class="third">
+				<view class="rank">3</view>
+				<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
+				<view class="nickname">{{topRankList[2].displayName}}</view>
+				<view class="value">{{topRankList[2].totalValue}}
+					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
 		</view>
-	</swiper-item>
 
-	<swiper-item class="swiper-item">
-		<view class="whole-rank">
+		<!-- 主体内容 -->
+		<view class="content">	
 			<view class="rank-item" wx:for="{{weekRankList}}" wx:key="index">
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
@@ -53,46 +56,65 @@
 				</view>
 			</view>
 		</view>
-	</swiper-item>
 
-</swiper>
+		<!-- 		
+		<view class="first">
+			<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
+			<view class="nickname">{{topRankList[0].displayName}}</view>
+			<view class="value">{{topRankList[0].totalValue}}</view>
+		</view>
+		<view class="second">
+			<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
+			<view class="nickname">{{topRankList[1].displayName}}</view>
+			<view class="value">{{topRankList[1].totalValue}}</view>
+		</view>
+		<view class="third">
+			<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
+			<view class="nickname">{{topRankList[2].displayName}}</view>
+			<view class="value">{{topRankList[2].totalValue}}</view>
+		</view>
+		<view class="update-date">更新时间：{{updateDate}}</view> 
+		-->
 
+		<!-- 
+		<view class="whole-rank">
+			<view class="rank-item" wx:for="{{dayRankList}}" wx:key="index">
+				<view class="left">
+					<text class="rank-number">{{index+1}}</text>
+					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
+					<view class="user-nickname">{{item.displayName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number">{{item.totalValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png"></image>
+				</view>
+			</view>
+		</view> 
+		-->
+		
+		<view class="my-rank">
+			<!-- <view class="left">
+				<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
+				<view class="user-nickname">{{userInfo.nickname}}</view>
+			</view>
+			<view class="right">
+				<text class="rank-info" wx:if="{{myRank!=-1}}">{{"No."+ myRank}}</text>
+				<text class="rank-info" wx:if="{{myRank==-1}}">您未上榜</text>
+			</view> -->
 
+			<view class="rank-item">
+				<view class="left">
+					<text class="rank-number" wx:if="{{myWeekRank!=-1}}">{{myWeekRank}}</text>
+					<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
+					<view class="user-nickname">{{userInfo.displayName}}</view>
+				</view>
+				<view class="right">
+					<view class="juan-number" wx:if="{{myWeekRank!=-1}}">{{myWeekValue}}</view>
+					<image class="juan-image" src="../../icon/roll2.png" wx:if="{{myWeekRank!=-1}}"></image>
+					<text class="rank-info" wx:if="{{myWeekRank==-1}}">您未上榜</text>
+				</view>
+			</view>
 
-<view class="my-rank">
-	<!-- <view class="left">
-		<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-		<view class="user-nickname">{{userInfo.nickname}}</view>
+		</view>
 	</view>
-	<view class="right">
-		<text class="rank-info" wx:if="{{myRank!=-1}}">{{"No."+ myRank}}</text>
-		<text class="rank-info" wx:if="{{myRank==-1}}">您未上榜</text>
-	</view> -->
-
-	<view class="rank-item" wx:if="{{chosenTabIndex==0}}">
-		<view class="left">
-			<text class="rank-number" wx:if="{{myDayRank!=-1}}">{{myDayRank}}</text>
-			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-			<view class="user-nickname">{{userInfo.displayName}}</view>
-		</view>
-		<view class="right">
-			<view class="juan-number" wx:if="{{myDayRank!=-1}}">{{myDayValue}}</view>
-			<image class="juan-image" src="../../icon/roll2.png" wx:if="{{myDayRank!=-1}}"></image>
-			<text class="rank-info" wx:if="{{myDayRank==-1}}">您未上榜</text>
-		</view>
-	</view>
-
-	<view class="rank-item" wx:if="{{chosenTabIndex==1}}">
-		<view class="left">
-			<text class="rank-number" wx:if="{{myWeekRank!=-1}}">{{myWeekRank}}</text>
-			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-			<view class="user-nickname">{{userInfo.displayName}}</view>
-		</view>
-		<view class="right">
-			<view class="juan-number" wx:if="{{myWeekRank!=-1}}">{{myWeekValue}}</view>
-			<image class="juan-image" src="../../icon/roll2.png" wx:if="{{myWeekRank!=-1}}"></image>
-			<text class="rank-info" wx:if="{{myWeekRank==-1}}">您未上榜</text>
-		</view>
-	</view>
-
 </view>

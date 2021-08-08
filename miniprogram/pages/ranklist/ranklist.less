@@ -1,79 +1,190 @@
 page {
+    --firstSize: 48rpx;
+    --secondSize: 36rpx;
+    --thirdSize: 36rpx;
+    
     background-color: var(--themeBackgroundColor);
 }
 
 .background {
-    .background-image {
-        width: 750rpx;
-        overflow-y: hidden;
+    width: 100%;
+}
+
+.main {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    bottom: 0;
+    background-color: #F7F7F7;
+    border-radius: 32rpx;
+
+    .foreground {
+        position: absolute;
+        width: 100%;
+
+        top: -10%;
     }
 
-    .first,
-    .second,
-    .third,
-    .update-date {
+    .tab {
+        display: block;
+
+        width: 80%;
+        margin-top: 16rpx;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .tab-title {
+        font-size: 36rpx; 
+        font-weight: bold;
+    }
+
+    .top3 {
         position: absolute;
         display: flex;
+        
         flex-direction: column;
         justify-content: center;
         align-items: center;
 
-        .avatar {
-            width: 128rpx;
-            height: 128rpx;
+        width: 100%;
+        height: 45%;
+        top: 0;
 
-            z-index: -1;
+        background-color: white;
+        border-top-left-radius: 32rpx;
+        border-top-right-radius: 32rpx;
+
+        .first,
+        .second,
+        .third {
+            position: absolute;
+            text-align: center;
+            width: 192rpx;
+
+            .avatar {
+                width: 144rpx;
+                height: 144rpx;
+                border-radius: 100%;
+            }
+            .nickname {
+                width: 160rpx;
+                color: var(--fontColor);
+                margin-top: 4rpx;
+                margin-left: auto;
+                margin-right: auto;
+
+                // font-weight: 550;
+
+                font-size: 32rpx;
+            }
+            .value {
+                display: flex;
+                
+                flex-direction: row;
+                justify-content: center;
+                text-align: center;
+
+                margin-top: 8rpx;
+
+                color: var(--themeColor);
+                font-size: 32rpx;
+
+                image {
+                    width: 36rpx; 
+                    height: 36rpx;
+                }
+            }
         }
 
-        .nickname, .value{
-            z-index: 1;
-            color: white;
+        .first {
+            top: 25%;
+            
+            .rank {
+                position: absolute;
+
+                width: var(--firstSize);
+                height: var(--firstSize);
+
+                padding: 4rpx;
+
+                color: white;
+                background-color:  var(--themeColor);
+
+                border-radius: 100%;
+
+                font-size: var(--firstSize);
+                line-height: var(--firstSize);
+            }
+            .text {
+                margin-top: 16rpx;
+                font-size: 24rpx;
+                color: #b2b2b2;
+            }
         }
 
-        .nickname{
-            margin: 30rpx 0 0 0;
-            font-size: 35rpx;
+        .second {
+            top: 40%;
+            left: 8%;
+            
+            .rank {
+                position: absolute;
+
+                width: var(--secondSize);
+                height: var(--secondSize);
+
+                padding: 2rpx;
+
+                color:  var(--fontColor);
+                background-color: white;
+
+                border-radius: 100%;
+                border-color: #b2b2b2;
+                border-style: solid;
+
+                font-size: var(--secondSize);
+                line-height: var(--secondSize);
+            }
         }
 
-        .value{
-            margin: 10rpx 0 0 0;
+        .third {
+            top: 45%;
+            right: 8%;
+            
+            .rank {
+                position: absolute;
+
+                width: var(--thirdSize);
+                height: var(--thirdSize);
+
+                padding: 2rpx;
+
+                color:  var(--fontColor);
+                background-color: white;
+
+                border-radius: 100%;
+                border-color: #b2b2b2;
+                border-style: solid;
+
+                font-size: var(--thirdSize);
+                line-height: var(--thirdSize);
+            }
         }
     }
 
-    .first {
-        top: 301rpx;
-        left: 313rpx;
-    }
+    .content {
 
-    .second {
-        top: 347rpx;
-        left: 125rpx;
-    }
+        position: absolute;
+        width: 100%;
+        height: 42%;
+        bottom: 12%;
 
-    .third {
-        top: 375rpx;
-        left: 501rpx;
-    }
+        background-color: white;
 
-    .update-date{
-        top: 665rpx;
-        right: 10rpx;
-        color: rgb(75, 75, 75);
-        font-size: 20rpx;
-    
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
-
 }
-
-.swiper-region {
-    overflow: scroll;
-}
-
-.whole-rank {
-    height: 100%;
-    overflow: scroll;
-}
-
+      
 .rank-item {
     background-color: white;
     padding: 5rpx;
@@ -83,27 +194,33 @@ page {
     justify-content: space-between;
     align-items: center;
 
+    margin-left: 16rpx;
+    margin-right: 16rpx;
+
     .left {
         flex: 3;
         display: flex;
         align-items: center;
 
         .rank-number {
-            width: 50rpx;
+            width: 72rpx;
+            font-size: 48rpx;
             text-align: center;
         }
 
         .user-avatar {
-            width: 90rpx;
-            height: 90rpx;
-            border-radius: 45rpx;
-            margin: 15rpx;
+            width: 92rpx;
+            height: 92rpx;
+            border-radius: 100%;
+            margin: 16rpx;
 
             display: inline-block;
         }
 
         .user-nickname {
-            font-size: 35rpx;
+            margin-left: 16rpx;
+
+            font-size: 36rpx;
 
             display: inline-block;
             overflow: hidden;
@@ -117,30 +234,40 @@ page {
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        
+        .juan-number {
+            color: var(--themeColor);
+            font-size: 36rpx;
+        }
 
         .juan-image {
-            margin: 10rpx 15rpx;
-            width: 55rpx;
-            height: 55rpx;
+            margin: 12rpx 20rpx;
+            width: 48rpx;
+            height: 48rpx;
         }
     }
 }
 
 .my-rank {
-    background-color: white;
-    padding: 10rpx;
-    width: 100%;
 
-    position: fixed;
+    position: absolute;
+
+    width: 100%;
+    height: 12%;
     bottom: 0;
 
-    .rank-item{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    background-color: white;
 
-        .rank-info{
-            margin-right: 20rpx;
-        }
+    .rank-item {
+        
+        width: 96%;
+
+        margin-left: auto;
+        margin-right: auto;
+        
+        background-color: white;
+    
+        border-radius: 24rpx;
+        box-shadow: 0 0 16rpx rgba(0, 0, 0, 0.25);
     }
 }
