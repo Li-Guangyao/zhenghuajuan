@@ -5,12 +5,15 @@ Page({
 		// 菜品数据库
 		foods: [],
 
+		// 自己蒸花卷的记录
 		records: [],
 	},
 
 	timeRanges: null,
 
+	// canvas
 	foodsCanvas: null,
+	// canvas的context属性
 	foodsCtx: null,
 
 	onLoad: async function (options) {
@@ -120,7 +123,7 @@ Page({
 	},
 
 	/**
-	 * 当前的时间范围
+	 * 当前的选择的时间段
 	 */
 	curTimeRange: function () {
 		return this.timeRanges[this.data.chosenTabIndex];
@@ -130,6 +133,7 @@ Page({
 	 * 刷新数据
 	 */
 	refreshData: async function () {
+		// 现在选择的那个时间段
 		var range = this.curTimeRange();
 		var res = await wx.cloud.callFunction({
 			name: "getMyRollRecord",
@@ -149,24 +153,28 @@ Page({
 	 * 绘制数据
 	 */
 	drawData: function () {
-		const colCount = 6;
-		const w = this.foodsCanvas.width / colCount,
-			h = w;
+		this.clearCanvas()
 
+		// 每一行有6个图标
+		const colCount = 6;
+		const w = this.foodsCanvas.width / colCount;
+		const h = w;
+
+		// 自己在某个时间段所有的蒸花卷记录
 		this.data.records.forEach((rec, i) => {
-			var ii = i;
 			var x = i % colCount * w;
 			var y = Math.floor(i / colCount) * h;
 			var url = this.data.foods[rec.foodId].images[rec.quality];
 
-			// 
+			// 返回的path是图片的本地路径
 			wx.getImageInfo({
 				src: url,
 				success: res => {
-					console.info(this, ii, x, y, w, h);
+					console.info(this, i, x, y, w, h);
+					// 先创建，才能绘制图片
 					var img = this.foodsCanvas.createImage();
 					img.src = res.path;
-					img.onload = () => 
+					img.onload = () =>
 						this.foodsCtx.drawImage(img, 0, 0, res.width, res.height, x, y, w, h);
 				}
 			});
@@ -178,5 +186,10 @@ Page({
 			img.onLoad = this.foodsCtx.drawImage.bind(this, img, x, y, w, h);
 			*/
 		})
+	},
+
+	// 清空画布的内容
+	clearCanvas(params) {
+		this.foodsCtx.clearRect(0, 0, this.foodsCanvas.width, this.foodsCanvas.height)
 	}
 })

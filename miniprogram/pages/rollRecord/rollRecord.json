@@ -7,6 +7,6 @@
     "van-tabs": "@vant/weapp/tabs/index"
   },
   "navigationBarBackgroundColor": "#ffa600",
-  "enablePullDownRefresh": true,
+  "enablePullDownRefresh": false,
   "navigationBarTitleText":"蒸花卷记录"
 }
