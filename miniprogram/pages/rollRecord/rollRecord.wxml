@@ -1,31 +1,18 @@
 <!--pages/rollRecord/rollRecord.wxml-->
 <view class="page">
 
-	<tabbar class="tabbar" tabbar="{{cate}}" bindtabbarChange="onTabbarChange"></tabbar>
+	<!-- <tabbar class="tabbar" tabbar="{{cate}}" bindtabbarChange="onTabbarChange"></tabbar> -->
+
+	<van-tabs active="{{ active }}" animated color="#ffa600" bind:change="onTabbarChange">
+		<van-tab title="本日"></van-tab>
+		<van-tab title="本周"></van-tab>
+		<van-tab title="本月"></van-tab>
+		<van-tab title="本年"></van-tab>
+	</van-tabs>
 
 	<view class="table">
 		<canvas id="foods" type="2d" class="foods">
 		</canvas>
-		
-		<!-- <van-grid column-num="6">
-			<view class="food" wx:for="{{records}}">
-				<image src="{{foods[item.foodId].images[item.quality]}}" mode="aspectFit"></image>
-			</view>
-
-		</van-grid> -->
-
 	</view>
-	<!-- 
-	<swiper current="{{chosenTabIndex}}"
-		class="swiper-region" bindchange="swiperChange">
-
-		<swiper-item class="swiper-item">
-		</swiper-item>
-
-		<swiper-item class="swiper-item">
-		</swiper-item>
-
-	</swiper> 
-	-->
 
 </view>

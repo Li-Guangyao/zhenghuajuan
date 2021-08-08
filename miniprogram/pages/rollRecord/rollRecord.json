@@ -2,8 +2,11 @@
   "usingComponents": {
     "tabbar": "../../components/tabbar/tabbar",
     "van-grid": "@vant/weapp/grid/index",
-    "van-grid-item": "@vant/weapp/grid-item/index"
+    "van-grid-item": "@vant/weapp/grid-item/index",
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index"
   },
   "navigationBarBackgroundColor": "#ffa600",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText":"蒸花卷记录"
 }

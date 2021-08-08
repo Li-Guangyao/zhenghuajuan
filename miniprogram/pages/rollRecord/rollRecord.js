@@ -1,33 +1,5 @@
-// pages/rollRecord/rollRecord.js
 Page({
-
-	/**
-	 * 页面的初始数据
-	 */
 	data: {
-
-		// 时间区间分类
-		cate: [{
-				id: 0,
-				name: "本日",
-				isChosen: true
-			},
-			{
-				id: 1,
-				name: "本周",
-				isChosen: false
-			},
-			{
-				id: 2,
-				name: "本月",
-				isChosen: false
-			},
-			{
-				id: 3,
-				name: "本年",
-				isChosen: false
-			}
-		],
 		chosenTabIndex: 0,
 
 		// 菜品数据库
@@ -41,9 +13,6 @@ Page({
 	foodsCanvas: null,
 	foodsCtx: null,
 
-	/**
-	 * 生命周期函数--监听页面加载
-	 */
 	onLoad: async function (options) {
 		this.setupTimeRanges();
 		await this.loadFoods();
@@ -77,21 +46,6 @@ Page({
 
 				this.refreshData();
 			})
-	},
-
-	// TODO: 测试
-	// 绘制图片测试
-	test() {
-		this.foodsCtx.lineWidth = 8;
-		this.foodsCtx.strokeStyle = '#eaeaea';
-		this.foodsCtx.lineCap = 'round';
-
-		var img = this.foodsCanvas.createImage();
-		img.src = "../../images/defaultAvatar.jpeg";
-		img.onLoad = () => {
-			this.foodsCtx.drawImage(img, 0, 0);
-			this.foodsCtx.stroke();
-		}
 	},
 
 	/**
@@ -154,22 +108,11 @@ Page({
 	},
 
 	/**
-	 * 滑动器改变回调
-	 */
-	onSwiperChange: function (e) {
-		this.selectIndex(e.detail.current);
-	},
-
-	/**
 	 * 选择页面索引
 	 */
 	selectIndex: function (chosenTabIndex) {
-		let cate = this.data.cate;
-
 		// 根据获取的下表，改变cate
-		cate.forEach((v, i) => v.isChosen = i === chosenTabIndex);
 		this.setData({
-			cate,
 			chosenTabIndex
 		});
 
@@ -216,6 +159,7 @@ Page({
 			var y = Math.floor(i / colCount) * h;
 			var url = this.data.foods[rec.foodId].images[rec.quality];
 
+			// 
 			wx.getImageInfo({
 				src: url,
 				success: res => {
@@ -235,5 +179,4 @@ Page({
 			*/
 		})
 	}
-
 })

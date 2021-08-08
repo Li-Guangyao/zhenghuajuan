@@ -9,12 +9,14 @@ const $ = db.command.aggregate
 
 const TOKEN = "dOXi^w$7D0BOwG!UIA";
 
-// 云函数入口函数
 exports.main = async (event, context) => {
 	switch (event.method.toUpperCase()) {
-		case "GET": return (await getFoods(event.cond)).data;
-		case "BUY": return await buyFood(event.userInfo, event.foodId);
-		case "UPDATE": updateFoods(event.token, event.foods);
+		case "GET":
+			return (await getFoods(event.cond)).data;
+		case "BUY":
+			return await buyFood(event.userInfo, event.foodId);
+		case "UPDATE":
+			updateFoods(event.token, event.foods);
 	}
 }
 
@@ -26,6 +28,7 @@ async function getFoods(cond) {
 		return await db.collection('t_food').get();
 }
 
+// 购买食物
 async function buyFood(userInfo, foodId) {
 	var {
 		rollCount,
