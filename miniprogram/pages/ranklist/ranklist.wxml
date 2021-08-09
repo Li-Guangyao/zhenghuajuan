@@ -1,5 +1,6 @@
 <view>
 
+	<!-- 左上角返回按钮 -->
 	<view class="back-button">
 		<image src="../../icon/backArrow.png" mode="widthFix"></image>
 		排行榜
@@ -19,6 +20,8 @@
 			<van-tab title="周榜" name="week"></van-tab>
 			<van-tab title="月榜" name="month"></van-tab>
 		</van-tabs>
+		<!-- 记录页按钮 -->
+		<image class="record-button" src="../../icon/recordButton.png" mode="heightFix"></image>
 
 		<!-- 前三名 -->
 		<view class="top3">

@@ -1,15 +1,175 @@
 page {
-	background-color: var(--themeBackgroundColor);
+	--greyColor: rgba(0,0,0,0.3);
+	background-color: var(--themeColor);
+}
+.back-button {
+	position: absolute;
+
+	display: flex;
+	
+	top: 92rpx;
+	left: 40rpx;
+
+	color: white;
+	font-size: 36rpx;
+	line-height: 42rpx;
+
+	image {
+			width: 24rpx;
+			margin-right: 20rpx;
+	}
+}
+
+.main {
+	position: absolute;
 	width: 100%;
-	height: 100%;
+	height: 90%;
+	bottom: 0;
+	background-color: white;
+	border-radius: 32rpx;
+
+	.tab {
+		display: block;
+
+		margin-top: 80rpx;
+		margin-left: 32rpx;
+		margin-right: 144rpx;
+	}
+	.tab-title {
+			font-size: 32rpx; 
+			font-weight: bold;
+	}
+
+	.rank-button {
+			position: absolute;
+			height: 36rpx;
+			right: 42rpx;
+			top: 92rpx;
+			padding: 12rpx;
+			z-index: 1;
+	}
+
+	.content {
+		position: absolute;
+		width: 100%;
+		top: 192rpx;
+		bottom: 0;
+
+		overflow-x: hidden;
+		overflow-y: scroll;
+
+		.block {
+			width: 100%;
+			height: 24%;
+		}
+
+		.day {
+
+			width: 90%;
+			margin-left: auto;
+			margin-right: auto;
+
+			.day-title {	
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+
+				color: var(--greyColor);
+				font-size: 26rpx;
+
+				padding-left: 12rpx;
+
+				margin: 20rpx 0;
+
+				image {
+					margin-left: 12rpx;
+					width: 18rpx;
+					height: 18rpx;
+				}
+			}
+	
+			.record {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+
+				height: 128rpx;
+	
+				.icon {
+					flex: 1;
+					border-radius: 100%;
+				}
+				.info {
+					flex: 4;
+					display: flex;
+					
+					flex-direction: column;
+					justify-content: center;
+
+					margin-left: 24rpx;
+	
+					.name {
+						font-size: 32rpx;
+						line-height: 48rpx;
+						color: var(--fontColor);
+					}
+					.detail {
+						font-size: 24rpx;
+						color: var(--greyColor);
+					}
+				}
+				.roll {
+					flex: 1;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+	
+					color: var(--themeColor);
+					font-size: 36rpx;
+	
+					image {
+						margin-left: 16rpx;
+
+						width: 42rpx;
+						height: 42rpx;
+					}
+				}
+			}
+		}
+	}
 }
-.table {
+
+.table-scroller {
+
 	position: absolute;
-	width: 100%; 
-	height: 75%;
-}
-.foods { 
-	position: absolute;
-	width: 100%; 
-	height: 100%;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+
+	overflow-y: scroll;
+
+	pointer-events: none;
+
+	.table {
+		position: absolute;
+
+		display: block;
+
+		width: 100%; 
+		top: 85%;
+
+		pointer-events: all;
+
+		.foods { 
+			position: absolute;
+
+			width: auto; 
+			height: 580px;
+
+			top: 32rpx;
+			left: 32rpx;
+			right: 32rpx;
+
+			pointer-events: all;
+		}
+	}
 }

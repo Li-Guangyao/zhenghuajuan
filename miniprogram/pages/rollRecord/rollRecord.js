@@ -44,6 +44,8 @@ Page({
 				// 缩放
 				// this.foodsCtx.scale(dpr, dpr);
 
+				console.info(this.foodsCanvas);
+
 				this.refreshData();
 			})
 	},
@@ -149,7 +151,7 @@ Page({
 	 * 绘制数据
 	 */
 	drawData: function () {
-		const colCount = 6;
+		const colCount = 4;
 		const w = this.foodsCanvas.width / colCount,
 			h = w;
 
