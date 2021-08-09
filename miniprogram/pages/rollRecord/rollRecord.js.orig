@@ -159,12 +159,18 @@ Page({
 	 * 绘制数据
 	 */
 	drawData: function () {
+<<<<<<< HEAD
+		const colCount = 4;
+		const w = this.foodsCanvas.width / colCount,
+			h = w;
+=======
 		this.clearCanvas()
 
-		// 每一行有4个图标
-		const colCount = 4;
+		// 每一行有6个图标
+		const colCount = 6;
 		const w = this.foodsCanvas.width / colCount;
 		const h = w;
+>>>>>>> 2cd9a68126864fc193ddd6cc152419e474ad1ab2
 
 		// 自己在某个时间段所有的蒸花卷记录
 		this.data.records[this.data.chosenTabIndex].forEach(async (rec, i) => {
