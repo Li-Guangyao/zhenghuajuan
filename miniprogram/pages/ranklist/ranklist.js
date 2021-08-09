@@ -1,28 +1,26 @@
 Page({
 	data: {
 		userInfo: null,
-		dayRankList: [],
-		weekRankList: [],
-		topRankList: [],
 		updateDate: null,
 
-		myDayRank: -1,
-		myDayValue: 0,
-		myWeekRank: -1,
-		myWeekValue: 0,
+		rankList: [],
+		// 用于显示的list
+		topRankList: [],
 
-		tabbar: [{
-				id: 0,
-				name: "日排行",
-				isChosen: true
-			},
-			{
-				id: 1,
-				name: "周排行",
-				isChosen: false
-			}
+		// 三项分别对应日/周/月排名数据
+		// 二级数组：[第几名，获得几个花卷]
+		myRankInfo: [
+			[-1, -1],
+			[-1, -1],
+			[-1, -1]
 		],
-		chosenTabIndex: 0,
+
+		tab: [
+			['日榜', 'day'],
+			['周榜', 'week'],
+			['月榜', 'month']
+		],
+		tabIndex: 0,
 
 		// 初始化wholeRank的高度
 		wholeRankHeight: null
@@ -80,77 +78,42 @@ Page({
 		)
 	},
 
-	async initPageContent(){
+	// 初始化页面内容
+	async initPageContent() {
 		wx.showLoading({
 			title: '加载中'
 		})
 
-		await wx.cloud.callFunction({
-			name: 'getDayJuanwang'
-		}).then(res => {
-			console.log(res)
-			this.setData({
-				dayRankList: res.result.rankList.dayRankList,
-				myDayRank: res.result.myDayRank,
-				myDayValue: res.result.myDayValue
-			})
-		})
+		const getRankList = this.data.tab.map(e => this.getRankList(e[1]))
+		var res = await Promise.all(getRankList)
 
-		await wx.cloud.callFunction({
-			name: 'getWeekJuanwang'
-		}).then(res => {
-			console.log(res)
+		for (var i = 0; i < res.length; i++) {
 			this.setData({
-				weekRankList: res.result.rankList.weekRankList,
-				myWeekRank: res.result.myWeekRank,
-				myWeekValue: res.result.myWeekValue
+				['rankList[' + i + ']']: res[i].result.rankList,
+				['myRankInfo[' + i + ']']: [res[i].result.myRank, res[i].result.myValue]
 			})
-		})
-
-		await wx.cloud.callFunction({
-			name: 'getTopJuanwang'
-		}).then(res => {
-			console.log(res)
-			this.setData({
-				topRankList: res.result.rankList.weekRankList,
-				updateDate: this.setDateFormat(res.result.rankList.createdAt)
-			})
-		})
-
+		}
 		wx.hideLoading()
 	},
 
-	tabbarChange(e) {
-		//获取点击的tabbar项下标
-		const chosenTabIndex = e.detail.index;
-		let tabbar = this.data.tabbar;
-		//根据获取的下表，改变tabbar
-		tabbar.forEach((v, i) => i === chosenTabIndex ? v.isChosen = true : v.isChosen = false);
-		// console.log(this)
-		this.setData({
-			tabbar,
-			chosenTabIndex: chosenTabIndex
-		});
-	},
-
-	swiperChange: function (e) {
-		var chosenTabIndex = e.detail.current
-		let tabbar = this.data.tabbar;
-		//根据获取的下表，改变tabbar
-		tabbar.forEach((v, i) => i === chosenTabIndex ? v.isChosen = true : v.isChosen = false);
-		this.setData({
-			tabbar,
-			chosenTabIndex: chosenTabIndex
+	// 获得排行榜信息
+	getRankList(type) {
+		return wx.cloud.callFunction({
+			name: 'getJuanwang',
+			data: {
+				type
+			}
 		})
 	},
 
-	onReady: function () {
-
+	// 点击切换日/周/月榜
+	onTabbarChange(e) {
+		this.setData({
+			tabIndex: e.detail.index,
+			topRankList: this.data.rankList[e.detail.index]
+		})
 	},
 
-	/**
-	 * 生命周期函数--监听页面显示
-	 */
 	onShow: function () {
 		this.judgeLogin()
 	},
@@ -170,6 +133,5 @@ Page({
 
 	onReachBottom: function () {
 
-	},
-
+	}
 })

@@ -10,7 +10,7 @@ const $ = db.command.aggregate
 function updateResult(result, now, start, end) {
 	db.collection('t_rank_tmp')
 		.where({
-			type: "day"
+			type: "month"
 		}).remove()
 		.then(_ => addResult(result, now, start, end))
 		.catch(_ => addResult(result, now, start, end))
@@ -19,7 +19,7 @@ function updateResult(result, now, start, end) {
 function addResult(result, now, start, end) {
 	db.collection('t_rank_tmp').add({
 		data: {
-			type: "day",
+			type: "month",
 			rankList: result,
 			createdAt: now,
 			start,
@@ -28,22 +28,23 @@ function addResult(result, now, start, end) {
 	})
 }
 
-// 统计前一天的卷王名单
+// 统计本月的卷王名单
 exports.main = async (event, context) => {
+
 	var now = new Date()
 
-	var date = now.getDate()
+	var date = now.getDate();
 	var month = now.getMonth();
 	var year = now.getFullYear();
+	var hour = now.getHours();
+	var minute = now.getMinutes();
 
-	var dayStart = new Date(
-		year, month, date, 0, 0, 0);
-	var dayEnd = new Date(
-		year, month, date + 1, 0, 0, 0);
+	var monthStart = new Date(year, month, 1, 0, 0, 0);
+	var monthEnd = new Date(year, month, date, hour, minute, 0);
 
 	return db.collection('t_post_like').aggregate().match({
-		createdAt: _.lt(dayEnd),
-		createdAt: _.gt(dayStart)
+		createdAt: _.lt(monthEnd),
+		createdAt: _.gt(monthStart)
 	}).group({
 		_id: '$postAuthor_openid',
 		totalValue: $.sum('$value')
@@ -62,7 +63,6 @@ exports.main = async (event, context) => {
 	}).project({
 		userInfo: 0
 	}).end().then(res => {
-		updateResult(res.list, now, dayStart, dayEnd)
+		updateResult(res.list, now, monthStart, monthEnd)
 	})
-
 }
