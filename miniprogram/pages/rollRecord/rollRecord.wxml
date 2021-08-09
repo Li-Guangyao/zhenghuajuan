@@ -25,201 +25,19 @@
 
 		<!-- 内容 -->
 		<view class="content">
-			<view class="day">
-				<view class="day-title">2021年8月7日
+			<view class="day" wx:for="{{records[chosenTabIndex]}}" wx:for-index="key" wx:for-item="item" wx:if="{{key != 'records'}}">
+				<view class="day-title">{{key}}
 					<image src="../../icon/arrowDown.png"/>
 					<!-- <image src="../../icon/arrowLeft.png"/> -->
 				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
+				<view class="record" wx:for="{{item}}" wx:for-item="item2">
+					<image class="icon" src="{{foods[item2.foodId].images[item2.quality]}}" mode="aspectFit"></image>
 					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
+						<view class="name">{{item2.rollName}}味{{foods[item2.foodId].name}}</view>
+						<view class="detail">{{item2.time}} | {{item2.rollDuration}}min</view>
 					</view>
 					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-			</view>
-			<view class="day">
-				<view class="day-title">2021年8月7日
-					<image src="../../icon/arrowDown.png"/>
-					<!-- <image src="../../icon/arrowLeft.png"/> -->
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-			</view>
-			<view class="day">
-				<view class="day-title">2021年8月7日
-					<image src="../../icon/arrowDown.png"/>
-					<!-- <image src="../../icon/arrowLeft.png"/> -->
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
-					</view>
-				</view>
-				<view class="record">
-					<image class="icon" src="../../images/pen.png" mode="aspectFit"></image>
-					<view class="info">
-						<view class="name">学习味花卷</view>
-						<view class="detail">8月7日 13:25 | 44min</view>
-					</view>
-					<view class="roll">
-						155 <image src="../../icon/roll2.png"></image>
+						{{item2.rollCount}} <image src="../../icon/roll2.png"></image>
 					</view>
 				</view>
 			</view>
@@ -229,7 +47,13 @@
 
 	<scroll-view class="table-scroller" scroll-y="true">
 		<!-- 桌子显示 -->
-		<image class="table" src="../../images/table.png" mode="widthFix">
+		<image class="table" src="../../images/table.png" mode="widthFix" bindload="setupCanvas">
+			<!-- 		
+			<image src="../../images/foods/a.png" style="top: 128rpx; left: 192rpx;"></image>
+			<image src="../../images/foods/b.png" style="top: 288rpx; left: 102rpx;"></image>
+			<image src="../../images/foods/c.png" style="top: 321rpx; left: 384rpx;"></image>
+			<image src="../../images/foods/d.png" style="top: 466rpx; left: 259rpx;"></image>
+			-->
 			<canvas id="foods" type="2d" class="foods"></canvas>
 		</image>
 		<!-- <view class="table">

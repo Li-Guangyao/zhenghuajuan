@@ -2,11 +2,13 @@ Page({
 	data: {
 		chosenTabIndex: 0,
 
+		positions: [],
+
 		// 菜品数据库
 		foods: [],
 
 		// 自己蒸花卷的记录
-		records: {},
+		records: [],
 	},
 
 	timeRanges: null,
@@ -14,6 +16,9 @@ Page({
 	foodsCanvas: null,
 	// canvas的context属性
 	foodsCtx: null,
+	// 菜品尺寸（绘制）
+	foodSize: [92, 92],
+
 	// 图片缓存
 	imageCache: {},
 
@@ -25,9 +30,7 @@ Page({
 	/**
 	 * 准备绘制
 	 */
-	onReady: function () {
-		this.setupCanvas();
-	},
+	onReady: function () {},
 
 	// 配置Canvas
 	setupCanvas() {
@@ -45,10 +48,15 @@ Page({
 				const dpr = wx.getSystemInfoSync().pixelRatio
 				this.foodsCanvas.width = res[0].width * dpr
 				this.foodsCanvas.height = res[0].height * dpr
+				this.foodsCanvas.dpr = dpr;
 				// 缩放
-				// this.foodsCtx.scale(dpr, dpr);
+				this.foodsCtx.scale(dpr, dpr);
 
 				console.info(this.foodsCanvas);
+
+				this.setData({
+					positions: this.generatePositions(), // 每个菜品的位置
+				})
 
 				this.refreshData();
 			})
@@ -101,8 +109,7 @@ Page({
 		let _foods = {}
 		foods.forEach(f => _foods[f._id] = f);
 		return {
-			...foods,
-			..._foods
+			...foods, ..._foods
 		}
 	},
 
@@ -149,43 +156,146 @@ Page({
 			});
 			var recordItemName = 'records[' + this.data.chosenTabIndex + ']'
 			this.setData({
-				[recordItemName]: res.result
+				[recordItemName]: this.processRecordData(res.result)
 			});
 		}
 		this.drawData();
 	},
 
+	processRecordData: function (records) {
+		var res = { records };
+
+		records.forEach(r => {
+			var time = new Date(r.createdAt);
+			var date = time.getDate();
+			var month = time.getMonth();
+			var year = time.getFullYear();
+			var hour = time.getHours();
+			var minute = time.getMinutes();
+
+			r.time = month + "月" + date + "日 " + hour + ":" + minute; 
+
+			var key = year + "年" + month + "月" + date + "日";
+			res[key] ||= []; res[key].push(r)
+		})
+		
+		return res;
+	},
+
 	/**
 	 * 绘制数据
 	 */
-	drawData: function () {
-		this.clearCanvas()
+	drawData: async function () {
+		this.clearCanvas();
 
-		// 每一行有4个图标
-		const colCount = 4;
-		const w = this.foodsCanvas.width / colCount;
-		const h = w;
+		var data = this.data.records[this.data.chosenTabIndex].records;
+		for (let i = 0; i < data.length; i++) 
+			await this.drawFood(i, data[i], this.data.positions[i]);
+	},
 
-		// 自己在某个时间段所有的蒸花卷记录
-		this.data.records[this.data.chosenTabIndex].forEach(async (rec, i) => {
-			var x = i % colCount * w;
-			var y = Math.floor(i / colCount) * h;
-			var src = this.data.foods[rec.foodId].images[rec.quality];
-			var cache = this.imageCache[src] ||= await wx.getImageInfo({src})
+	width: function() {
+		return this.foodsCanvas.width / this.foodsCanvas.dpr;
+	},
+	height: function() {
+		return this.foodsCanvas.height / this.foodsCanvas.dpr;
+	},
 
-			var draw = () =>
-				this.foodsCtx.drawImage(cache.img, 0, 0, cache.width, cache.height, x, y, w, h);
+	generatePositions: function() {
+		var w = this.width(), h = this.height();
+		var center = [w / 2, h / 2], res = [];
+		this.doGenPositions(center, res);
+		return res.sort((p1, p2) => p1[1] != p2[1] ? 
+			p1[1] - p2[1] : p1[0] - p2[0]);
+	},
 
-			if (!cache.img) {
-				cache.img = this.foodsCanvas.createImage();
-				cache.img.src = cache.path;
-				cache.img.onload = draw;
-			} else draw();
-		})
+	doGenPositions: function(pos, positions) {
+		if (!this.isValidPoint(pos, positions)) return;
+
+		var fw = this.foodSize[0] * 1, pi = Math.PI;
+
+		positions.push(pos);
+
+		for (let rad = 0; rad < 2 * pi; rad += pi / 3) {
+			var newPos = [
+				pos[0] + fw * Math.cos(rad),
+				pos[1] + fw * Math.sin(rad)
+			];
+			this.doGenPositions(newPos, positions)
+		}
+	},
+
+	// 点操作函数
+	isValidPoint: function (pos, positions) {
+		var w = this.width(), h = this.height(), d = this.foodSize[0];
+		// var center = [w / 2, h / 2], radius = Math.max(w, h) / 2 * 0.9;
+
+		// if (this.pointsDist2(pos, center) >= 
+		// 	(radius - d / 2)*(radius - d / 2)) return false;
+
+		// 边界判断
+		if (pos[0] - d / 2 <= 0 || pos[0] + d / 2 >= w) return false;
+		if (pos[1] - d / 2 <= 0 || pos[1] + d / 2 >= h) return false;
+
+		return positions.every(
+			p => this.pointsDist2(pos, p) >= d * d * 0.5
+		)
+	},
+	pointsDist2: (p1, p2) =>
+		(p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]),
+
+	adjustPos: function (pos) {
+		return [
+			pos[0] - this.foodSize[0] / 2,
+			pos[1] - this.foodSize[1] / 2
+		];
+	},
+
+	drawFood: async function (i, rec, pos) {
+		pos = this.adjustPos(pos);
+
+		var x = pos[0], y = pos[1];
+		var w = this.foodSize[0], h = this.foodSize[1];
+		var src = this.data.foods[rec.foodId].images[rec.quality];
+		var cache = this.imageCache[src] ||= await wx.getImageInfo({src})
+
+		var draw = () => 
+			// console.log("drawFood", i, pos, this.adjustPos(pos));
+			this.foodsCtx.drawImage(cache.img, 0, 0, 
+				cache.width, cache.height, x, y, w, h);
+
+		if (!cache.img) {
+			var img = this.foodsCanvas.createImage();
+			img.src = cache.path;
+			img.onload = () => {
+				cache.img = img; draw();
+			};
+		} else draw();
 	},
 
 	// 清空画布的内容
-	clearCanvas(params) {
+	clearCanvas: function () {
 		this.foodsCtx.clearRect(0, 0, this.foodsCanvas.width, this.foodsCanvas.height)
+		
+		/* 测试用
+		for (let x = 0; x < this.width(); x += 100) {
+			this.foodsCtx.moveTo(x, 0);
+
+			this.foodsCtx.lineTo(x, 999);
+			this.foodsCtx.lineWidth = 3; //直线的宽度状态设置
+			this.foodsCtx.strokeStyle = "#000"; //直线的颜色状态设置
+
+			this.foodsCtx.stroke()
+		}
+
+		for (let y = 0; y < this.height(); y += 100) {
+			this.foodsCtx.moveTo(0, y);
+
+			this.foodsCtx.lineTo(999, y);
+			this.foodsCtx.lineWidth = 3; //直线的宽度状态设置
+			this.foodsCtx.strokeStyle = "#000"; //直线的颜色状态设置
+
+			this.foodsCtx.stroke()
+		}
+		*/
 	}
 })

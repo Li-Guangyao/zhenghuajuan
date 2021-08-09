@@ -127,12 +127,16 @@ page {
   top: 85%;
   pointer-events: all;
 }
+.table-scroller .table image {
+  position: absolute;
+  width: 192rpx;
+  height: 192rpx;
+}
 .table-scroller .table .foods {
   position: absolute;
-  width: auto;
-  height: 580px;
-  top: 32rpx;
-  left: 32rpx;
-  right: 32rpx;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   pointer-events: all;
 }
