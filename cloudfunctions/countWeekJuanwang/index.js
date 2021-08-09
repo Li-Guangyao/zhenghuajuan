@@ -9,7 +9,9 @@ const $ = db.command.aggregate
 
 function updateResult(result, now, start, end) {
 	db.collection('t_rank_tmp')
-		.where({ type: "week" }).remove()
+		.where({
+			type: "week"
+		}).remove()
 		.then(_ => addResult(result, now, start, end))
 		.catch(_ => addResult(result, now, start, end))
 }
@@ -18,44 +20,33 @@ function addResult(result, now, start, end) {
 	db.collection('t_rank_tmp').add({
 		data: {
 			type: "week",
-			weekRankList: result,
+			rankList: result,
 			createdAt: now,
-			start, end
+			start,
+			end
 		}
-	})	
+	})
 }
 
 // 统计本周的卷王名单
 exports.main = async (event, context) => {
 	var now = new Date()
 
-	var timeZone = 8;
-
 	var date = now.getDate();
 	var month = now.getMonth();
 	var year = now.getFullYear();
 	var day = now.getDay(); // 星期
 
-	var hour = now.getHours();
-	if (hour + timeZone >= 24) {
-		date += 1; day = day + 1 % 7;
-	}
 	if (day == 0) day = 7;
 
 	var sDate = date - day + 1;
 	var eDate = sDate + 7;
 
 	var weekStart = new Date(
-		year, month, sDate, -timeZone, 0, 0);
+		year, month, sDate, 0, 0, 0);
 	var weekEnd = new Date(
-		year, month, eDate, -timeZone, 0, 0);
+		year, month, eDate, 0, 0, 0);
 
-	//先统计出来一周有多少毫秒
-	// var week = 7 * 24 * 60 * 60 * 1000
-	// var endStamp = nowStamp - week
-
-	// var end = new Date(endStamp)
-	
 	return db.collection('t_post_like').aggregate().match({
 		createdAt: _.lt(weekEnd),
 		createdAt: _.gt(weekStart)

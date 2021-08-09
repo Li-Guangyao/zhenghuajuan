@@ -34,7 +34,6 @@ page {
   top: -10%;
 }
 .main .tab {
-  display: block;
   width: 80%;
   margin-top: 16rpx;
   margin-left: auto;

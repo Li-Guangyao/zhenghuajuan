@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "openapi": [
+    ]
+  },
+  "triggers": [{
+    "name": "countMonthJuanwang",
+    "type": "timer",
+    "config": "0 0/5 * * * * *"
+  }]
+}

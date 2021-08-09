@@ -1,5 +1,4 @@
 <view>
-
 	<!-- 左上角返回按钮 -->
 	<view class="back-button">
 		<image src="../../icon/backArrow.png" mode="widthFix"></image>
@@ -13,19 +12,18 @@
 	<view class="main">
 		<!-- 标题前景 -->
 		<image class="foreground" src="../../images/rankListForeground.png" mode="widthFix" />
-			
+
 		<!-- 榜单切换 -->
-		<van-tabs custom-class="tab" tab-class="tab-title" active="{{ active }}" animated color="#ffa600" bind:change="onTabbarChange">
-			<van-tab title="日榜" name="day"></van-tab>
-			<van-tab title="周榜" name="week"></van-tab>
-			<van-tab title="月榜" name="month"></van-tab>
+		<van-tabs custom-class="tab" tab-class="tab-title" active="{{ active }}" animated color="#ffa600"
+			bind:change="onTabbarChange">
+			<van-tab wx:for="{{tab}}" wx:key="index" title="{{tab[index][0]}}" name="{{tab[index][1]}}"></van-tab>
 		</van-tabs>
 		<!-- 记录页按钮 -->
 		<image class="record-button" src="../../icon/recordButton.png" mode="heightFix"></image>
 
 		<!-- 前三名 -->
 		<view class="top3">
-			<view class="first">
+			<view class="first" wx:if="{{topRankList[0]}}">
 				<view class="rank">1</view>
 				<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
 				<view class="nickname">{{topRankList[0].displayName}}</view>
@@ -34,7 +32,7 @@
 				</view>
 				<view class="text">恭迎卷王！</view>
 			</view>
-			<view class="second">
+			<view class="second" wx:if="{{topRankList[1]}}">
 				<view class="rank">2</view>
 				<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
 				<view class="nickname">{{topRankList[1].displayName}}</view>
@@ -42,7 +40,7 @@
 					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
-			<view class="third">
+			<view class="third" wx:if="{{topRankList[2]}}">
 				<view class="rank">3</view>
 				<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
 				<view class="nickname">{{topRankList[2].displayName}}</view>
@@ -50,11 +48,14 @@
 					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
+			<view class="empty" wx:if="{{!topRankList.length}}">
+				<van-empty description="空空如也" />
+			</view>
 		</view>
 
 		<!-- 主体内容 -->
-		<view class="content">	
-			<view class="rank-item" wx:for="{{weekRankList}}" wx:key="index">
+		<view class="content">
+			<view class="rank-item" wx:for="{{topRankList}}" wx:key="index" wx:if="{{index>=3}}">
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
 					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
@@ -65,23 +66,27 @@
 					<image class="juan-image" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
+			<view class="empty" wx:if="{{!topRankList.length}}">
+				<van-empty description="空空如也" />
+			</view>
 		</view>
-		
+
 		<!-- 我的页面 -->
 		<view class="my-rank">
 			<view class="rank-item">
 				<view class="left">
-					<text class="rank-number" wx:if="{{myWeekRank!=-1}}">{{myWeekRank}}</text>
+					<text class="rank-number" wx:if="{{myRankInfo[tabIndex][0]!=-1}}">{{myRankInfo[tabIndex][0]}}</text>
 					<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
 					<view class="user-nickname">{{userInfo.displayName}}</view>
 				</view>
 				<view class="right">
-					<view class="juan-number" wx:if="{{myWeekRank!=-1}}">{{myWeekValue}}</view>
-					<image class="juan-image" src="../../icon/roll2.png" wx:if="{{myWeekRank!=-1}}"></image>
-					<text class="rank-info" wx:if="{{myWeekRank==-1}}">您未上榜</text>
+					<view class="juan-number" wx:if="{{myRankInfo[tabIndex][1]!=-1}}">
+						{{myRankInfo[tabIndex][1]}}</view>
+					<image class="juan-image" src="../../icon/roll2.png" wx:if="{{myRankInfo[tabIndex][1]!=-1}}">
+					</image>
+					<text class="rank-info" wx:if="{{myRankInfo[tabIndex][1]==-1}}">您未上榜</text>
 				</view>
 			</view>
-
 		</view>
 	</view>
 </view>
