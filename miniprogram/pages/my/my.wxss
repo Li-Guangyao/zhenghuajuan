@@ -2,24 +2,19 @@ page {
   --greyColor: rgba(0, 0, 0, 0.3);
   background-color: var(--themeColor);
 }
-.title-bar {
-  position: fixed;
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  align-items: flex-end;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 168rpx;
-  background-color: var(--themeColor);
-  z-index: 4;
+.van-nav-bar {
+  background-color: var(--themeColor) !important;
 }
-.title-bar .title {
-  margin-left: 8%;
-  color: white;
-  font-size: 36rpx;
-  line-height: 92rpx;
+.van-icon:before {
+  color: white !important;
+  font-size: 36rpx !important;
+}
+.van-nav-bar__text {
+  margin-left: -12rpx !important;
+  color: white !important;
+  font-size: 36rpx !important;
+  line-height: 36rpx !important;
+  background-color: transparent !important;
 }
 .next-button {
   flex: 1;
@@ -160,6 +155,7 @@ page {
   width: 100%;
   height: 144rpx;
   bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 .bottom-bar image {
   height: 100%;

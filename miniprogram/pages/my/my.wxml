@@ -1,9 +1,7 @@
-<view class="page">
+<!-- 左上角标题 -->
+<van-nav-bar border="{{false}}" fixed left-text="个人"/>
 
-	<!-- 左上角标题 -->
-	<view class="title-bar">
-		<view class="title">个人</view>
-	</view>
+<view class="page">
 
 	<!-- 用户信息 -->
 	<view class="user-card">

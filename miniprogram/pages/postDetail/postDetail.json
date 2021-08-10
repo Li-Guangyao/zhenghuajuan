@@ -1,5 +1,7 @@
 {
     "usingComponents": {
-        "post-display": "../../components/postDisplay/postDisplay"
-    }
+        "post-display": "../../components/postDisplay/postDisplay",
+        "van-nav-bar": "@vant/weapp/nav-bar/index"
+    },
+    "navigationStyle": "custom"
 }

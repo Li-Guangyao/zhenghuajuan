@@ -200,9 +200,9 @@ Page({
 	},
 	
 	toPost() {
-		wx.redirectTo({ url: '../homepage/homepage' })
+		wx.reLaunch({ url: '../homepage/homepage' })
 	},
 	toMy() {
-		wx.redirectTo({ url: '../my/my' })
+		wx.reLaunch({ url: '../my/my' })
 	},
 })

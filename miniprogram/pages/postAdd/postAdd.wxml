@@ -1,3 +1,6 @@
+<!-- 左上角标题 -->
+<van-nav-bar border="{{false}}" fixed left-text="卷一波" left-arrow bind:click-left="back"/>
+
 <view class="post">
 	<!-- 富文本输入，已废除 -->
 	<!-- <editor class="content-input" model:value="{{content}}" bindinput="contentInput" placeholder="写下你的成果吧~"

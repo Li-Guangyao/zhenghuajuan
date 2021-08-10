@@ -275,4 +275,6 @@ Page({
 			isAnonymous: e.detail
 		})
 	},
+	
+	back() { wx.navigateBack(); }
 })

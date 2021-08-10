@@ -126,10 +126,12 @@ Page({
 	},
 
 	toRoll() {
-		wx.redirectTo({ url: '../roll/roll' })
+		wx.switchTab({
+			url: '../roll/roll',
+		});
 	},
 	toMy() {
-		wx.redirectTo({ url: '../my/my' })
+		wx.switchTab({ url: '../my/my' })
 	},
 
 })

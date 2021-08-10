@@ -25,10 +25,10 @@ Page({
 	},
 
 	toRoll() {
-		wx.redirectTo({ url: '../roll/roll' })
+		wx.switchTab({ url: '../roll/roll' })
 	},
 	toPost() {
-		wx.redirectTo({ url: '../homepage/homepage' })
+		wx.switchTab({ url: '../homepage/homepage' })
 	},
 
 })
