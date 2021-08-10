@@ -23,4 +23,12 @@ Page({
 	toShopName(){
 		wx.navigateTo({ url: '../shopName/shopName' })
 	},
+
+	toRoll() {
+		wx.redirectTo({ url: '../roll/roll' })
+	},
+	toPost() {
+		wx.redirectTo({ url: '../homepage/homepage' })
+	},
+
 })

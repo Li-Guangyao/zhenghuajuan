@@ -2,6 +2,7 @@
 @import './miniprogram_npm/@vant/weapp/common/index.wxss';
 
 page {
+  --borderColor: #e1e1e1;
   --themeColor: #ffa600;
   --themeBackgroundColor: #f6f6f6;
 

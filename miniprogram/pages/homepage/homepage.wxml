@@ -1,5 +1,11 @@
 <view class="page">
 	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
+
+	<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="toPostAdd"></image>
 </view>
 
-<image class="btn-addpost" src="../../icon2/add.png" mode="aspectFill" bindtap="toPostAdd"></image>
+<view class="bottom-bar">
+	<image src="../../icon/postSelected.png" mode="aspectFit"></image>
+	<image src="../../icon/menuRoll.png" mode="aspectFit" bindtap="toRoll"></image>
+	<image src="../../icon/my.png" mode="aspectFit" bindtap="toMy"></image>
+</view>

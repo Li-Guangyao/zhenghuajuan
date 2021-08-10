@@ -7,42 +7,51 @@ var calcCount = function(count, strictMode) {
 
 module.exports.calcCount = calcCount;
 </wxs>
+<view class="page">
 
-<view class="no-record" wx:if="{{postList.length <= 0}}">
-	<image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
-	<text>还没有任何蒸花卷记录</text>
-	<text>点击右下角加号开始蒸花卷吧</text>
+	<view class="no-record" wx:if="{{postList.length <= 0}}">
+		<image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
+		<text>还没有任何蒸花卷记录</text>
+		<text>点击右下角加号开始蒸花卷吧</text>
+	</view>
+
+	<view class="record-list" wx:if="{{postList.length > 0}}">
+		<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}" showDelete="true"></post-display>
+	</view>
+
+	<van-dialog class="set-activity" title="标题" use-slot use-title-slot show="{{ showDialog }}" zIndex="1"
+		show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
+		confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa" style="z-index:-1;">
+		<view slot="title" class="dialog-title">蒸花卷</view>
+		<view class="activity-name">
+			<view class="tip">花卷口味</view>
+			<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5"
+				placeholder="写下你专注的内容吧"></input>
+		</view>
+		<view class="activity-duration">
+			<view class="tip">蒸制时间</view>
+			<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
+			<view class="minute">min</view>
+		</view>
+		<view class="dialog-tip">预计可获得{{m1.calcCount(counts[durationIndex], strictMode)}}个
+			<image src="../../icon/roll2.png" mode="heightFix"></image>
+			<van-checkbox value="{{ strictMode }}" bind:change="onStrictChange" shape="round" checked-color="#ffa600"
+				style="margin-left: 32rpx">严格模式
+			</van-checkbox>
+		</view>
+	</van-dialog>
+
+	<van-popup show="{{ showPopup }}" position="bottom" z-index="2" round="{{true}}" close-on-click-overlay="{{true}}">
+		<van-picker show-toolbar title="选择时间" columns="{{ durations }}" bind:cancel="showPopup"
+			bind:confirm="choseDuration" />
+	</van-popup>
+
+	<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="showDialog"></image>
+
 </view>
 
-<view class="record-list" wx:if="{{postList.length > 0}}">
-	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}" showDelete="true"></post-display>
+<view class="bottom-bar">
+	<image src="../../icon/post.png" mode="aspectFit" bindtap="toPost"></image>
+	<image src="../../icon/menuRoll.png" mode="aspectFit"></image>
+	<image src="../../icon/my.png" mode="aspectFit" bindtap="toMy"></image>
 </view>
-
-<van-dialog class="set-activity" title="标题" use-slot use-title-slot show="{{ showDialog }}" zIndex="1"
-	show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
-	confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa" style="z-index:-1;">
-	<view slot="title" class="dialog-title">蒸花卷</view>
-	<view class="activity-name">
-		<view class="tip">花卷口味</view>
-		<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5"
-			placeholder="写下你专注的内容吧"></input>
-	</view>
-	<view class="activity-duration">
-		<view class="tip">蒸制时间</view>
-		<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
-		<view class="minute">min</view>
-	</view>
-	<view class="dialog-tip">预计可获得{{m1.calcCount(counts[durationIndex], strictMode)}}个
-		<image src="../../icon/roll2.png" mode="heightFix"></image>
-		<van-checkbox value="{{ strictMode }}" bind:change="onStrictChange" shape="round" checked-color="#ffa600"
-			style="margin-left: 32rpx">严格模式
-		</van-checkbox>
-	</view>
-</van-dialog>
-
-<van-popup show="{{ showPopup }}" position="bottom" z-index="2" round="{{true}}" close-on-click-overlay="{{true}}">
-	<van-picker show-toolbar title="选择时间" columns="{{ durations }}" bind:cancel="showPopup"
-		bind:confirm="choseDuration" />
-</van-popup>
-
-<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="showDialog"></image>

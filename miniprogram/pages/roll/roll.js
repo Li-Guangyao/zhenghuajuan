@@ -198,4 +198,11 @@ Page({
 		})
 		this.showPopup()
 	},
+	
+	toPost() {
+		wx.redirectTo({ url: '../homepage/homepage' })
+	},
+	toMy() {
+		wx.redirectTo({ url: '../my/my' })
+	},
 })

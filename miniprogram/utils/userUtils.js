@@ -8,7 +8,7 @@ userUtils.Key = "userInfo";
 userUtils.getUserInfo = async function() {
 	var res = await wx.cloud.callFunction({name: 'getUser'});
 	wx.setStorageSync('userInfo', res.result)
-	return res;
+	return res.result;
 }
 
 /**

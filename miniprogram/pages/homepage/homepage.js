@@ -123,6 +123,13 @@ Page({
 			current: index2,
 			showmenu: true,
 		})
-	}
+	},
+
+	toRoll() {
+		wx.redirectTo({ url: '../roll/roll' })
+	},
+	toMy() {
+		wx.redirectTo({ url: '../my/my' })
+	},
 
 })
