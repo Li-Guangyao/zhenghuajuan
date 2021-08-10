@@ -1,46 +1,12 @@
 import getDateDiff from "../../utils/getDateDiff"
+import { userUtils } from "../../utils/userUtils"
 
 Page({
 	data: {
 		post: {},
 		userInfo: null,
 		commentList: [],
-
-		// // 评论帖子的输入框
-		// showInput: false,
-		// // 点赞框
-		// showPopup: false,
-		// // 评论评论的输入框
-		// showInputForComment: false,
-		// // 针对帖子的评论
-		// inputComment: null,
-		// // 针对评论的评论
-		// inputCommentComment: null,
-		// // 回复+用户名+：
-		// commentSb: null,
-		// commentList: [],
-
-		// chosenPopupItemIndex: -1,
-		// originChosenPopupItemIndex: -1,
-		// // 点赞的选项
-		// popupItem: [{
-		// 		name: '卷王非你莫属，我五体投地',
-		// 		value: 8
-		// 	},
-		// 	{
-		// 		name: '大佬太强了，不要再卷了',
-		// 		value: 4
-		// 	},
-		// 	{
-		// 		name: '给个鼓励~',
-		// 		value: 2
-		// 	},
-		// 	{
-		// 		name: '还不够卷啊！',
-		// 		value: 1
-		// 	},
-		// ],
-
+		
 		postIndex: null
 	},
 

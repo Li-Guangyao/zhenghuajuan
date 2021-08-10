@@ -1,4 +1,10 @@
-<view class="page">
+<!-- 左上角标题 -->
+<view class="title-bar">
+	<view class="title">动态</view>
+</view>
+
+<!-- 内容 -->
+<view class="main">
 	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
 
 	<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="toPostAdd"></image>

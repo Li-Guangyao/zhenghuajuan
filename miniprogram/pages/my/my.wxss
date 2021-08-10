@@ -2,13 +2,24 @@ page {
   --greyColor: rgba(0, 0, 0, 0.3);
   background-color: var(--themeColor);
 }
-.title {
-  position: absolute;
-  top: 6%;
-  left: 8%;
+.title-bar {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: flex-end;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 168rpx;
+  background-color: var(--themeColor);
+  z-index: 4;
+}
+.title-bar .title {
+  margin-left: 8%;
   color: white;
   font-size: 36rpx;
-  line-height: 42rpx;
+  line-height: 92rpx;
 }
 .next-button {
   flex: 1;

@@ -3,7 +3,6 @@
     "van-icon": "@vant/weapp/icon/index",
     "post-display": "../../components/postDisplay/postDisplay"
   },
-  "navigationBarTitleText": "动态",
-  "navigationBarBackgroundColor": "#ffa600",
+  "navigationStyle": "custom",
   "enablePullDownRefresh": true
 }

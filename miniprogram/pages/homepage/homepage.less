@@ -1,5 +1,51 @@
 page {
-    background-color: var(--themeBackgroundColor);
+    background-color: var(--themeColor);
+
+    padding-bottom: 144rpx;
+}
+
+.title-bar {
+    position: fixed;
+
+    display: flex;
+
+    flex-direction: row;
+    justify-content: left;
+    align-items: flex-end;
+    
+    top: 0; left: 0; right: 0;
+    height: 168rpx;
+
+    background-color: var(--themeColor);
+
+    z-index: 4;
+
+    .title {
+        margin-left: 8%;
+    
+        color: white;
+        font-size: 36rpx;
+        line-height: 92rpx;
+    }
+}
+
+.main {
+    position: absolute;
+    top: 15%;
+    width: 100%;
+	height: fit-content;
+    background-color: white;
+    border-top-left-radius: 32rpx;
+    border-top-right-radius: 32rpx;
+
+    padding-top: 32rpx;
+    padding-bottom: 144rpx;
+
+    // .content {
+    //     width: 100%;
+    //     height: 100%;
+    //     overflow-y: scroll;
+    // }
 }
 
 .btn-add {
@@ -10,17 +56,18 @@ page {
     height: 128rpx;
     bottom: 192rpx;
     right: 36rpx;
-
-    position: fixed;
 }
 
 .page {
     position: absolute;
 
-    left: 0; right: 0;
-    top: 0; bottom: 144rpx;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 144rpx;
     overflow-y: scroll;
 }
+
 .bottom-bar {
     position: fixed;
     display: flex;
@@ -29,11 +76,14 @@ page {
     justify-content: center;
     align-items: center;
 
+    background-color: var(--themeBackgroundColor);
     border-top: var(--borderColor) solid 1rpx;
 
     width: 100%;
     height: 144rpx;
     bottom: 0;
 
-    image { height: 100%; }
+    image {
+        height: 100%;
+    }
 }
