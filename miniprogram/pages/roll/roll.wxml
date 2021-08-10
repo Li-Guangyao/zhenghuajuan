@@ -32,7 +32,7 @@
 		</van-slider>
 	</view>
 	<view class="time-tips">
-		蒸制需要<text>30</text>min
+		制作需要<text>30</text>min
 	</view>
 
 	<!-- 更改口味 -->
@@ -45,37 +45,34 @@
 	
 	<van-button custom-class="start-button" round color="#ffa600">
 		<view class="button-content">
-			<view class="big">开始蒸制</view>
+			<view class="big">开始制作</view>
 			<view class="small">Get Started!</view>
 		</view>
 	</van-button>
 
 </view>
 
-<!-- 
-<view class="main">
-	<view class="shopName">{{shopName}}店</view>\
-	<view class="leftArrow"></view>
-	<view class="rightArrow"></view>
-	<canvas type="2d" class="circle">
-	<image class="btn-changeFood" src="../../icon2/rolling.png" mode="heightFix"></image>
-</canvas>
-<view class="activity-name">
-		<view class="tip">口味</view>
-		<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5"
-			placeholder="写下你专注的内容吧"></input>
+<!-- 购买菜品弹窗 -->
+<van-popup custom-class="buy-food" show="{{ false }}" bind:close="onClose">
+	<!-- 用户小麦数量 -->
+	<view class="user-roll">
+		2500<image src="../../icon/roll2.png" mode="heightFix"></image>
 	</view>
-	<view class="activity-duration">
-		<view class="tip">蒸制时间</view>
-		<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
-		<view class="minute">min</view>
+	<view class="food-name">叉烧包</view>
+	<view class="food-desc">好吃！</view>
+	<view class="food-switch">
+		<image class="prev" src="../../icon/prevArrow2.png" mode="widthFix"></image>
+		<image class="food-card" src="../../images/foodBackground.png" mode="heightFix">
+			<image class="food-image" src="../../images/foods/e.png" mode="aspectFit"></image>
+			<view class="food-price">
+				<image src="../../icon/roll2.png" mode="heightFix"></image>250
+			</view>
+		</image>
+		<image class="next" src="../../icon/nextArrow4.png" mode="widthFix"></image>
 	</view>
-	
-	<van-button round color="#ffa600" class="btn-setActivity" bind:click="StartCook" >
-	<text>开始蒸制\nGet Started</text>
-	</van-button>
-	
-</view> -->
+	<view class="food-time">最短制作时间<text>15min</text></view>
+	<van-button custom-class="confirm-button" round color="#ffa600">解锁菜谱</van-button>
+</van-popup>
 
 <view class="bottom-bar">
 	<image src="../../icon/post.png" mode="aspectFit" bindtap="toPost"></image>

@@ -101,9 +101,9 @@ page {
         .food {
             position: absolute;
 
-            left: 10%; right: 10%;
-            top: 10%; bottom: 10%;
-            width: 80%; height: 80%;
+            left: 13%; right: 13%;
+            top: 13%; bottom: 13%;
+            width: 74%; height: 74%;
         }
 
         .tips {
@@ -215,6 +215,135 @@ page {
                 font-weight: lighter;
             }    
         }
+    }
+}
+
+.buy-food {
+
+    color: var(--fontColor);
+    font-size: 28rpx;
+
+    background-color: #FCF6EA;
+    border-radius: 32rpx;
+
+    width: 80%;
+
+    padding: 32rpx;
+
+    display: flex;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .user-roll {
+        position: absolute;
+        top: 32rpx;
+        right: 32rpx;
+        height: 48rpx;
+
+        display: flex;
+
+        color: var(--themeColor);
+        font-size: 32rpx;
+        
+        flex-direction: row;
+        align-items: center;
+
+        image {
+            height: 42rpx;
+            margin-left: 6rpx;
+        }
+    }
+
+    .food-name {
+        height: 48rpx;
+        font-size: 36rpx;
+        font-weight: bold;
+    }
+
+    .food-desc {
+        width: 80%;
+        margin-top: 24rpx;
+        text-align: left;
+    }
+
+    .food-switch {
+        .prev {
+            position: absolute;
+        
+            width: 28rpx;
+            left: 48rpx;
+            top: 45%;
+        }
+        .next {
+            position: absolute;
+        
+            width: 28rpx;
+            right: 48rpx;
+            top: 45%;
+        }
+        .food-card {
+            position: relative;
+            display: block;
+
+            height: 324rpx;
+
+            margin-left: auto;
+            margin-right: auto;
+
+            .food-image {
+                position: absolute;
+                display: block;
+                width: 60%; height: 60%;
+                top: 18%; left: 16%;
+            }
+            
+            .food-price {
+                position: absolute;
+
+                width: 100%; 
+                bottom: 12%; left: 12%;
+
+                display: flex;
+
+                color: var(--themeColor);
+                font-size: 24rpx;
+            
+                flex-direction: row;
+                justify-content: left;
+                align-items: center;
+
+                image {
+                    height: 32rpx;
+                    margin-right: 4rpx;
+                }
+            }
+        }
+    
+    }
+
+    .food-time {
+        font-size: 24rpx;
+        margin: 4rpx auto;
+
+        text {
+            margin-left: 4rpx;
+            color: var(--themeColor);
+            font-size: 32rpx;
+        }
+    }
+
+    .confirm-button {       
+        width: 256rpx;
+        height: 80rpx;
+        border-radius: 12rpx;
+
+        margin-top: 24rpx;
+        margin-bottom: 20rpx;
+
+        font-weight: normal;
+        font-size: 28rpx;
     }
 }
 

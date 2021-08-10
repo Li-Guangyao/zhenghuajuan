@@ -9,7 +9,7 @@
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
 			<view class="user-detail">
 				<view class="user-nickname" bindtap="getUserInfo">{{userInfo.shopName}}</view>
-				<view class="user-today">今日已蒸制<text>30</text>min</view>
+				<view class="user-today">今日已制作<text>30</text>min</view>
 			</view>
 			<image class="next-button" src="../../icon/nextArrow.png" mode="aspectFit"></image> 
 		</view>
@@ -38,11 +38,11 @@
 			<view class="card-title">今日数据</view>
 			<view class="card-content">
 				<view class="count card-item">
-					<view class="key">蒸制次数</view>
+					<view class="key">制作次数</view>
 					<view class="value">50</view>
 				</view>
 				<view class="time card-item">
-					<view class="key">蒸制时间</view>
+					<view class="key">制作时间</view>
 					<view class="value">1254<text>min</text></view>
 				</view>
 				<view class="roll card-item">
@@ -55,11 +55,11 @@
 			<view class="card-title">累计数据</view>
 			<view class="card-content">
 				<view class="count card-item">
-					<view class="key">蒸制次数</view>
+					<view class="key">制作次数</view>
 					<view class="value">50</view>
 				</view>
 				<view class="time card-item">
-					<view class="key">蒸制时间</view>
+					<view class="key">制作时间</view>
 					<view class="value">1254<text>min</text></view>
 				</view>
 				<view class="roll card-item">

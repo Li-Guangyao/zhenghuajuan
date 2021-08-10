@@ -81,12 +81,12 @@
 }
 .food-layer .food-select .food {
   position: absolute;
-  left: 10%;
-  right: 10%;
-  top: 10%;
-  bottom: 10%;
-  width: 80%;
-  height: 80%;
+  left: 13%;
+  right: 13%;
+  top: 13%;
+  bottom: 13%;
+  width: 74%;
+  height: 74%;
 }
 .food-layer .food-select .tips {
   position: absolute;
@@ -171,6 +171,104 @@
   font-size: 24rpx;
   line-height: 24rpx;
   font-weight: lighter;
+}
+.buy-food {
+  color: var(--fontColor);
+  font-size: 28rpx;
+  background-color: #FCF6EA;
+  border-radius: 32rpx;
+  width: 80%;
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.buy-food .user-roll {
+  position: absolute;
+  top: 32rpx;
+  right: 32rpx;
+  height: 48rpx;
+  display: flex;
+  color: var(--themeColor);
+  font-size: 32rpx;
+  flex-direction: row;
+  align-items: center;
+}
+.buy-food .user-roll image {
+  height: 42rpx;
+  margin-left: 6rpx;
+}
+.buy-food .food-name {
+  height: 48rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.buy-food .food-desc {
+  width: 80%;
+  margin-top: 24rpx;
+  text-align: left;
+}
+.buy-food .food-switch .prev {
+  position: absolute;
+  width: 28rpx;
+  left: 48rpx;
+  top: 45%;
+}
+.buy-food .food-switch .next {
+  position: absolute;
+  width: 28rpx;
+  right: 48rpx;
+  top: 45%;
+}
+.buy-food .food-switch .food-card {
+  position: relative;
+  display: block;
+  height: 324rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+.buy-food .food-switch .food-card .food-image {
+  position: absolute;
+  display: block;
+  width: 60%;
+  height: 60%;
+  top: 18%;
+  left: 16%;
+}
+.buy-food .food-switch .food-card .food-price {
+  position: absolute;
+  width: 100%;
+  bottom: 12%;
+  left: 12%;
+  display: flex;
+  color: var(--themeColor);
+  font-size: 24rpx;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+}
+.buy-food .food-switch .food-card .food-price image {
+  height: 32rpx;
+  margin-right: 4rpx;
+}
+.buy-food .food-time {
+  font-size: 24rpx;
+  margin: 4rpx auto;
+}
+.buy-food .food-time text {
+  margin-left: 4rpx;
+  color: var(--themeColor);
+  font-size: 32rpx;
+}
+.buy-food .confirm-button {
+  width: 256rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
+  margin-top: 24rpx;
+  margin-bottom: 20rpx;
+  font-weight: normal;
+  font-size: 28rpx;
 }
 .bottom-bar {
   position: fixed;
