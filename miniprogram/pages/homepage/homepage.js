@@ -5,7 +5,8 @@ import { userUtils } from "../../utils/userUtils"
 Page({
 	data: {
 		postList: [],
-		userInfo: null
+		userInfo: null,
+		shopName:'耗子尾汁'
 	},
 
 	queryParams: {
