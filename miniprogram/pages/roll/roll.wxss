@@ -206,8 +206,10 @@
 }
 .buy-food .food-desc {
   width: 80%;
+  height: 76rpx;
   margin-top: 24rpx;
   text-align: left;
+  overflow-y: scroll;
 }
 .buy-food .food-switch .prev {
   position: absolute;

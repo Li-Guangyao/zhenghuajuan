@@ -6,7 +6,7 @@ Page({
 	data: {
 		userInfo: null,
 		postList: [],
-		strictMode: false,
+		strictMode: true,
 
 		name: '',
 

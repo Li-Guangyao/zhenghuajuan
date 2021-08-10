@@ -6,7 +6,6 @@ Page({
 	data: {
 		postList: [],
 		userInfo: null,
-		shopName:'耗子尾汁'
 	},
 
 	queryParams: {

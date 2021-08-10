@@ -19,8 +19,8 @@
           "query": ""
         },
         {
-          "name": "pages/my/my",
-          "pathName": "pages/my/my",
+          "name": "测试Ranklist",
+          "pathName": "pages/ranklist/ranklist",
           "query": "",
           "scene": null
         },
