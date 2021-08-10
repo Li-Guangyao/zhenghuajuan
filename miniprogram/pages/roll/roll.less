@@ -1,124 +1,223 @@
 page {
-    background-color: var(--themeBackgroundColor);
 }
 
-.no-record {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: translateY(-50%);
-    position: absolute;
-    
-    top: 40%;
-    margin: 0;
+.main-background {
+    position: fixed;
+
+    z-index: -1;
+
     width: 100%;
+    height: 100%;
+
+    left: 0; right: 0; 
+    top: 0; bottom: 0;
+} 
+
+.buttons {
+    position: fixed;
+
+    left: 24rpx;
+    top: 80rpx;
+    width: 256rpx;
+    height: 48rpx;
+
+    .icon-button {
+        width: 64rpx;
+        height: 64rpx;
+
+        margin-left: 16rpx;
+        margin-right: 16rpx;
+    }
+}
+
+.shop-board {
+    position: fixed;
+
+    top: 10%;
+    left: 30%; right: 30%;
+
+    width: 40%;
 
     image {
-        width: 70%;
-        margin-bottom: 24rpx;
-    }
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        
+        view {
+            position: absolute;
 
-    text {
-        font-size: 32rpx;
-        color: #B3B3B3;
-    }
-}
-
-
-.set-activity {
-    text-align: center;
-
-    .van-dialog__header {
-        padding: 0;
-    }
-
-    .dialog-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        margin: 0 0 32rpx 0;
-        height: 80rpx;
-        background-color: var(--themeColor);
-        color: white;
-    }
-
-    .dialog-tip {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        color: #808080;
-        font-size: 24rpx;
-        margin: 0 0 32rpx 0;
-
-        image {
-            height: 42rpx;
-            margin-left: 8rpx
-        }
-    }
-
-    .activity-name,
-    .activity-duration {
-        display: inline-flex;
-        justify-content:space-between;
-        align-items: center;
-
-        margin: 24rpx 0 16rpx 0;
-        height: 80rpx;
-        width: 85%;
-        border-radius: 50rpx;
-        background-color: #fff2db;
-        color: var(--themeColor);
-
-        .tip {
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: left;
 
-            width: 35%;
-            height: inherit;
-            border-radius: inherit;
-            border: 5rpx solid #fea403;
+            top: 0%; bottom: 0%;
+            left: 0%; right: 0%;
+
+            font-size: 42rpx;
+            font-weight: bold;
+            line-height: 64rpx;
+
+            color: var(--fontColor);
+        }
+    }
+}
+
+.food-layer {
+    position: fixed;
+
+    top: 24%; left: 0; right: 0;
+    width: 100%; height: 30%;
+
+    .prev {
+        position: absolute;
+    
+        width: 28rpx;
+        left: 48rpx;
+        top: 45%;
+    }
+    .next {
+        position: absolute;
+    
+        width: 28rpx;
+        right: 48rpx;
+        top: 45%;
+    }
+
+    .food-select {
+        position: absolute;
+
+        left: 50%; top: 50%;
+
+        width: 360rpx; height: 360rpx;
+
+        background-color: #FCF6EA;
+        border: #d9b7ab solid 8rpx;
+        border-radius: 32rpx;
+
+        transform: translateX(-50%) translateY(-50%);
+        
+        box-shadow: 0 20rpx 36rpx rgba(0, 0, 0, 0.1);
+
+        .food {
+            position: absolute;
+
+            left: 10%; right: 10%;
+            top: 10%; bottom: 10%;
+            width: 80%; height: 80%;
         }
 
-        .input {
-            text-align: left;
-            flex: 3;
+        .tips {
+            position: absolute;
 
-            margin: 0 20rpx;
-            color: #2f2f2f;
+            top: 100%;
+            width: 100%;
+
+            padding-top: 24rpx;
+
+            color: rgba(14,14,14,0.5);
+            font-size: 24rpx;
+
+            text-align: center;
         }
+    }
+}
 
-        .minute {
-            flex: 1;
+.input-layer {
+    position: absolute;
 
-            margin: 0 15rpx;
+    width: 70%;
+    top: 58%;
+    bottom: 192rpx;
+
+    padding-left: 15%;
+    padding-right: 15%;
+
+    .time-input {
+        width: 100%;
+        height: fit-content;
+
+        margin-top: 16rpx;
+
+        .bar-icon {
+            width: 72rpx;
+            height: 72rpx;
         }
     }
 
+    .time-tips {
+        
+        margin-top: 32rpx;
+
+        font-size: 24rpx;
+        color: rgba(32,32,32,0.5);
+
+        text-align: center;
+
+        text {
+            margin-left: 8rpx;
+            margin-right: 8rpx;
+            font-size: 36rpx;
+            color: var(--themeColor);
+        }
+    }
+
+    .name-edit {
+        width: 100%;
+        height: 64rpx;
+
+        margin-top: 24rpx;
+
+        color: var(--fontColor);
+        font-size: 36rpx;
+        font-weight: bold;
+        text-align: center;
+            
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        image {
+            height: 32rpx;
+            margin-right: 16rpx;
+        }
+        input {
+            display: inline;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    .start-button {
+        width: 80%;
+        height: 108rpx;
+        border-radius: 32rpx;
+
+        margin-top: 32rpx;
+        margin-left: 10%;
+        margin-right: 10%;
+
+        .button-content {
+            display: flex;
+
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .big {
+                font-size: 32rpx;
+                line-height: 32rpx;
+            }
+            .small {
+                margin-top: 12rpx;
+                font-size: 24rpx;
+                line-height: 24rpx;
+                font-weight: lighter;
+            }    
+        }
+    }
 }
 
-.btn-add {
-    position: fixed;
-
-    border-radius: 100%;
-    width: 128rpx;
-    height: 128rpx;
-    bottom: 192rpx;
-    right: 36rpx;
-
-    position: fixed;
-}
-
-.page {
-    position: absolute;
-
-    left: 0; right: 0;
-    top: 0; bottom: 144rpx;
-    overflow-y: scroll;
-}
 .bottom-bar {
     position: fixed;
     display: flex;
@@ -127,7 +226,8 @@ page {
     justify-content: center;
     align-items: center;
 
-    border-top: var(--borderColor) solid 1rpx;
+    border-top: white solid 1rpx;
+    background-color: rgba(255,255,255,0.6);
 
     width: 100%;
     height: 144rpx;

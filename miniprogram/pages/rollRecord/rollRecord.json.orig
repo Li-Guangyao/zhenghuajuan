@@ -1,7 +1,13 @@
 {
   "usingComponents": {
+<<<<<<< HEAD
     "tabbar": "../../components/tabbar/tabbar",
     "van-nav-bar": "@vant/weapp/nav-bar/index",
+=======
+    "tabbar": "../../components/Tabbar/Tabbar",
+    "van-grid": "@vant/weapp/grid/index",
+    "van-grid-item": "@vant/weapp/grid-item/index",
+>>>>>>> 5a6be3fafe4eb76e5f5087a01fa887cd10bfc3f9
     "van-tab": "@vant/weapp/tab/index",
     "van-tabs": "@vant/weapp/tabs/index"
   },

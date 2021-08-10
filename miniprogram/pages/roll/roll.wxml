@@ -1,54 +1,81 @@
-<!--wxml-->
-<wxs module="m1">
-var calcCount = function(count, strictMode) {
-	if (strictMode) return count;
-	return Math.floor(count / 2);
-};
 
-module.exports.calcCount = calcCount;
-</wxs>
-<view class="page">
+<image class="main-background" src="../../images/mainBackground.png" mode="aspectFill"></image>
 
-	<view class="no-record" wx:if="{{postList.length <= 0}}">
-		<image src="../../icon2/noRollRecord.png" mode="widthFix"></image>
-		<text>还没有任何蒸花卷记录</text>
-		<text>点击右下角加号开始蒸花卷吧</text>
+<!-- 左上角按钮 -->
+<view class="buttons">
+	<image class="icon-button" src="../../icon/recordButton2.png" mode="aspectFit"></image>
+	<image class="icon-button" src="../../icon/rankButton3.png" mode="aspectFit"></image>
+</view>
+
+<!-- 店名 -->
+<view class="shop-board">
+	<image src="../../images/titleBoard.png" mode="widthFix"><view>耗子喂汁店</view></image>
+</view>
+
+<!-- 菜品选择 -->
+<view class="food-layer">
+	<image class="prev" src="../../icon/prevArrow.png" mode="widthFix"></image>
+	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
+	<view class="food-select">
+		<image class="food" src="../../images/foods/e.png" mode="aspectFit"></image>
+		<view class="tips">点击图标可更换菜品</view>
+	</view>
+</view>
+
+<!-- 输入层 -->
+<view class="input-layer">
+	<!-- 更改时间 -->
+	<view class="time-input">
+		<van-slider value="{{25}}" use-button-slot bar-height="20" active-color="#F2B771" inactive-color="#EBD6BC" bind:drag="onDrag">
+			<image class="bar-icon" src="../../icon/barIcon.png" slot="button" mode="aspectFit">
+			</image>
+		</van-slider>
+	</view>
+	<view class="time-tips">
+		蒸制需要<text>30</text>min
 	</view>
 
-	<view class="record-list" wx:if="{{postList.length > 0}}">
-		<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}" showDelete="true"></post-display>
+	<!-- 更改口味 -->
+	<view class="name-edit">
+		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{true}}"></image>
+		<view class="value" wx:if="{{true}}">学习味花卷</view>
+		<input class="input" value="学习" bindinput="inputActivityName" maxlength="5"
+		placeholder="写下你专注的内容吧" wx:if="{{false}}"></input>
 	</view>
-
-	<van-dialog class="set-activity" title="标题" use-slot use-title-slot show="{{ showDialog }}" zIndex="1"
-		show-cancel-button="{{false}}" show-confirm-button bind:close="onDialogClose" close-on-click-overlay
-		confirm-button-text="确定" confirm-button-color="#ffa600" cancel-button-color="#aaaaaa" style="z-index:-1;">
-		<view slot="title" class="dialog-title">蒸花卷</view>
-		<view class="activity-name">
-			<view class="tip">花卷口味</view>
-			<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5"
-				placeholder="写下你专注的内容吧"></input>
+	
+	<van-button custom-class="start-button" round color="#ffa600">
+		<view class="button-content">
+			<view class="big">开始蒸制</view>
+			<view class="small">Get Started!</view>
 		</view>
-		<view class="activity-duration">
-			<view class="tip">蒸制时间</view>
-			<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
-			<view class="minute">min</view>
-		</view>
-		<view class="dialog-tip">预计可获得{{m1.calcCount(counts[durationIndex], strictMode)}}个
-			<image src="../../icon/roll2.png" mode="heightFix"></image>
-			<van-checkbox value="{{ strictMode }}" bind:change="onStrictChange" shape="round" checked-color="#ffa600"
-				style="margin-left: 32rpx">严格模式
-			</van-checkbox>
-		</view>
-	</van-dialog>
-
-	<van-popup show="{{ showPopup }}" position="bottom" z-index="2" round="{{true}}" close-on-click-overlay="{{true}}">
-		<van-picker show-toolbar title="选择时间" columns="{{ durations }}" bind:cancel="showPopup"
-			bind:confirm="choseDuration" />
-	</van-popup>
-
-	<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="showDialog"></image>
+	</van-button>
 
 </view>
+
+<!-- 
+<view class="main">
+	<view class="shopName">{{shopName}}店</view>\
+	<view class="leftArrow"></view>
+	<view class="rightArrow"></view>
+	<canvas type="2d" class="circle">
+	<image class="btn-changeFood" src="../../icon2/rolling.png" mode="heightFix"></image>
+</canvas>
+<view class="activity-name">
+		<view class="tip">口味</view>
+		<input class="input" value="{{activityName}}" bindinput="inputActivityName" maxlength="5"
+			placeholder="写下你专注的内容吧"></input>
+	</view>
+	<view class="activity-duration">
+		<view class="tip">蒸制时间</view>
+		<view class="input" bindtap="showPopup">{{durations[durationIndex]}}</view>
+		<view class="minute">min</view>
+	</view>
+	
+	<van-button round color="#ffa600" class="btn-setActivity" bind:click="StartCook" >
+	<text>开始蒸制\nGet Started</text>
+	</van-button>
+	
+</view> -->
 
 <view class="bottom-bar">
 	<image src="../../icon/post.png" mode="aspectFit" bindtap="toPost"></image>

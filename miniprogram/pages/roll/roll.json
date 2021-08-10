@@ -1,12 +1,14 @@
 {
   "usingComponents": {
+    "van-button":"@vant/weapp/button/index",
     "van-nav-bar": "@vant/weapp/nav-bar/index",
     "van-dialog": "@vant/weapp/dialog/index",
     "van-popup": "@vant/weapp/popup/index",
     "van-picker": "@vant/weapp/picker/index",
     "van-checkbox": "@vant/weapp/checkbox/index",
+    "van-slider": "@vant/weapp/slider/index",
+    "van-field": "@vant/weapp/field/index",
     "post-display": "../../components/postDisplay/postDisplay"
   },
-  "navigationBarBackgroundColor": "#ffa600",
-  "enablePullDownRefresh": true
+  "navigationStyle": "custom"
 }

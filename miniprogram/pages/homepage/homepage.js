@@ -5,7 +5,8 @@ import { userUtils } from "../../utils/userUtils"
 Page({
 	data: {
 		postList: [],
-		userInfo: null
+		userInfo: null,
+		shopName:'耗子尾汁'
 	},
 
 	queryParams: {
@@ -126,9 +127,7 @@ Page({
 	},
 
 	toRoll() {
-		wx.switchTab({
-			url: '../roll/roll',
-		});
+		wx.switchTab({ url: '../roll/roll' });
 	},
 	toMy() {
 		wx.switchTab({ url: '../my/my' })

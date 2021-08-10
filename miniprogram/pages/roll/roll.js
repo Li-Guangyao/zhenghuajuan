@@ -200,9 +200,9 @@ Page({
 	},
 	
 	toPost() {
-		wx.reLaunch({ url: '../homepage/homepage' })
+		wx.switchTab({ url: '../homepage/homepage' })
 	},
 	toMy() {
-		wx.reLaunch({ url: '../my/my' })
+		wx.switchTab({ url: '../my/my' })
 	},
 })

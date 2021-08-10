@@ -1,0 +1,151 @@
+page {
+  background-color: var(--themeColor);
+  padding-bottom: 144rpx;
+  text-align: center;
+}
+.van-nav-bar {
+  background-color: var(--themeColor) !important;
+}
+.van-icon:before {
+  color: white !important;
+  font-size: 36rpx !important;
+}
+.van-nav-bar__text {
+  margin-left: -12rpx !important;
+  color: white !important;
+  font-size: 36rpx !important;
+  line-height: 36rpx !important;
+  background-color: transparent !important;
+}
+<<<<<<< HEAD
+.main {
+  position: absolute;
+  top: 15%;
+  width: 100%;
+  height: fit-content;
+  min-height: 85%;
+  background-color: white;
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+}
+=======
+
+>>>>>>> 5a6be3fafe4eb76e5f5087a01fa887cd10bfc3f9
+.btn-add {
+  position: fixed;
+  border-radius: 100%;
+  width: 128rpx;
+  height: 128rpx;
+  bottom: 192rpx;
+  right: 36rpx;
+}
+.page {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 144rpx;
+  overflow-y: scroll;
+}
+.bottom-bar {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--themeBackgroundColor);
+  border-top: var(--borderColor) solid 1rpx;
+  width: 100%;
+  height: 144rpx;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-bar image {
+  height: 100%;
+}
+.main {
+  position: absolute;
+  top: 15%;
+  width: 100%;
+  height: fit-content;
+  background-color: white;
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+  padding-top: 32rpx;
+  padding-bottom: 144rpx;
+}
+.main .shopName{
+  height: 80rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+  color:#2f2f2f;
+}
+.main .circle{
+  margin: 0rpx auto 32rpx auto;
+  border-radius: 50rpx;
+  box-shadow:0 0 10rpx #2f2f2f;
+  }
+  .main .leftArrow{
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #999;
+    border-right: 2px solid #999;
+    position: absolute;
+    left: 20rpx;
+    transform: rotate(-135deg);
+    margin-top:15%;
+    }
+.main .rightArrow{
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #999;
+    border-right: 2px solid #999;
+    position: absolute;
+    right: 20rpx;
+    transform: rotate(45deg);
+    margin-top:15%;
+    }
+  .main .circle .btn-changeFood{
+  position: absolute;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 80%;
+  margin: auto;
+
+}
+.main .activity-name,
+.main .activity-duration {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24rpx 0 16rpx 0;
+  height: 80rpx;
+  width: 70%;
+  border-radius: 50rpx; /*实现圆角*/
+  background-color: #fff2db;
+  color: var(--themeColor);
+}
+.main .activity-name .tip,
+.main .activity-duration .tip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
+  height: inherit;
+  border-radius: inherit;
+  border: 5rpx solid #fea403;
+}
+.main .activity-name .input,
+.main .activity-duration .input {
+  text-align: left;
+  flex: 3;
+  margin: 0 20rpx;
+  color: #2f2f2f;
+}
+.main .activity-name .minute,
+.main .activity-duration .minute {
+  flex: 1;
+  margin: 0 15rpx;
+}
