@@ -1,6 +1,7 @@
 //获取标准的时间格式yyyy-mm-dd hh:mm，而非时间戳
 import judgeImageFormat from '../../utils/judgeImageFormat'
 import uploadMedia from '../../utils/uploadImage'
+import { userUtils } from "../../utils/userUtils"
 
 Page({
 	data: {
@@ -16,8 +17,8 @@ Page({
 		rollDuration: null,
 	},
 
-	onLoad: function (e) {
-		this.judgeLogin()
+	onLoad: async function (e) {
+		await this.judgeLogin()
 
 		if (e.rollName && e.rollCount && e.rollDuration) {
 			var rollName = e.rollName;
@@ -30,35 +31,16 @@ Page({
 			this.setData({
 				content, rollName, rollCount, rollDuration
 			})
+
 		} else {
 			var tempPost = wx.getStorageSync('tempPost')
-			if (tempPost) {
-				this.setData({
-					content: tempPost.content,
-					location: tempPost.location,
-					fileList: tempPost.fileList,
-				})
-			}
+			if (tempPost) this.setData({ ...tempPost })
 		}
 	},
 
 	// 判断用户是否登录
-	judgeLogin() {
-		var userInfo = wx.getStorageSync('userInfo')
-
-		if (!userInfo)
-			wx.showModal({
-				title: '卷王同志，请先登陆再来',
-				showCancel: true,
-
-				success: (res) => {
-					if (res.confirm) 
-						wx.switchTab({ url: '../my/my' })
-					else if (res.cancel) 
-						wx.navigateBack({ delta: 1 })
-				}
-			})
-		else this.setData({ userInfo })
+	async judgeLogin() {
+		this.setData({ userInfo: await userUtils.judgeLogin() })
 	},
 
 	// 获取用户位置
@@ -93,9 +75,7 @@ Page({
 
 	// 去除这个位置信息
 	removeLocation() {
-		this.setData({
-			location: null
-		})
+		this.setData({ location: null })
 	},
 
 	// 选择一些图片

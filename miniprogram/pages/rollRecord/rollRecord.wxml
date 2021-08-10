@@ -6,7 +6,7 @@
 	<!-- 左上角返回按钮 -->
 	<view class="back-button">
 		<image src="../../icon/backArrow.png" mode="widthFix"></image>
-		排行榜
+		{{userInfo.shopName}}
 	</view>
 
 	<!-- 主页 -->
@@ -25,7 +25,7 @@
 
 		<!-- 内容 -->
 		<view class="content">
-			<view class="day" wx:for="{{records[chosenTabIndex]}}" wx:for-index="key" wx:for-item="item" wx:if="{{key != 'records'}}">
+			<view class="day" wx:for="{{records[curIndex]}}" wx:for-index="key" wx:for-item="item" wx:if="{{key != 'records'}}">
 				<view class="day-title">{{key}}
 					<image src="../../icon/arrowDown.png"/>
 					<!-- <image src="../../icon/arrowLeft.png"/> -->

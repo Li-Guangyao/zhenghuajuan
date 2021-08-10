@@ -1,5 +1,6 @@
 import getDateDiff from "../../utils/getDateDiff"
 import changeFileListFormat from "../../utils/changeFileListFormat"
+import { userUtils } from "../../utils/userUtils"
 
 Page({
 	data: {
@@ -23,24 +24,7 @@ Page({
 	},
 
 	async judgeLogin() {
-		var userInfo = await wx.getStorageSync('userInfo')
-		if (!userInfo) {
-			wx.showModal({
-				title: '卷王同志，请先登陆再来',
-				showCancel: true,
-				success(res) {
-					if (res.confirm) {
-						wx.switchTab({
-							url: '../my/my',
-						})
-					} else if (res.cancel) {
-						wx.navigateBack({
-							delta: 1,
-						})
-					}
-				}
-			})
-		} else this.setData({ userInfo })
+		this.setData({ userInfo: await userUtils.judgeLogin() })
 	},
 
 	// 下拉刷新
@@ -62,27 +46,27 @@ Page({
 			this.data.userInfo._openid : undefined;
 
 		this.queryParams.pageNum++
-		await wx.cloud.callFunction({
+
+		var res = await wx.cloud.callFunction({
 			name: 'getPost',
 			data: {
 				newestDate: this.data.postList[0].createdAt,
 				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
 				userOpenId: openId,
 			}
-		}).then(res => {
-			console.log(res)
-			if (res.result.length == 0) {
-				wx.showToast({
-					icon: 'error',
-					title: '没有更多了~',
-				})
-			} else {
-				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
-				this.setData({
-					postList: [...this.data.postList].concat(...subPostList)
-				})
-			}
 		})
+
+		if (res.result.length == 0)
+			wx.showToast({
+				icon: 'error',
+				title: '没有更多了~',
+			})
+		else {
+			var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
+			this.setData({
+				postList: [...this.data.postList].concat(...subPostList)
+			})
+		}
 
 		wx.hideLoading()
 	},
@@ -97,25 +81,21 @@ Page({
 			title: '加载中', mask: true
 		})
 
-		await wx.cloud.callFunction({
+		var res = await wx.cloud.callFunction({
 			name: 'getPost',
 			data: { userOpenId: openId }
-		}).then(res => {
-			if (res.result) {
-				this.setData({
-					postList: changeFileListFormat(this.dateDiffTrans(res.result))
-				})
-			}
 		})
+		if (res.result) 
+			this.setData({
+				postList: changeFileListFormat(this.dateDiffTrans(res.result))
+			})
 
 		wx.hideLoading()
 	},
 
 	// 发帖
 	toPostAdd() {
-		wx.navigateTo({
-			url: '../postAdd/postAdd',
-		})
+		wx.navigateTo({ url: '../postAdd/postAdd' })
 	},
 
 	tapPost(e) {

@@ -1,5 +1,6 @@
 import getDateDiff from "../../utils/getDateDiff"
 import changeFileListFormat from "../../utils/changeFileListFormat"
+import { userUtils } from "../../utils/userUtils"
 
 Page({
 	data: {
@@ -18,29 +19,7 @@ Page({
 	},
 
 	async judgeLogin() {
-		var userInfo = await wx.getStorageSync('userInfo')
-		if (!userInfo) {
-			wx.showModal({
-				title: '卷王同志，请先登陆再来',
-				showCancel: true,
-
-				success(res) {
-					if (res.confirm) {
-						wx.switchTab({
-							url: '../my/my',
-						})
-					} else if (res.cancel) {
-						wx.navigateBack({
-							delta: 1,
-						})
-					}
-				}
-			})
-		} else {
-			this.setData({
-				userInfo: userInfo
-			})
-		}
+		this.setData({ userInfo: await userUtils.judgeLogin() })
 	},
 
 	async refreshPage() {

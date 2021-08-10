@@ -48,59 +48,19 @@ Page({
 
 		wx.showLoading({ title: '加载中' })
 
-		await this.judgeLogin();
-
 		this.setData({
 			post: JSON.parse(e.post),
 			postIndex: e.postIndex
 		})
 
-		/*
-		wx.cloud.callFunction({
-			name: 'isPostLiked',
-			data: {
-				postId: post._id
-			}
-		}).then(res => {
-			if (res.result.data.length != 0) {
-				this.setData({
-					chosenPopupItemIndex: res.result.data[0].valueIndex,
-					originChosenPopupItemIndex: res.result.data[0].valueIndex
-				})
-			}
-		})
-		*/
+		await this.judgeLogin();
 		await this.refreshComment()
 
-		wx.hideLoading({
-			success: (res) => {},
-		})
+		wx.hideLoading()
 	},
 
 	async judgeLogin() {
-		var userInfo = await wx.getStorageSync('userInfo')
-		if (!userInfo) {
-			wx.showModal({
-				title: '卷王同志，请先登陆再来',
-				showCancel: true,
-
-				success(res) {
-					if (res.confirm) {
-						wx.switchTab({
-							url: '../my/my',
-						})
-					} else if (res.cancel) {
-						wx.navigateBack({
-							delta: 1,
-						})
-					}
-				}
-			})
-		} else {
-			this.setData({
-				userInfo: userInfo
-			})
-		}
+		this.setData({ userInfo: await userUtils.judgeLogin() })
 	},
 
 	async refreshComment() {

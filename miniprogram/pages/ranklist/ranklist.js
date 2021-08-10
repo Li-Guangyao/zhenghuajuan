@@ -1,3 +1,5 @@
+import { userUtils } from "../../utils/userUtils"
+
 Page({
 	data: {
 		userInfo: null,
@@ -26,7 +28,8 @@ Page({
 		wholeRankHeight: null
 	},
 
-	onLoad: function (options) {
+	onLoad: async function (options) {
+		await this.judgeLogin()
 		this.initPageStyle()
 		this.initPageContent()
 	},
@@ -43,23 +46,7 @@ Page({
 	},
 
 	async judgeLogin() {
-		var userInfo = await wx.getStorageSync('userInfo')
-		if (!userInfo) {
-			wx.showModal({
-				title: '卷王同志，请先登陆再来',
-				showCancel: true,
-
-				success(res) {
-					wx.switchTab({
-						url: '../my/my',
-					})
-				}
-			})
-		} else {
-			this.setData({
-				userInfo: userInfo
-			})
-		}
+		this.setData({ userInfo : await userUtils.judgeLogin() })
 	},
 
 	initPageStyle() {
@@ -115,7 +102,6 @@ Page({
 	},
 
 	onShow: function () {
-		this.judgeLogin()
 	},
 
 	onHide: function () {

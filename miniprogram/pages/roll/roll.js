@@ -1,41 +1,9 @@
 import getDateDiff from "../../utils/getDateDiff"
 import changeFileListFormat from "../../utils/changeFileListFormat"
+import { userUtils } from "../../utils/userUtils"
 
 Page({
 	data: {
-		/*
-		postList: [{
-			rollName: "学习",
-			rollCount: 30,
-			rollTime: 30,
-
-			avatarUrl: "",
-			timeDiff: "1天前",
-			nickName: "我自己",
-			likeValue: 42,
-			content: "今天学了30分钟的Java的反射",
-			fileList: [],
-		}, {
-			rollName: "编程",
-			rollCount: 15,
-			rollTime: 15,
-
-			avatarUrl: "",
-			timeDiff: "1天前",
-			nickName: "我自己",
-			likeValue: 28,
-			content: "专注了15分钟",
-			fileList: [],
-		}, {
-
-			avatarUrl: "",
-			timeDiff: "1天前",
-			nickName: "我自己",
-			likeValue: 28,
-			content: "今天啥也没干",
-			fileList: [],
-		}],
-		*/
 		userInfo: null,
 		postList: [],
 		strictMode: false,
@@ -69,26 +37,7 @@ Page({
 	},
 
 	async judgeLogin() {
-		var userInfo = await wx.getStorageSync('userInfo')
-		if (!userInfo) {
-			wx.showModal({
-				title: '卷王同志，请先登陆再来',
-				showCancel: true,
-				success(res) {
-					if (res.confirm) {
-						wx.switchTab({
-							url: '../my/my',
-						})
-					} else if (res.cancel) {
-						wx.navigateBack({
-							delta: 1,
-						})
-					}
-				}
-			})
-		} else this.setData({
-			userInfo
-		})
+		this.setData({ userInfo : await userUtils.judgeLogin() })
 	},
 
 	async refreshPage() {
