@@ -1,7 +1,8 @@
 Page({
 
 	data: {
-		shopName: ''
+		shopName: '',
+		userInfo: wx.getStorageSync('userInfo')
 	},
 
 	onLoad: function (options) {
@@ -24,16 +25,13 @@ Page({
 
 	},
 
-	onPullDownRefresh: function () {
-
-	},
-
-	onReachBottom: function () {
-
-	},
-
 	editShopName: function () {
-		if (this.data.shopName.length != 0) {
+		if (this.data.shopName.length > 10) {
+			wx.showToast({
+				icon: 'error',
+				title: '不超过10个字！',
+			})
+		} else if (this.data.shopName.length != 0) {
 			wx.cloud.callFunction({
 				name: "editShopName",
 				data: {
@@ -55,6 +53,12 @@ Page({
 		} else {}
 	},
 
+	toRoll() {
+		wx.navigateBack({
+			delta: 1,
+		})
+	},
+
 	// 一个测试函数
 	test() {
 		const db = wx.cloud.database()
@@ -64,7 +68,7 @@ Page({
 			data: {
 				aaa: _.rename('ccc')
 			}
-		}).then(res=>{
+		}).then(res => {
 			console.log(res)
 		})
 	}

@@ -205,4 +205,16 @@ Page({
 	toMy() {
 		wx.switchTab({ url: '../my/my' })
 	},
+
+	toRollRecord(){
+		wx.navigateTo({
+		  url: '../rollRecord/rollRecord',
+		})
+	},
+
+	toRanklist(){
+		wx.navigateTo({
+		  url: '../ranklist/ranklist',
+		})
+	}
 })

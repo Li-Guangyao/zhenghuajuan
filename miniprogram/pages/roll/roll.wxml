@@ -1,18 +1,18 @@
-
 <image class="main-background" src="../../images/mainBackground.png" mode="aspectFill"></image>
 
 <!-- 左上角按钮 -->
 <view class="buttons">
 	<!-- TODO: 按钮，分别跳转到记录页和排行页 -->
-	<image class="icon-button" src="../../icon/recordButton2.png" mode="aspectFit"></image>
-	<image class="icon-button" src="../../icon/rankButton3.png" mode="aspectFit"></image>
+	<image class="icon-button" src="../../icon/recordButton2.png" bindtap="toRollRecord" mode="aspectFit"></image>
+	<image class="icon-button" src="../../icon/rankButton3.png" bindtap="toRanklist" mode="aspectFit"></image>
 </view>
 
 <!-- 店名 -->
-<view class="shop-board">
-	<!-- TODO: 显示用户店名 -->
-	<image src="../../images/titleBoard.png" mode="widthFix"><view>耗子喂汁店</view></image>
-</view>
+<navigator class="shop-board" url="../shopName/shopName">
+	<image src="../../images/titleBoard.png" mode="widthFix">
+		<view>{{userInfo.shopName}}店</view>
+	</image>
+</navigator>
 
 <!-- 菜品选择 -->
 <view class="food-layer">
@@ -36,7 +36,8 @@
 			时间到达最大值，中间的菜品显示品质2的图片
 			如果中途切换了菜品，导致最低时限改变了，这里也需要同步改变
 		 -->
-		<van-slider value="{{25}}" use-button-slot bar-height="20" active-color="#F2B771" inactive-color="#EBD6BC" bind:drag="onDrag">
+		<van-slider value="{{25}}" use-button-slot bar-height="20" active-color="#F2B771" inactive-color="#EBD6BC"
+			bind:drag="onDrag">
 			<image class="bar-icon" src="../../icon/barIcon.png" slot="button" mode="aspectFit">
 			</image>
 		</van-slider>
@@ -52,10 +53,10 @@
 		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{true}}"></image>
 		<view class="value" wx:if="{{true}}">学习味花卷</view>
 		<!-- TODO: 输入完毕后（失去焦点后，应该是用bindblur来绑定事件）成功修改口味，退回上一个状态 -->
-		<input class="input" value="学习" bindinput="inputActivityName" maxlength="5"
-		placeholder="写下你专注的内容吧" wx:if="{{false}}"></input>
+		<input class="input" value="学习" bindinput="inputActivityName" maxlength="5" placeholder="写下你专注的内容吧"
+			wx:if="{{false}}"></input>
 	</view>
-	
+
 	<!-- TODO: 开始制作！（复用原来的代码） -->
 	<van-button custom-class="start-button" round color="#ffa600">
 		<view class="button-content">
