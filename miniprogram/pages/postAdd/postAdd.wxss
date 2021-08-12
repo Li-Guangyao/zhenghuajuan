@@ -18,11 +18,12 @@ page {
 .post {
   overflow-x: hidden;
   background-color: white;
+  position: absolute;
+  width: 100%;
+  top: 10%;
 }
 .post .content-input {
   margin: 0 10rpx;
-  background-color: #ffffff;
-  border-radius: 5rpx;
   padding: 20rpx 20rpx;
   width: 100%;
   min-height: 400rpx;
@@ -40,6 +41,15 @@ page {
   width: 100% !important;
   background-color: #ffffff;
   padding: 0 15rpx;
+}
+.post .set-anonymous {
+  margin: 10rpx 20rpx;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.post .set-anonymous .tip {
+  margin: 0 10rpx;
 }
 .post .show-location {
   background-color: var(--themeColor);
@@ -63,13 +73,5 @@ page {
   width: 100%;
   text-align: center;
   position: fixed;
-}
-.set-anonymous {
-  margin: 10rpx 20rpx;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.set-anonymous .tip {
-  margin: 0 10rpx;
+  padding-bottom: env(safe-area-inset-bottom);
 }

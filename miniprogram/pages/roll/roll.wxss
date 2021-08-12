@@ -145,7 +145,6 @@
 }
 .input-layer .name-edit input {
   display: inline;
-  width: 100%;
   text-align: center;
 }
 .input-layer .start-button {

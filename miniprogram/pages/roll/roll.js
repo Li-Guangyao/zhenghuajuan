@@ -1,21 +1,28 @@
 import getDateDiff from "../../utils/getDateDiff"
 import changeFileListFormat from "../../utils/changeFileListFormat"
-import { userUtils } from "../../utils/userUtils"
+import {
+	userUtils
+} from "../../utils/userUtils"
 
 Page({
 	data: {
-		userInfo: null,
+		userInfo: wx.getStorageSync('userInfo'),
 		postList: [],
 		strictMode: true,
 
-		name: '',
+		name: '学习味花卷',
+		showNameEdit: false,
 
 		showDialog: false,
 		showPopup: false,
 
-		durationIndex: 0,
-		durations: [15, 30, 45, 60, 90, 120],
-		counts: [15, 30, 45, 60, 135, 240]
+		duration: 15,
+
+		foodList: [],
+		// 浏览到第几个菜品
+		foodIdx: 0,
+		// 选择了第几个菜品
+		chosenFoodIdx: 0,
 	},
 
 	queryParams: {
@@ -23,11 +30,20 @@ Page({
 		pageSize: 20
 	},
 
-	// onLoad: async function (options) {
-	// },
+	async onLoad(options) {
+		// 获得食物列表
+		var res = await wx.cloud.callFunction({
+			name: 'getFood',
+		})
+		this.setData({
+			foodList: res.result
+		})
+	},
 
 	async onShow() {
-		await this.judgeLogin();
+		if (!this.data.userInfo) {
+			await this.judgeLogin();
+		}
 		await this.refreshPage();
 	},
 
@@ -37,7 +53,9 @@ Page({
 	},
 
 	async judgeLogin() {
-		this.setData({ userInfo : await userUtils.judgeLogin() })
+		this.setData({
+			userInfo: await userUtils.judgeLogin()
+		})
 	},
 
 	async refreshPage() {
@@ -160,7 +178,7 @@ Page({
 					var duration = this.data.durations[this.data.durationIndex];
 					var count = this.data.counts[this.data.durationIndex];
 
-					if (!this.data.strictMode) 
+					if (!this.data.strictMode)
 						count = Math.floor(count / 2);
 
 					var title = '确定要蒸' + duration + '分钟花卷吗？';
@@ -168,7 +186,8 @@ Page({
 						title += "严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！";
 
 					wx.showModal({
-						title, showCancel: true,
+						title,
+						showCancel: true,
 						success: res => {
 							if (res.confirm) {
 								wx.navigateTo({
@@ -198,23 +217,123 @@ Page({
 		})
 		this.showPopup()
 	},
-	
-	toPost() {
-		wx.switchTab({ url: '../homepage/homepage' })
-	},
-	toMy() {
-		wx.switchTab({ url: '../my/my' })
-	},
 
-	toRollRecord(){
-		wx.navigateTo({
-		  url: '../rollRecord/rollRecord',
+	// 点击菜品，
+	showPopup() {
+		this.setData({
+			showPopup: !this.data.showPopup
 		})
 	},
 
-	toRanklist(){
+	prevFood() {
+		var foodIdx = this.data.foodIdx
+		this.setData({
+			foodIdx: foodIdx == 0 ? foodIdx : foodIdx - 1
+		})
+	},
+
+	nextFood() {
+		var foodIdx = this.data.foodIdx
+		var length = this.data.foodList.length
+		this.setData({
+			foodIdx: foodIdx == length - 1 ? foodIdx : foodIdx + 1
+		})
+	},
+
+	// 解锁食物
+	unlockFood() {
+		var userInfo = this.data.userInfo
+		var foodList = this.data.foodList
+		var foodIdx = this.data.foodIdx
+
+		if (userInfo.rollCount < foodList[foodIdx].cost) {
+			wx.showToast({
+				icon: 'error',
+				title: '小麦数量不够！',
+			})
+		} else {
+			wx.showModal({
+				title:'确定要解锁吗？',
+				showCancel: true,
+				success: res => {
+					if (res.confirm) {
+						userInfo.rollCount -= foodList[foodIdx].cost
+						userInfo.unlockFoods.push(foodList[foodIdx]._id)
+			
+						wx.cloud.callFunction({
+							name: 'unlockFood',
+							data: {
+								unlockFoods: userInfo.unlockFoods,
+								rollCount: userInfo.rollCount
+							}
+						})
+
+						this.setData({
+							['userInfo.unlockFood']:unlockFoods,
+							['userInfo.rollCount']: rollCount
+						})
+						
+					} else if (res.cancel){}
+				}
+			})
+		}
+	},
+
+	// 选择食物
+	chooseFood() {
+		this.setData({
+			chosenFoodIdx: this.data.foodIdx,
+		})
+		this.showPopup()
+	},
+
+	// 拖动进度条
+	onDrag(e) {
+		this.setData({
+			duration: e.detail.value
+		})
+	},
+
+	// 修改学习任务的名字
+	showNameEdit() {
+		this.setData({
+			showNameEdit: true
+		})
+	},
+
+	inputActivityName(e) {
+		this.setData({
+			name: e.detail.value + '味花卷'
+		})
+	},
+
+	finishNameEdit() {
+		this.setData({
+			showNameEdit: false
+		})
+	},
+
+	toPost() {
+		wx.switchTab({
+			url: '../homepage/homepage'
+		})
+	},
+
+	toMy() {
+		wx.switchTab({
+			url: '../my/my'
+		})
+	},
+
+	toRollRecord() {
 		wx.navigateTo({
-		  url: '../ranklist/ranklist',
+			url: '../rollRecord/rollRecord',
+		})
+	},
+
+	toRanklist() {
+		wx.navigateTo({
+			url: '../ranklist/ranklist',
 		})
 	}
 })

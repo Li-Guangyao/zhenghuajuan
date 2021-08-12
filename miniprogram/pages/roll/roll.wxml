@@ -2,7 +2,6 @@
 
 <!-- 左上角按钮 -->
 <view class="buttons">
-	<!-- TODO: 按钮，分别跳转到记录页和排行页 -->
 	<image class="icon-button" src="../../icon/recordButton2.png" bindtap="toRollRecord" mode="aspectFit"></image>
 	<image class="icon-button" src="../../icon/rankButton3.png" bindtap="toRanklist" mode="aspectFit"></image>
 </view>
@@ -15,13 +14,13 @@
 </navigator>
 
 <!-- 菜品选择 -->
-<view class="food-layer">
+<view class="food-layer" bindtap="showPopup">
 	<!-- TODO: 以下任意元素点击均可唤起菜品切换/购买弹窗 -->
 	<image class="prev" src="../../icon/prevArrow.png" mode="widthFix"></image>
 	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
 	<view class="food-select">
 		<!-- TODO: 显示当前选择的菜品的图片 -->
-		<image class="food" src="../../images/foods/e.png" mode="aspectFit"></image>
+		<image class="food" src="{{foodList[chosenFoodIdx].images[0]}}" mode="aspectFit"></image>
 		<view class="tips">点击图标可更换菜品</view>
 	</view>
 </view>
@@ -36,25 +35,25 @@
 			时间到达最大值，中间的菜品显示品质2的图片
 			如果中途切换了菜品，导致最低时限改变了，这里也需要同步改变
 		 -->
-		<van-slider value="{{25}}" use-button-slot bar-height="20" active-color="#F2B771" inactive-color="#EBD6BC"
-			bind:drag="onDrag">
+		<van-slider use-button-slot bar-height="20" active-color="#F2B771" step="1" inactive-color="#EBD6BC"
+			bind:drag="onDrag" min="15" max="120">
 			<image class="bar-icon" src="../../icon/barIcon.png" slot="button" mode="aspectFit">
 			</image>
 		</van-slider>
 	</view>
 	<!-- TODO: 时间显示，需要和上面的拖拽条同步更新 -->
 	<view class="time-tips">
-		制作需要<text>30</text>min
+		制作需要<text>{{duration}}</text>min
 	</view>
 
 	<!-- 更改口味 -->
 	<view class="name-edit">
 		<!-- TODO: 点击切换后把原有的元素隐藏掉，显示下面的input -->
-		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{true}}"></image>
-		<view class="value" wx:if="{{true}}">学习味花卷</view>
+		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{!showNameEdit}}"></image>
+		<view class="value" wx:if="{{!showNameEdit}}" bindtap="showNameEdit">{{name}}</view>
 		<!-- TODO: 输入完毕后（失去焦点后，应该是用bindblur来绑定事件）成功修改口味，退回上一个状态 -->
-		<input class="input" value="学习" bindinput="inputActivityName" maxlength="5" placeholder="写下你专注的内容吧"
-			wx:if="{{false}}"></input>
+		<input class="input" bindinput="inputActivityName" bindblur="finishNameEdit" maxlength="5"
+			placeholder="写下你专注的内容吧" wx:if="{{showNameEdit}}"></input>
 	</view>
 
 	<!-- TODO: 开始制作！（复用原来的代码） -->
@@ -64,37 +63,53 @@
 			<view class="small">Get Started!</view>
 		</view>
 	</van-button>
-
 </view>
 
 <!-- 购买菜品弹窗 -->
-<van-popup custom-class="buy-food" show="{{ false }}" bind:close="onClose">
+<van-popup custom-class="buy-food" show="{{ showPopup }}" bind:close="showPopup">
 	<!-- TODO: 用户小麦数量 -->
-	<view class="user-roll">
-		2500<image src="../../icon/roll2.png" mode="heightFix"></image>
+	<view class="user-roll">{{userInfo.rollCount}}
+		<image src="../../icon/roll2.png" mode="heightFix"></image>
 	</view>
 	<!-- TODO: 菜品名称 -->
-	<view class="food-name">叉烧包</view>
+	<view class="food-name">{{foodList[foodIdx].name}}</view>
 	<!-- TODO: 菜品描述 -->
-	<view class="food-desc">柔软的面团裹着细腻的叉烧，象征着团结与和谐</view>
+	<view class="food-desc">{{foodList[foodIdx].description}}</view>
 	<view class="food-switch">
-		<image class="prev" src="../../icon/prevArrow2.png" mode="widthFix"></image>
+		<image class="prev" src="../../icon/prevArrow2.png" mode="widthFix" bindtap="prevFood"></image>
 		<image class="food-card" src="../../images/foodBackground.png" mode="heightFix">
 			<!-- TODO: 菜品图像 -->
-			<image class="food-image" src="../../images/foods/e.png" mode="aspectFit"></image>
+			<image class="food-image" src="{{foodList[foodIdx].images[0]}}" mode="aspectFit"></image>
 			<!-- TODO: 菜品价格 -->
-			<view class="food-price">
-				<image src="../../icon/roll2.png" mode="heightFix"></image>250
+			<view class="food-price" wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo.unlockFoods)}}">
+				<image src="../../icon/roll2.png" mode="heightFix"></image>{{foodList[foodIdx].cost}}
 			</view>
 		</image>
-		<image class="next" src="../../icon/nextArrow4.png" mode="widthFix"></image>
+		<image class="next" src="../../icon/nextArrow4.png" mode="widthFix" bindtap="nextFood"></image>
 	</view>
 	<!-- TODO: 菜品最短制作时间（如果没有则显示15min） -->
-	<view class="food-time">最短制作时间<text>15min</text></view>
+	<view class="food-time">最短制作时间
+		<text wx:if="{{foodList[foodIdx].minTime<=15}}">15min</text>
+		<text wx:if="{{foodList[foodIdx].minTime>15}}">{{foodList[foodIdx].minTime}}min</text>
+	</view>
 	<!-- TODO: 解锁，需要前端判断是否有足够的小麦 -->
-	<van-button custom-class="confirm-button" round color="#ffa600">解锁菜谱</van-button>
+	<van-button custom-class="confirm-button" round color="#ffa600"
+		wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo.unlockFoods)}}" bindtap="unlockFood">解锁菜谱
+	</van-button>
+	<van-button custom-class="confirm-button" round color="#ffa600"
+		wx:if="{{judgeFoodLock.judge(foodList[foodIdx]._id, userInfo.unlockFoods)}}" bindtap="chooseFood">选择菜品
+	</van-button>
 </van-popup>
 
+<!-- 判断该菜品是否解锁 -->
+<wxs module="judgeFoodLock">
+	var judge = function (item, array) {
+		return array.indexOf(item) != -1
+	}
+	module.exports.judge = judge
+</wxs>
+
+<!-- tabbar -->
 <view class="bottom-bar">
 	<image src="../../icon/post.png" mode="aspectFit" bindtap="toPost"></image>
 	<image src="../../icon/menuRoll.png" mode="aspectFit"></image>

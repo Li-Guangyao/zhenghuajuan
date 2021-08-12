@@ -119,5 +119,11 @@ Page({
 
 	onReachBottom: function () {
 
+	},
+
+	toRoll(){
+		wx.navigateBack({
+		  delta: 1,
+		})
 	}
 })

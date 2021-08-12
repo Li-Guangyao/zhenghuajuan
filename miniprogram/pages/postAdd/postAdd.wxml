@@ -33,6 +33,4 @@
 	</view>
 </view>
 
-<!-- <button bindtap="checkPost">checkPost</button> -->
-
 <view class="buttons" bindtap="publishPost">发布笔记</view>
