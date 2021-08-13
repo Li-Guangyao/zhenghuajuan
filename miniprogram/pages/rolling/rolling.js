@@ -1,4 +1,3 @@
-import Wxml2Canvas from '../../lib/wxml2canvas/index';
 
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
 var x = 128,

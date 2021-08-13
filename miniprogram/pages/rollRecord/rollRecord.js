@@ -1,4 +1,5 @@
 import { userUtils } from "../../utils/userUtils"
+import { canvasUtils } from "../../utils/canvasUtils"
 
 Page({
 	data: {
@@ -33,6 +34,10 @@ Page({
 		this.setupTimeRanges();
 		await this.getUserInfo();
 		await this.loadFoods();
+	},
+
+	onUnload: function () {
+		canvasUtils.clear();
 	},
 
 	getUserInfo: async function() {
@@ -92,6 +97,21 @@ Page({
 
 	// 配置Canvas（桌面图片onload后执行）
 	setupCanvas() {
+		var query = this.createSelectorQuery()
+		canvasUtils.setupById(query, "foods", 
+			u => {
+				this.foodsCanvas = u.canvas;
+				this.foodsCtx = u.ctx;
+				
+				this.setData({
+					positions: this.generatePositions(), // 每个菜品的位置
+				})
+
+				this.refreshData();
+			}
+		);
+
+		/*
 		const query = this.createSelectorQuery()
 		// 获取canvas
 		query.select('#foods')
@@ -118,6 +138,7 @@ Page({
 
 				this.refreshData();
 			})
+		*/
 	},
 
 	/**
@@ -170,6 +191,7 @@ Page({
 			this.setData({
 				[key]: this.processRecordData(res.result)
 			});
+			data = this.curRecords();
 		}
 		this.drawData(data.records);
 	},
@@ -261,10 +283,17 @@ Page({
 	},
 
 	drawFood: async function (i, rec, pos) {
-		pos = this.adjustPos(pos);
+		console.info("drawFood: ", i, rec, pos)
+		// pos = this.adjustPos(pos);
 
 		var x = pos[0], y = pos[1];
 		var w = this.foodSize[0], h = this.foodSize[1];
+		var food = this.data.foods[rec.foodId];
+
+		await canvasUtils.drawFood(food, rec.quality,
+			x, y, w, h);
+		
+		/*
 		var src = this.data.foods[rec.foodId].images[rec.quality];
 		var cache = this.imageCache[src] ||= await wx.getImageInfo({ src })
 
@@ -280,6 +309,7 @@ Page({
 				cache.img = img; draw();
 			};
 		} else draw();
+		*/
 	},
 
 	// 清空画布的内容
