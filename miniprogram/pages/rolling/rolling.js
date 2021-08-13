@@ -53,7 +53,6 @@ Page({
 	foodImgs: [
 		"../../../../../images/foods/a.png",
 		"../../../../../images/foods/b.png",
-		"../../../../../images/foods/c.png",
 		"../../../../../images/foods/d.png",
 		"../../../../../images/foods/e.png",
 		"../../../../../images/foods/f.png",
