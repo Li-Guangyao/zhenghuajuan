@@ -28,15 +28,6 @@ exports.main = async (event, context) => {
 	var rankList = res.data[0].rankList
 	var myInfo = getMyInfo(rankList, event.userInfo.openId)
 
-	// await db.collection('t_rank_day').aggregate().sort({
-	// 	createdAt: -1
-	// }).end().then(res => {
-	// 	// 只需要最新一期的排行榜就行了
-	// 	rankList = res.list[0]
-	// 	myInfo = getMyInfo(rankList.dayRankList, event.userInfo.openId)
-	// })
-	// return rankList
-
 	return {
 		rankList,
 		myRank: myInfo.myRank,

@@ -24,11 +24,11 @@ userUtils.login = async function(force, desc) {
 		res = (await wx.cloud.callFunction({
 			name: 'saveUserInfo',
 			data: { userInfo: profile.userInfo },
-		})).result
-	
+		})).result.userInfo
+		
+		console.log(res)
 		wx.setStorageSync(userUtils.Key, res)
 	}
-
 	return res;
 }
 

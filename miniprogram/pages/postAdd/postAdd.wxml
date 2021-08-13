@@ -18,13 +18,13 @@
 	</view>
 
 	<view class="location" bindtap="getLocation">
-		<van-icon name="location-o" />
+		<van-icon name="location-o"/>
 		<view style="font-size: 30rpx">添加位置</view>
 	</view>
 
 	<view class="set-anonymous">
 		<view class="tip">匿名发布</view>
-		<van-switch checked="{{ isAnonymous }}" active-color="#ffa600" bind:change="changeAnonymous" />
+		<van-switch checked="{{ isAnonymous }}" size="38rpx" active-color="#ffa600" bind:change="changeAnonymous" />
 	</view>
 
 	<view class="show-location" wx:if="{{location}}">
@@ -32,7 +32,5 @@
 		<van-icon class="location-delete" name="cross" bindtap="removeLocation" />
 	</view>
 </view>
-
-<!-- <button bindtap="checkPost">checkPost</button> -->
 
 <view class="buttons" bindtap="publishPost">发布笔记</view>

@@ -1,3 +1,73 @@
-input{
-	border: black solid 1rpx;
+page {
+	background-color: var(--themeBackgroundColor);
+	--grey: rgb(220, 220, 220);
+	--grey2: rgb(160, 160, 160);
+}
+
+.back-button {
+	position: absolute;
+	display: flex;
+
+	top: 6%;
+	left: 6%;
+
+	font-size: 36rpx;
+	line-height: 42rpx;
+}
+
+.user-avatar {
+	position: absolute;
+	top: 15%;
+
+	width: 200rpx;
+	border-radius: 100rpx;
+	margin-left: 80rpx;
+}
+
+.input-area {
+	position: absolute;
+	top: 30%;
+	width: 100%;
+
+	.tag {
+		margin: 25rpx 85rpx;
+		color: var(--grey2);
+
+		.shopName {
+			display: inline;
+			color: var(--themeColor);
+		}
+	}
+
+	.input-shopName {
+		background-color: var(--grey);
+		border-radius: 5rpx;
+		margin: 0 30rpx;
+		height: 90rpx;
+
+		display: flex;
+		align-items: center;
+
+		input {
+			width: 100%;
+			margin: 0 20rpx;
+		}
+	}
+}
+
+
+
+#affirm {
+	position: absolute;
+	top: 70%;
+	left: 55%;
+	height: 100rpx;
+	width: 250rpx;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background-color: var(--themeColor);
+	color: white;
 }

@@ -27,11 +27,13 @@ exports.main = async (event, context) => {
 			}).sort({ // 按照时间顺序排列
 				createdAt: -1
 			}).skip(event.skipNum - 1), event.userOpenId)
-			
 	} else {
-
 		return query(db.collection('t_post').aggregate()
-			.match({ status: 1 }).sort({ createdAt: -1 }), event.userOpenId)
+			.match({
+				status: 1
+			}).sort({
+				createdAt: -1
+			}), event.userOpenId)
 	}
 }
 
@@ -63,8 +65,8 @@ function query(q, userOpenId) {
 	}).project({
 		_commentCount: 0,
 	})
-	
-	if (userOpenId) 
+
+	if (userOpenId)
 		res = res.lookup({
 			from: 't_post_like',
 			let: {
@@ -79,7 +81,8 @@ function query(q, userOpenId) {
 					newRoot: {
 						likeIndex: '$valueIndex',
 						oriLikeIndex: '$valueIndex',
-					}})
+					}
+				})
 				.done(),
 			as: '_like'
 		}).replaceRoot({

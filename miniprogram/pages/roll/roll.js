@@ -1,119 +1,63 @@
-import getDateDiff from "../../utils/getDateDiff"
-import changeFileListFormat from "../../utils/changeFileListFormat"
-import { userUtils } from "../../utils/userUtils"
+import {
+	userUtils
+} from "../../utils/userUtils"
 
 Page({
 	data: {
-		userInfo: null,
+		userInfo: wx.getStorageSync('userInfo'),
 		postList: [],
 		strictMode: true,
 
-		name: '',
-
-		showDialog: false,
+		name: '学习味花卷',
+		showNameEdit: false,
 		showPopup: false,
 
-		durationIndex: 0,
-		durations: [15, 30, 45, 60, 90, 120],
-		counts: [15, 30, 45, 60, 135, 240]
+		// 学习时间长短，默认15min
+		duration: 15,
+
+		foodList: [],
+		// 浏览到第几个菜品
+		foodIdx: 0,
+		// 选择了第几个菜品
+		chosenFoodIdx: 0,
+		// 当前选择的时间，对应第几级别食物
+		qualityIdx: 0
 	},
 
-	queryParams: {
-		pageNum: 0,
-		pageSize: 20
+	async onLoad(options) {
+		// 获得食物列表
+		var res = await wx.cloud.callFunction({
+			name: 'operFoods',
+			data: {
+				method: 'GET'
+			}
+		})
+		this.setData({
+			foodList: res.result
+		})
+		if (!this.data.userInfo) {
+			await this.judgeLogin();
+		}
+		this.initFoodInfo()
 	},
 
-	// onLoad: async function (options) {
-	// },
+	// 拿到foodList，判断某些food是否解锁
+	initFoodInfo() {
+		var unlockFoods = this.data.userInfo.unlockFoods
+		var foodList = this.data.foodList
 
-	async onShow() {
-		await this.judgeLogin();
-		await this.refreshPage();
-	},
+		foodList.map(item => {
+			item.unlock = unlockFoods.indexOf(item._id) != -1
+		})
 
-	onPullDownRefresh: function () {
-		this.refreshPage()
-		wx.stopPullDownRefresh()
+		this.setData({
+			foodList
+		})
 	},
 
 	async judgeLogin() {
-		this.setData({ userInfo : await userUtils.judgeLogin() })
-	},
-
-	async refreshPage() {
-		this.queryParams.pageNum = 0
-
-		wx.showLoading({
-			title: '加载中',
-			mask: true
-		})
-
-		wx.cloud.callFunction({
-			name: 'getMyPost',
-			data: {
-				roll: true,
-				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-			}
-		}).then(res => {
-			console.log(res)
-			if (res.result) {
-				this.setData({
-					postList: changeFileListFormat(this.dateDiffTrans(res.result))
-				})
-			}
-		})
-
-		wx.hideLoading()
-	},
-
-	// 发帖的时间距离现在多久
-	dateDiffTrans(postList) {
-		var length = postList.length
-		for (var i = 0; i < length; i++) {
-			var originDate = postList[i].createdAt
-			postList[i].timeDiff = getDateDiff(originDate)
-		}
-		return postList
-	},
-
-	//触底加载
-	async onReachBottom() {
-		console.log('ReachBottom')
-		wx.showLoading({
-			title: '加载中',
-			mask: true
-		})
-
-		this.queryParams.pageNum++
-		console.log(this.queryParams.pageNum)
-
-		var res = await wx.cloud.callFunction({
-			name: 'getMyPost',
-			data: {
-				roll: true,
-				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-			}
-		})
-
-		if (res.result.length == 0) {
-			wx.showToast({
-				icon: 'error',
-				title: '没有更多了~',
-			})
-		} else {
-			var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
-			this.setData({
-				postList: [...this.data.postList].concat(...subPostList)
-			})
-		}
-
-		wx.hideLoading()
-	},
-
-	// 点击页面下方+按钮
-	showDialog() {
 		this.setData({
-			showDialog: true
+			userInfo: await userUtils.judgeLogin()
 		})
 	},
 
@@ -121,13 +65,6 @@ Page({
 	showPopup() {
 		this.setData({
 			showPopup: !this.data.showPopup
-		})
-	},
-
-	inputActivityName(e) {
-		console.log(e)
-		this.setData({
-			name: e.detail.value
 		})
 	},
 
@@ -160,7 +97,7 @@ Page({
 					var duration = this.data.durations[this.data.durationIndex];
 					var count = this.data.counts[this.data.durationIndex];
 
-					if (!this.data.strictMode) 
+					if (!this.data.strictMode)
 						count = Math.floor(count / 2);
 
 					var title = '确定要蒸' + duration + '分钟花卷吗？';
@@ -168,7 +105,8 @@ Page({
 						title += "严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！";
 
 					wx.showModal({
-						title, showCancel: true,
+						title,
+						showCancel: true,
 						success: res => {
 							if (res.confirm) {
 								wx.navigateTo({
@@ -191,18 +129,136 @@ Page({
 		}
 	},
 
-	// 在时间弹出框中，选择了一个时间长度
-	choseDuration(e) {
+	// 点击菜品
+	showPopup() {
 		this.setData({
-			durationIndex: e.detail.index
+			showPopup: !this.data.showPopup
+		})
+	},
+
+	prevFood() {
+		var foodIdx = this.data.foodIdx
+		this.setData({
+			foodIdx: foodIdx == 0 ? foodIdx : foodIdx - 1
+		})
+	},
+
+	nextFood() {
+		var foodIdx = this.data.foodIdx
+		var length = this.data.foodList.length
+		this.setData({
+			foodIdx: foodIdx == length - 1 ? foodIdx : foodIdx + 1
+		})
+	},
+
+	// 解锁食物
+	unlockFood() {
+		var userInfo = this.data.userInfo
+		var foodList = this.data.foodList
+		var foodIdx = this.data.foodIdx
+
+		if (userInfo.rollCount < foodList[foodIdx].cost) {
+			wx.showToast({
+				icon: 'error',
+				title: '小麦数量不够！',
+			})
+		} else {
+			wx.showModal({
+				title: '确定要解锁吗？',
+				showCancel: true,
+				success: res => {
+					if (res.confirm) {
+						userInfo.rollCount -= foodList[foodIdx].cost
+						userInfo.unlockFoods.push(foodList[foodIdx]._id)
+
+						wx.cloud.callFunction({
+							name: 'operFoods',
+							data: {
+								method: 'BUY',
+								foodId: foodList[foodIdx]._id
+							}
+						})
+
+						this.setData({
+							['userInfo.unlockFood']: userInfo.unlockFoods,
+							['userInfo.rollCount']: userInfo.rollCount
+						})
+
+						this.initFoodInfo()
+
+					} else if (res.cancel) {}
+				}
+			})
+		}
+	},
+
+	// 选择食物
+	chooseFood() {
+		this.setData({
+			chosenFoodIdx: this.data.foodIdx,
 		})
 		this.showPopup()
 	},
-	
+
+	// 拖动进度条
+	onDrag(e) {
+		var value = e.detail.value
+		var length = this.data.foodList[this.data.chosenFoodIdx].images.length
+		this.setData({
+			duration: value,
+			qualityIdx: parseInt((length - 1) * (value - 15) / 105)
+		})
+	},
+
+	// 修改学习任务的名字
+	showNameEdit() {
+		this.setData({
+			showNameEdit: true
+		})
+	},
+
+	// 输入活动的名称
+	inputActivityName(e) {
+		this.setData({
+			name: e.detail.value + '味花卷'
+		})
+	},
+
+	// 完成输入，失去焦点触发
+	finishNameEdit() {
+		this.setData({
+			showNameEdit: false
+		})
+	},
+
+	// 点击“开始蒸花卷”
+	beginActivity() {
+		wx.navigateTo({
+			url: '../rolling/rolling?name=' + this.data.name + '&duration=' + this.data.duration,
+		})
+	},
+
 	toPost() {
-		wx.switchTab({ url: '../homepage/homepage' })
+		wx.switchTab({
+			url: '../homepage/homepage'
+		})
 	},
+
 	toMy() {
-		wx.switchTab({ url: '../my/my' })
+		wx.switchTab({
+			url: '../my/my'
+		})
 	},
+
+	toRollRecord() {
+		wx.navigateTo({
+			url: '../rollRecord/rollRecord',
+		})
+	},
+
+	toRanklist() {
+		wx.navigateTo({
+			url: '../ranklist/ranklist',
+		})
+	}
 })

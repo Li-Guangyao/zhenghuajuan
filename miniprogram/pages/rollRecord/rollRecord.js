@@ -337,5 +337,11 @@ Page({
 			this.foodsCtx.stroke()
 		}
 		*/
+	},
+
+	toRoll(){
+		wx.navigateBack({
+		  delta: 1,
+		})
 	}
 })

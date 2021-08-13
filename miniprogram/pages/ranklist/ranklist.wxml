@@ -1,6 +1,6 @@
 <view>
 	<!-- 左上角返回按钮 -->
-	<view class="back-button">
+	<view class="back-button" bindtap="toRoll">
 		<image src="../../icon/backArrow.png" mode="widthFix"></image>
 		排行榜
 	</view>

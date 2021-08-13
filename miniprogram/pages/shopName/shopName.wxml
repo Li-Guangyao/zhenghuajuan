@@ -1,3 +1,23 @@
-<input model:value="{{shopName}}"></input>
-<button bindtap="editShopName">修改店铺名称</button>
-<button bindtap="test">测试修改数据库字段名</button>
+<view>
+	<!-- 左上角返回按钮 -->
+	<view class="back-button" bindtap="toRoll">
+		<van-icon name="arrow-left" color="black" />
+		<view>更改店名</view>
+	</view>
+
+	<image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
+
+	<view class="input-area">
+		<view class="tag">店名</view>
+		<view class="input-shopName">
+			<input type="text" model:value="{{shopName}}" maxlength="10"></input>
+		</view>
+		<view class="tag">点击确认更改，将店名修改为
+			<view class="shopName">{{shopName}}</view> 店
+		</view>
+
+	</view>
+
+	<button id="affirm" bindtap="editShopName">确认修改</button>
+	<!-- <button bindtap="test">测试修改数据库字段名</button> -->
+</view>

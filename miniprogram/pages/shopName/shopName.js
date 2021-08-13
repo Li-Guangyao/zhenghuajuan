@@ -1,39 +1,16 @@
 Page({
-
 	data: {
-		shopName: ''
-	},
-
-	onLoad: function (options) {
-
-	},
-
-	onReady: function () {
-
-	},
-
-	onShow: function () {
-
-	},
-
-	onHide: function () {
-
-	},
-
-	onUnload: function () {
-
-	},
-
-	onPullDownRefresh: function () {
-
-	},
-
-	onReachBottom: function () {
-
+		shopName: '',
+		userInfo: wx.getStorageSync('userInfo')
 	},
 
 	editShopName: function () {
-		if (this.data.shopName.length != 0) {
+		if (this.data.shopName.length > 10) {
+			wx.showToast({
+				icon: 'error',
+				title: '不超过10个字！',
+			})
+		} else if (this.data.shopName.length != 0) {
 			wx.cloud.callFunction({
 				name: "editShopName",
 				data: {
@@ -44,7 +21,7 @@ Page({
 				if (res.result.stats.updated == 0) {
 					wx.showToast({
 						icon: 'error',
-						title: '30天修改一次！',
+						title: '1天修改一次！',
 					})
 				} else {
 					wx.showToast({
@@ -55,17 +32,9 @@ Page({
 		} else {}
 	},
 
-	// 一个测试函数
-	test() {
-		const db = wx.cloud.database()
-		const _ = db.command
-
-		db.collection('t_test').doc('cd045e75610d4741038d4d7d2ed967bc').update({
-			data: {
-				aaa: _.rename('ccc')
-			}
-		}).then(res=>{
-			console.log(res)
+	toRoll() {
+		wx.navigateBack({
+			delta: 1,
 		})
 	}
 })

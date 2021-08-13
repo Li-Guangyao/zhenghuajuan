@@ -1,3 +1,6 @@
+page {
+  overflow-y: hidden;
+}
 .main-background {
   position: fixed;
   z-index: -1;
@@ -145,7 +148,6 @@
 }
 .input-layer .name-edit input {
   display: inline;
-  width: 100%;
   text-align: center;
 }
 .input-layer .start-button {

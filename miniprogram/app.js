@@ -1,6 +1,8 @@
+import { userUtils } from "/utils/userUtils"
 let tcb = require("./lib/tcb.js");
+
 App({
-  onLaunch: function () {
+  onLaunch: async function () {
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
@@ -14,6 +16,10 @@ App({
       })
     }
 
+    var userInfo = await userUtils.getUserInfo()
+    wx.setStorageSync('userInfo', userInfo)
+
+
     // const cloud = tcb.init({
     //   env: "cloud1-1gpq51y7845e8d66",
     //   appSign: "touristappid",
@@ -22,11 +28,5 @@ App({
     //     appAccessKey: "b96e08eaac870373f68761b1d8b74b0f"
     //   }
     // });
-
-    // this.globalData = {
-    //   cloud,
-    //   collection: "tcb_hello_world"
-    // };
-
   }
 })

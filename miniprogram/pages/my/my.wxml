@@ -2,13 +2,12 @@
 <van-nav-bar border="{{false}}" fixed left-text="个人"/>
 
 <view class="page">
-
 	<!-- 用户信息 -->
 	<view class="user-card">
 		<view class="user-info" wx:if="{{userInfo}}" bindtap="getUserInfo">
 			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
 			<view class="user-detail">
-				<view class="user-nickname" bindtap="getUserInfo">{{userInfo.shopName}}</view>
+				<view class="user-nickname" bindtap="getUserInfo">{{userInfo.nickName}}</view>
 				<!-- TODO: 今日制作时长 -->
 				<view class="user-today">今日已制作<text>30</text>min</view>
 			</view>
@@ -75,9 +74,7 @@
 				</view>
 			</view>
 		</view>
-
 	</view>
-
 </view>
 
 <view class="bottom-bar">

@@ -14,7 +14,7 @@ exports.main = async (event, context) => {
 			address: event.location.address,
 			name: event.location.name
 		} : null,
-		coordinate: event.location? new db.Geo.Point(Number(event.location.longitude), Number(event.location.latitude)):null,
+		coordinate: event.location ? new db.Geo.Point(Number(event.location.longitude), Number(event.location.latitude)) : null,
 
 		photoList: event.uploadedFileList.uploadedPhotoList,
 		videoList: event.uploadedFileList.uploadedVideoList,
@@ -35,5 +35,7 @@ exports.main = async (event, context) => {
 		data.rollDuration = parseInt(event.rollDuration)
 	}
 
-	return db.collection('t_post').add({data})
+	return db.collection('t_post').add({
+		data
+	})
 }

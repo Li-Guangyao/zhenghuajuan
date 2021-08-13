@@ -5,11 +5,12 @@ page {
 // 标题
 .van-nav-bar {
     background-color: var(--themeColor) !important;
+    .van-icon:before {
+        color: white !important;
+        font-size: 36rpx !important;
+    }
 }
-.van-icon:before {
-    color: white !important;
-    font-size: 36rpx !important;
-}
+
 .van-nav-bar__text {
     margin-left: -12rpx !important;
     color: white !important;
@@ -19,15 +20,15 @@ page {
 }
 
 .post {
-    overflow-x: hidden;
     background-color: white;
+    position: absolute;
+    width: 100%;
+    top: 10%;
 
     .content-input {
         margin: 0 10rpx;
-        background-color: #ffffff;
-        border-radius: 5rpx;
-        padding: 20rpx 20rpx;
-        width: 100%;
+        padding: 15rpx 15rpx;
+        width: 94%;
         min-height: 400rpx;
         max-height: 900rpx;
         overflow: scroll;
@@ -46,6 +47,18 @@ page {
         width: 100% !important;
         background-color: #ffffff;
         padding: 0 15rpx;
+    }
+
+    .set-anonymous {
+        margin: 10rpx 20rpx;
+
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .tip {
+            margin: 0 10rpx;
+        }
     }
 
     .show-location {
@@ -77,19 +90,6 @@ page {
     text-align: center;
 
     position: fixed;
-    
-    // 仅iphonex以上机型适用
-    // padding-bottom: env(safe-area-inset-bottom);
-}
 
-.set-anonymous{
-    margin: 10rpx 20rpx;
-    
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-    
-    .tip{
-        margin: 0 10rpx;
-    }
+    padding-bottom: env(safe-area-inset-bottom);
 }
