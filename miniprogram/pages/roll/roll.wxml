@@ -9,7 +9,7 @@
 <!-- 店名 -->
 <navigator class="shop-board" url="../shopName/shopName">
 	<image src="../../images/titleBoard.png" mode="widthFix">
-		<view>{{userInfo.shopName}}店</view>
+		<view>{{userInfo.shopName}}</view>
 	</image>
 </navigator>
 

@@ -3,7 +3,7 @@
 	<view class="progress-bar">
 		<!-- 旋转 -->
 		<!-- 暂时隐藏 -->
-		<canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{false}}">
+		<canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{true}}">
 			<image src="../../icon2/rolling.png" mode="heightFix"></image>
 		</canvas>
 		<text>{{curMinute < duration ? status[statusIndex] : finishedText}}</text>
@@ -20,9 +20,10 @@
 	</view>
 </view>
 
+<canvas id="post-canvas" class="post-canvas" type="2d"></canvas>
+
 <!-- 海报弹窗 -->
-<van-popup custom-class="post-prompt" show="{{ true }}" bind:close="onClose">
-	<canvas id="post-canvas" type="2d"></canvas>
+<van-popup custom-class="post-prompt" show="{{ false }}" bind:close="onClose">
 
 	<image class="post" src="../../images/post.png" mode="heightFix" bindtap="testWxml2Canvas">
 		<text class="time">本次蒸了120分钟</text>

@@ -32,9 +32,7 @@ Page({
 		} else {}
 	},
 
-	toRoll() {
-		wx.navigateBack({
-			delta: 1,
-		})
+	back() {
+		wx.navigateBack({ delta: 1 })
 	}
 })

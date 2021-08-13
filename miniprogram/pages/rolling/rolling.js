@@ -86,10 +86,10 @@ Page({
 		// y, x, w, align
 		[35, 33, 67.5], [20, 42, 67.5], [82, 1, 67.5, 'right']
 	],
-	textSkewYs: [-1.54, 2.16, -1.64],
+	textSkewYs: [-0.513, 0.72, -0.546],
 
-	nickNameFont: "20px 黑体",
-	messageFont: "16px 黑体",
+	nickNameFont: "20px 微软雅黑",
+	messageFont: "16px 微软雅黑",
 	infoFontColor: "#613b10",
 
 	postBottom: "../../../../../images/postBottom.png",
@@ -108,6 +108,8 @@ Page({
 		var fh = h * this.foodSize[1] / 100;
 		var fCnt = this.foodImgs.length;
 
+		canvasUtils.clipRect(0, 0, w, h);
+
 		// 绘制背景和菜品
 		await canvasUtils.drawImage(this.background, 0, 0, w, h);
 		for (var i = 0; i < this.foodPositions.length; ++i) {
@@ -116,9 +118,7 @@ Page({
 			var x = w * p[1] / 100, y = h * p[0] / 100;
 			await canvasUtils.drawFood(src, undefined, x, y, fw, fh, false);
 		}
-
-		// await canvasUtils.wait(500);
-
+		
 		// 绘制文本
 		canvasUtils.setFont(this.font);
 		this.texts.forEach((t, i) => {
@@ -153,8 +153,6 @@ Page({
 
 		canvasUtils.setFont(this.messageFont);
 		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
-
-		canvasUtils.clipRect(0, 0, w, h);
 	},
 
 	onLoad: function (e) {
@@ -256,9 +254,8 @@ Page({
 		const query = this.createSelectorQuery()
 
 		// 海报Canvas
-		setTimeout(() => canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas), 1000);
+		// setTimeout(() => canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas), 1000);
 
-		/*
 		// 获取canvas（原来的）
 		query.select('#canvasArcCir')
 			.fields({
@@ -280,7 +277,6 @@ Page({
 				this.clearMinuteProgress();
 				this.startTimer();
 			})
-		*/
 	},
 
 	// 正式开始计时
@@ -296,7 +292,7 @@ Page({
 		// var now = new Date();
 		// var s = this.data.startTime;
 
-		var ms = this.data.curMilliSecond + updateInterval;
+		var ms = this.data.curMilliSecond + updateInterval * 1000;
 
 		// var nTime = now.getTime();
 		// var sTime = s.getTime();
@@ -384,6 +380,9 @@ Page({
 	onFinished() {
 		if (this.data.stopped) return;
 
+		const query = this.createSelectorQuery()
+		canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas);
+
 		this.setData({
 			finished: true
 		});
@@ -392,6 +391,7 @@ Page({
 		this.stopRolling();
 
 		// TODO: 完成了
+		/*
 		wx.showModal({
 			title: '蒸花卷完成了！发布到动态后将获得' + this.data.count + '个花卷，快去分享努力成果吧！',
 			showCancel: false,
@@ -408,6 +408,7 @@ Page({
 		wx.setKeepScreenOn({
 			keepScreenOn: false
 		});
+		*/
 	},
 
 	onStopped() {

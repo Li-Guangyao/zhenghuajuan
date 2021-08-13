@@ -6,7 +6,7 @@
 	</view>
 
 	<!-- 背景 -->
-	<image class="background" src="../../images/rankListBackground.png" mode="widthFix" />
+	<image class="background" src="../../images/rankListBackground.jpg" mode="widthFix" />
 
 	<!-- 主页 -->
 	<view class="main">

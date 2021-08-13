@@ -176,6 +176,8 @@ canvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
 
 canvasUtils.setTransform = function(scaleX, skewY, skewX, scaleY, posX, posY) {
 	scaleX *= this.dpr; scaleY *= this.dpr;
+	skewY *= this.dpr; skewX *= this.dpr;
+	posX *= this.dpr; posY *= this.dpr;
 	this.ctx.setTransform(scaleX, skewY, skewX, scaleY, posX, posY);
 }
 canvasUtils.resetTransform = function() {
