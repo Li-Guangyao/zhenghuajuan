@@ -17,14 +17,6 @@ Page({
 		this.setData({ userInfo: await userUtils.login(true)})
 	},
 
-	test(){
-		wx.cloud.callFunction({
-			name: 'saveUserInfo'
-		}).then(res=>{
-			console.log(res)
-		})
-	},
-
 	toMyPost(){
 		wx.navigateTo({ url: '../myPost/myPost' })
 	},

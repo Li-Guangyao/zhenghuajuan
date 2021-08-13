@@ -23,6 +23,8 @@ Page({
 		foodIdx: 0,
 		// 选择了第几个菜品
 		chosenFoodIdx: 0,
+		// 当前选择的时间，对应第几级别食物
+		qualityIdx:0
 	},
 
 	queryParams: {
@@ -289,8 +291,11 @@ Page({
 
 	// 拖动进度条
 	onDrag(e) {
+		var value = e.detail.value
+		var length = this.data.foodList[this.data.chosenFoodIdx].images.length
 		this.setData({
-			duration: e.detail.value
+			duration: value,
+			qualityIdx: parseInt((length-1)*(value-15)/105)
 		})
 	},
 
@@ -310,6 +315,13 @@ Page({
 	finishNameEdit() {
 		this.setData({
 			showNameEdit: false
+		})
+	},
+
+	// 点击“开始蒸花卷”
+	beginActivity(){
+		wx.navigateTo({
+		  url: '../rolling/rolling',
 		})
 	},
 

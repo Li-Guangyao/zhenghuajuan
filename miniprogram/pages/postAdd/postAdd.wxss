@@ -4,7 +4,7 @@ page {
 .van-nav-bar {
   background-color: var(--themeColor) !important;
 }
-.van-icon:before {
+.van-nav-bar .van-icon:before {
   color: white !important;
   font-size: 36rpx !important;
 }
@@ -16,7 +16,6 @@ page {
   background-color: transparent !important;
 }
 .post {
-  overflow-x: hidden;
   background-color: white;
   position: absolute;
   width: 100%;
@@ -24,8 +23,8 @@ page {
 }
 .post .content-input {
   margin: 0 10rpx;
-  padding: 20rpx 20rpx;
-  width: 100%;
+  padding: 15rpx 15rpx;
+  width: 94%;
   min-height: 400rpx;
   max-height: 900rpx;
   overflow: scroll;

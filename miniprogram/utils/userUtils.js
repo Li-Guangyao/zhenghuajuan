@@ -30,8 +30,6 @@ userUtils.login = async function(force, desc) {
 		wx.setStorageSync(userUtils.Key, res)
 	}
 	return res;
-	// https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epEEqpwBRHOx03vBo3a9XEtdKhwlmCibFymIC6B89hV8w0ZydRU6y8p5kLDlWGb6prFE6ZP3ibcYI1w/132
-
 }
 
 /**

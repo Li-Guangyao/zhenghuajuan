@@ -20,7 +20,7 @@
 	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
 	<view class="food-select">
 		<!-- TODO: 显示当前选择的菜品的图片 -->
-		<image class="food" src="{{foodList[chosenFoodIdx].images[0]}}" mode="aspectFit"></image>
+		<image class="food" src="{{foodList[chosenFoodIdx].images[qualityIdx]}}" mode="aspectFit"></image>
 		<view class="tips">点击图标可更换菜品</view>
 	</view>
 </view>
@@ -57,7 +57,7 @@
 	</view>
 
 	<!-- TODO: 开始制作！（复用原来的代码） -->
-	<van-button custom-class="start-button" round color="#ffa600">
+	<van-button custom-class="start-button" round color="#ffa600" bindtap="beginActivity">
 		<view class="button-content">
 			<view class="big">开始制作</view>
 			<view class="small">Get Started!</view>

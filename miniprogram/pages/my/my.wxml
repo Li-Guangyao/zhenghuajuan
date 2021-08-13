@@ -24,8 +24,7 @@
 	<view class="main">
 
 		<!-- 菜单栏 -->
-		<view class="menu-item" bindtap="test">
-		<!-- <view class="menu-item" bindtap="toMyPost"> -->
+		<view class="menu-item" bindtap="toMyPost">
 			<view class="menu-title">我的帖子</view>
 			<image class="next-button" src="../../icon/nextArrow2.png" mode="aspectFit"></image>
 		</view>
