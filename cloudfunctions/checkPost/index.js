@@ -9,6 +9,7 @@ const app = tcb.init({
 });
 app.registerExtension(extCi);
 
+// 不良内容检测
 exports.main = async (event, context) => {
 	
 	var a = await contentSec(event.postContent)

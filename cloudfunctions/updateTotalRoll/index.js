@@ -18,18 +18,20 @@ function update(result, now) {
 
 // 统计所有用户花卷数
 exports.main = async (event, context) => {
-	
+
 	var totals = (await db.collection('t_post_like')
-	.aggregate().group({
-		_id: '$postAuthor_openid',
-		totalValue: $.sum('$value')
-	}).end()).list;
-	
+		.aggregate().group({
+			_id: '$postAuthor_openid',
+			totalValue: $.sum('$value')
+		}).end()).list;
+
 	totals.forEach(total => {
 		db.collection('t_user').where({
 			_openid: total._id
 		}).update({
-			data: { rollCount: total.totalValue }
+			data: {
+				rollCount: total.totalValue
+			}
 		})
 	});
 }

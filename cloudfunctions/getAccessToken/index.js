@@ -7,7 +7,7 @@ var request = require('request-promise')
 
 const db = cloud.database()
 
-// 云函数入口函数
+// 获取AccessToken值，暂时不用
 exports.main = async (event, context) => {
 	var token = await getNewestAccessToken()
 	if (token == null || judgeExpiration(token.createdAt)) {

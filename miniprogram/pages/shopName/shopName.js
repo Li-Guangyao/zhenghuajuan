@@ -1,28 +1,7 @@
 Page({
-
 	data: {
 		shopName: '',
 		userInfo: wx.getStorageSync('userInfo')
-	},
-
-	onLoad: function (options) {
-
-	},
-
-	onReady: function () {
-
-	},
-
-	onShow: function () {
-
-	},
-
-	onHide: function () {
-
-	},
-
-	onUnload: function () {
-
 	},
 
 	editShopName: function () {
