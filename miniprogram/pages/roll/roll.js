@@ -24,7 +24,7 @@ Page({
 		// 选择了第几个菜品
 		chosenFoodIdx: 0,
 		// 当前选择的时间，对应第几级别食物
-		qualityIdx:0
+		qualityIdx: 0
 	},
 
 	queryParams: {
@@ -40,94 +40,31 @@ Page({
 		this.setData({
 			foodList: res.result
 		})
-	},
-
-	async onShow() {
 		if (!this.data.userInfo) {
 			await this.judgeLogin();
 		}
-		await this.refreshPage();
+		this.initFoodInfo()
 	},
 
-	onPullDownRefresh: function () {
-		this.refreshPage()
-		wx.stopPullDownRefresh()
+	// 拿到foodList，判断某些food是否解锁
+	initFoodInfo() {
+		var unlockFoods = this.data.userInfo.unlockFoods
+		var foodList = this.data.foodList
+
+		foodList.map(item=> {
+			console.log(item)
+			item.unlock = unlockFoods.indexOf(item._id) != -1
+		})
+
+		this.setData({
+			foodList
+		})
 	},
 
 	async judgeLogin() {
 		this.setData({
 			userInfo: await userUtils.judgeLogin()
 		})
-	},
-
-	async refreshPage() {
-		this.queryParams.pageNum = 0
-
-		wx.showLoading({
-			title: '加载中',
-			mask: true
-		})
-
-		wx.cloud.callFunction({
-			name: 'getMyPost',
-			data: {
-				roll: true,
-				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-			}
-		}).then(res => {
-			console.log(res)
-			if (res.result) {
-				this.setData({
-					postList: changeFileListFormat(this.dateDiffTrans(res.result))
-				})
-			}
-		})
-
-		wx.hideLoading()
-	},
-
-	// 发帖的时间距离现在多久
-	dateDiffTrans(postList) {
-		var length = postList.length
-		for (var i = 0; i < length; i++) {
-			var originDate = postList[i].createdAt
-			postList[i].timeDiff = getDateDiff(originDate)
-		}
-		return postList
-	},
-
-	//触底加载
-	async onReachBottom() {
-		console.log('ReachBottom')
-		wx.showLoading({
-			title: '加载中',
-			mask: true
-		})
-
-		this.queryParams.pageNum++
-		console.log(this.queryParams.pageNum)
-
-		var res = await wx.cloud.callFunction({
-			name: 'getMyPost',
-			data: {
-				roll: true,
-				skipNum: this.queryParams.pageNum * this.queryParams.pageSize,
-			}
-		})
-
-		if (res.result.length == 0) {
-			wx.showToast({
-				icon: 'error',
-				title: '没有更多了~',
-			})
-		} else {
-			var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
-			this.setData({
-				postList: [...this.data.postList].concat(...subPostList)
-			})
-		}
-
-		wx.hideLoading()
 	},
 
 	// 点击页面下方+按钮
@@ -141,13 +78,6 @@ Page({
 	showPopup() {
 		this.setData({
 			showPopup: !this.data.showPopup
-		})
-	},
-
-	inputActivityName(e) {
-		console.log(e)
-		this.setData({
-			name: e.detail.value
 		})
 	},
 
@@ -220,7 +150,7 @@ Page({
 		this.showPopup()
 	},
 
-	// 点击菜品，
+	// 点击菜品
 	showPopup() {
 		this.setData({
 			showPopup: !this.data.showPopup
@@ -255,13 +185,13 @@ Page({
 			})
 		} else {
 			wx.showModal({
-				title:'确定要解锁吗？',
+				title: '确定要解锁吗？',
 				showCancel: true,
 				success: res => {
 					if (res.confirm) {
 						userInfo.rollCount -= foodList[foodIdx].cost
 						userInfo.unlockFoods.push(foodList[foodIdx]._id)
-			
+
 						wx.cloud.callFunction({
 							name: 'unlockFood',
 							data: {
@@ -271,11 +201,13 @@ Page({
 						})
 
 						this.setData({
-							['userInfo.unlockFood']:unlockFoods,
-							['userInfo.rollCount']: rollCount
+							['userInfo.unlockFood']: userInfo.unlockFoods,
+							['userInfo.rollCount']: userInfo.rollCount
 						})
-						
-					} else if (res.cancel){}
+
+						this.initFoodInfo()
+
+					} else if (res.cancel) {}
 				}
 			})
 		}
@@ -295,7 +227,7 @@ Page({
 		var length = this.data.foodList[this.data.chosenFoodIdx].images.length
 		this.setData({
 			duration: value,
-			qualityIdx: parseInt((length-1)*(value-15)/105)
+			qualityIdx: parseInt((length - 1) * (value - 15) / 105)
 		})
 	},
 
@@ -306,12 +238,14 @@ Page({
 		})
 	},
 
+	// 输入活动的名称
 	inputActivityName(e) {
 		this.setData({
 			name: e.detail.value + '味花卷'
 		})
 	},
 
+	// 完成输入，失去焦点触发
 	finishNameEdit() {
 		this.setData({
 			showNameEdit: false
@@ -319,9 +253,9 @@ Page({
 	},
 
 	// 点击“开始蒸花卷”
-	beginActivity(){
+	beginActivity() {
 		wx.navigateTo({
-		  url: '../rolling/rolling',
+			url: '../rolling/rolling?name=' + this.data.name + '&duration=' + this.data.duration,
 		})
 	},
 

@@ -81,7 +81,7 @@
 			<!-- TODO: 菜品图像 -->
 			<image class="food-image" src="{{foodList[foodIdx].images[0]}}" mode="aspectFit"></image>
 			<!-- TODO: 菜品价格 -->
-			<view class="food-price" wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo.unlockFoods)}}">
+			<view class="food-price" wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo)}}">
 				<image src="../../icon/roll2.png" mode="heightFix"></image>{{foodList[foodIdx].cost}}
 			</view>
 		</image>
@@ -94,20 +94,29 @@
 	</view>
 	<!-- TODO: 解锁，需要前端判断是否有足够的小麦 -->
 	<van-button custom-class="confirm-button" round color="#ffa600"
-		wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo.unlockFoods)}}" bindtap="unlockFood">解锁菜谱
+		wx:if="{{!foodList[foodIdx].unlock}}" bindtap="unlockFood">解锁菜谱
 	</van-button>
 	<van-button custom-class="confirm-button" round color="#ffa600"
-		wx:if="{{judgeFoodLock.judge(foodList[foodIdx]._id, userInfo.unlockFoods)}}" bindtap="chooseFood">选择菜品
+		wx:if="{{foodList[foodIdx].unlock}}" bindtap="chooseFood">选择菜品
 	</van-button>
+	<!-- <van-button custom-class="confirm-button" round color="#ffa600"
+		wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo)}}" bindtap="unlockFood">解锁菜谱
+	</van-button>
+	<van-button custom-class="confirm-button" round color="#ffa600"
+		wx:if="{{judgeFoodLock.judge(foodList[foodIdx]._id, userInfo)}}" bindtap="chooseFood">选择菜品
+	</van-button> -->
 </van-popup>
 
 <!-- 判断该菜品是否解锁 -->
-<wxs module="judgeFoodLock">
+<!-- <wxs module="judgeFoodLock">
 	var judge = function (item, array) {
-		return array.indexOf(item) != -1
+		console.log('item',item)
+		console.log('array',array)
+		console.log('array',array.unlockFoods)
+		return array.unlockFoods.indexOf(item) != -1
 	}
 	module.exports.judge = judge
-</wxs>
+</wxs> -->
 
 <!-- tabbar -->
 <view class="bottom-bar">
