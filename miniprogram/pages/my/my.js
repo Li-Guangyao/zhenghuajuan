@@ -4,17 +4,56 @@ import { userUtils } from "../../utils/userUtils"
 
 Page({
 	data: {
-		userInfo: wx.getStorageSync('userInfo'),
+		userInfo: 0,
+		todayData:{
+			timesCount:0,
+			rollDuration:0,
+			rollCount:0,
+		},
+		totalData:{
+			timesCount:0,
+			rollDuration:0,
+			rollCount:0,
+		},
+		
 	},
 
-	// 暂时注释(在app.js中使用了getUsrInfo函数,每当小程序加载时就触发)
-	// onLoad: async function (options) {
-	// 	this.setData({ userInfo: await userUtils.getUserInfo() });
-	// },
+	onLoad: async function (options) {
+		this.setData({ userInfo: await userUtils.getUserInfo() });
+		this.getTotalData();
+		this.getTodayData();
+
+	},
+
+	getTotalData(){
+		wx.cloud.callFunction({
+			name:'getTotalData'
+		}).then((res)=>{
+			this.setData({
+				'totalData.timesCount': res.result.timesCount,
+				'totalData.rollDuration':res.result.rollDuration,
+				'totalData.rollCount':res.result.rollCount
+			})
+		})
+	},
+
+	getTodayData(){
+		wx.cloud.callFunction({
+			name:'getTodayData'
+		}).then((res)=>{
+			this.setData({
+				'todayData.timesCount': res.result.timesCount,
+				'todayData.rollDuration':res.result.rollDuration,
+				'todayData.rollCount':res.result.rollCount
+			})
+		})
+	},
 
 	// 如果是新用户，就需要授权获取
 	async getUserInfo() {
 		this.setData({ userInfo: await userUtils.login(true)})
+		this.getTotalData();
+		this.getTodayData();
 	},
 
 	toMyPost(){
