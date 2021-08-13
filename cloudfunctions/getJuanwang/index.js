@@ -13,8 +13,10 @@ function getMyInfo(rankList, myOpenId) {
 	if (!rankList.length) return res
 
 	var idx = rankList.findIndex(e => e._openid == myOpenId)
-	res.myRank = idx + 1
-	res.myValue = rankList[idx].totalValue
+	if (idx > -1) {
+		res.myRank = idx + 1
+		res.myValue = rankList[idx].totalValue
+	}
 
 	return res
 }
