@@ -1,5 +1,3 @@
-import getDateDiff from "../../utils/getDateDiff"
-import changeFileListFormat from "../../utils/changeFileListFormat"
 import {
 	userUtils
 } from "../../utils/userUtils"
@@ -12,10 +10,9 @@ Page({
 
 		name: '学习味花卷',
 		showNameEdit: false,
-
-		showDialog: false,
 		showPopup: false,
 
+		// 学习时间长短，默认15min
 		duration: 15,
 
 		foodList: [],
@@ -27,15 +24,13 @@ Page({
 		qualityIdx: 0
 	},
 
-	queryParams: {
-		pageNum: 0,
-		pageSize: 20
-	},
-
 	async onLoad(options) {
 		// 获得食物列表
 		var res = await wx.cloud.callFunction({
-			name: 'getFood',
+			name: 'operFoods',
+			data: {
+				method: 'GET'
+			}
 		})
 		this.setData({
 			foodList: res.result
@@ -51,8 +46,7 @@ Page({
 		var unlockFoods = this.data.userInfo.unlockFoods
 		var foodList = this.data.foodList
 
-		foodList.map(item=> {
-			console.log(item)
+		foodList.map(item => {
 			item.unlock = unlockFoods.indexOf(item._id) != -1
 		})
 
@@ -64,13 +58,6 @@ Page({
 	async judgeLogin() {
 		this.setData({
 			userInfo: await userUtils.judgeLogin()
-		})
-	},
-
-	// 点击页面下方+按钮
-	showDialog() {
-		this.setData({
-			showDialog: true
 		})
 	},
 
@@ -142,14 +129,6 @@ Page({
 		}
 	},
 
-	// 在时间弹出框中，选择了一个时间长度
-	choseDuration(e) {
-		this.setData({
-			durationIndex: e.detail.index
-		})
-		this.showPopup()
-	},
-
 	// 点击菜品
 	showPopup() {
 		this.setData({
@@ -193,10 +172,10 @@ Page({
 						userInfo.unlockFoods.push(foodList[foodIdx]._id)
 
 						wx.cloud.callFunction({
-							name: 'unlockFood',
+							name: 'operFoods',
 							data: {
-								unlockFoods: userInfo.unlockFoods,
-								rollCount: userInfo.rollCount
+								method: 'BUY',
+								foodId: foodList[foodIdx]._id
 							}
 						})
 
