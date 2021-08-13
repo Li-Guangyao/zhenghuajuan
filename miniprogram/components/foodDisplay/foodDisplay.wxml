@@ -1,0 +1,4 @@
+<view class="content">
+	<image class="shadow" src="../../images/shadow.png" mode="{{mode}}"></image>
+	<image class="food" src="{{src || food.images[quality]}}" mode="{{mode}}"></image>
+</view>

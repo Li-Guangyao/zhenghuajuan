@@ -2,7 +2,7 @@
 <view class="content">
 	<view class="progress-bar">
 		<!-- 旋转 -->
-		<canvas id="canvasArcCir" type="2d" class="circle">
+		<canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{false}}">
 			<image src="../../icon2/rolling.png" mode="heightFix"></image>
 		</canvas>
 		<text>{{curMinute < duration ? status[statusIndex] : finishedText}}</text>
@@ -18,3 +18,53 @@
 		</view>
 	</view>
 </view>
+
+<!-- 海报弹窗 -->
+<van-popup custom-class="post-prompt" show="{{ true }}" bind:close="onClose">
+
+	<image class="post" src="../../images/post.png" mode="heightFix" bindtap="testWxml2Canvas">
+		<text class="time">本次蒸了120分钟</text>
+		<text class="day">连续蒸了6天</text>
+		<text class="play">相当于打了120局\n和平精英</text>
+		<view class="foods">
+			<food-display class="food1" src="../../images/foods/a.png" mode="aspectFit"></food-display>
+			<food-display class="food2" src="../../images/foods/b.png" mode="aspectFit"></food-display>
+			<food-display class="food3" src="../../images/foods/c.png" mode="aspectFit"></food-display>
+			<food-display class="food4" src="../../images/foods/d.png" mode="aspectFit"></food-display>
+			<food-display class="food5" src="../../images/foods/e.png" mode="aspectFit"></food-display>
+			<food-display class="food6" src="../../images/foods/e.png" mode="aspectFit"></food-display>
+			<food-display class="food7" src="../../images/foods/a.png" mode="aspectFit"></food-display>
+			<food-display class="food8" src="../../images/foods/b.png" mode="aspectFit"></food-display>
+			<food-display class="food9" src="../../images/foods/c.png" mode="aspectFit"></food-display>
+			<food-display class="food10" src="../../images/foods/e.png" mode="aspectFit"></food-display>
+			<food-display class="food11" src="../../images/foods/d.png" mode="aspectFit"></food-display>
+			<food-display class="food12" src="../../images/foods/b.png" mode="aspectFit"></food-display>
+			<food-display class="food13" src="../../images/foods/a.png" mode="aspectFit"></food-display>
+			<food-display class="food14" src="../../images/foods/e.png" mode="aspectFit"></food-display>
+			<food-display class="food15" src="../../images/foods/d.png" mode="aspectFit"></food-display>
+			<food-display class="food16" src="../../images/foods/e.png" mode="aspectFit"></food-display>
+		</view>
+		<image class="post-bottom" src="../../images/postBottom.png" mode="widthFix">
+			<image class="avatar" src="../../images/defaultAvatar.jpeg" mode="heightFix"></image>
+			<view class="info">
+				<view clsas="name">超级长的名字</view>
+				<textarea class="message" placeholder="输入你的感想吧~" value="我蒸了啊分钟花卷！" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
+			</view>
+		</image>
+	</image>
+
+	<view class="share">
+		<van-button custom-class="share-button" round color="#ffa600" bind:click="testWxml2Canvas">
+			<view class="button-content">
+				<view class="big">分享到朋友圈</view>
+				<view class="small">每日首次分享3倍奖励</view>
+			</view>
+		</van-button>
+		<van-button custom-class="share-button" round color="#ffa600">
+			<view class="button-content">
+				<view class="big">分享到动态</view>
+				<view class="small">每日首次分享2倍奖励</view>
+			</view>
+		</van-button>
+	</view>
+</van-popup>
