@@ -2,6 +2,7 @@
 <view class="content">
 	<view class="progress-bar">
 		<!-- 旋转 -->
+		<!-- 暂时隐藏 -->
 		<canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{false}}">
 			<image src="../../icon2/rolling.png" mode="heightFix"></image>
 		</canvas>
@@ -21,6 +22,7 @@
 
 <!-- 海报弹窗 -->
 <van-popup custom-class="post-prompt" show="{{ true }}" bind:close="onClose">
+	<canvas id="post-canvas" type="2d"></canvas>
 
 	<image class="post" src="../../images/post.png" mode="heightFix" bindtap="testWxml2Canvas">
 		<text class="time">本次蒸了120分钟</text>

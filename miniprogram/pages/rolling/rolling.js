@@ -1,3 +1,4 @@
+import { canvasUtils } from "../../utils/canvasUtils";
 
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
 var x = 128,
@@ -45,7 +46,116 @@ Page({
 
 		exitTime: null,
 
-		img: null // "../../images/post.png"
+	},
+
+	// 绘制数据（单位：百分比）
+	background: "../../../../../images/post.png",
+	foodImgs: [
+		"../../../../../images/foods/a.png",
+		"../../../../../images/foods/b.png",
+		"../../../../../images/foods/c.png",
+		"../../../../../images/foods/d.png",
+		"../../../../../images/foods/e.png",
+		"../../../../../images/foods/f.png",
+		"../../../../../images/foods/g.png",
+		"../../../../../images/foods/h.png",
+		"../../../../../images/foods/i.png"
+	],
+	foodSize: [25, 15], // x, y
+	foodPositions: [
+		[-10, -2], // y, x
+		[0, 20],
+		[-7, 45],
+		[26, -9],
+		[34, 12],
+		[43, 35],
+		[50, 10],
+		[42, -14],
+		[58, -16],
+		[21, 54],
+		[14, 80],
+		[31, 78],
+		[64, 70],
+		[72, 47],
+		[80, 25],
+		[75, 95]
+	],
+	font: "30px 海派腔调清夏简",
+	fontColor: "#FFDB93",
+	texts: ["本次蒸了120分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
+	textPositions: [
+		// y, x, w, align
+		[35, 33, 67.5], [20, 42, 67.5], [82, 1, 67.5, 'right']
+	],
+	textSkewYs: [-1.54, 2.16, -1.64],
+
+	nickNameFont: "20px 黑体",
+	messageFont: "16px 黑体",
+	infoFontColor: "#613b10",
+
+	postBottom: "../../../../../images/postBottom.png",
+	
+	avatar: "../../../../../images/defaultAvatar.jpeg",
+	avatarRect: [5, 15, 70], // x, y, h
+
+	nickName: "超级长的名字",
+	nickNameRect: [27.5, 15, 45], // x, y, w
+
+	message: "我正乐14321321分钟花卷哈哈哈哈哈哈哈！",
+
+	testWxml2Canvas: async function() {
+		var w = 720 / 2, h = 1280 / 2;
+		var fw = w * this.foodSize[0] / 100;
+		var fh = h * this.foodSize[1] / 100;
+		var fCnt = this.foodImgs.length;
+
+		// 绘制背景和菜品
+		await canvasUtils.drawImage(this.background, 0, 0, w, h);
+		for (var i = 0; i < this.foodPositions.length; ++i) {
+			var p = this.foodPositions[i];
+			var src = this.foodImgs[Math.floor(Math.random() * fCnt)];
+			var x = w * p[1] / 100, y = h * p[0] / 100;
+			await canvasUtils.drawFood(src, undefined, x, y, fw, fh, false);
+		}
+
+		// await canvasUtils.wait(500);
+
+		// 绘制文本
+		canvasUtils.setFont(this.font);
+		this.texts.forEach((t, i) => {
+			var pos = this.textPositions[i];
+			var skew = this.textSkewYs[i];
+			var x = w * pos[1] / 100, y = h * pos[0] / 100;
+			var tw = w * pos[2] / 100;
+
+			canvasUtils.setColor(this.fontColor);
+			canvasUtils.setTransform(1, skew, 0, 1, 0, 0);
+			canvasUtils.drawTextEx(t, x, y, tw, 32, pos[3]);
+		})
+		canvasUtils.resetTransform();
+
+		// 绘制底部信息
+		var cache = await canvasUtils.getImageInfo(this.postBottom);
+		var bw = cache.width; var asp = w / bw;
+		var bh = cache.height * asp, by = h - bh;
+		await canvasUtils.drawImage(this.postBottom, 0, by, w, bh);
+
+		var ap = this.avatarRect;
+		var ax = w * ap[0] / 100, ay = by + bh * ap[1] / 100;
+		var ah = bh * ap[2] / 100, aw = ah;
+		await canvasUtils.drawImage(this.avatar, ax, ay, aw, ah, 'round')
+
+		var np = this.nickNameRect;
+		var nx = w * np[0] / 100, ny = by + bh * np[1] / 100 + 20;
+		var nw = w * np[2] / 100;
+		canvasUtils.setColor(this.infoFontColor);
+		canvasUtils.setFont(this.nickNameFont);
+		canvasUtils.drawText(this.nickName, nx, ny);
+
+		canvasUtils.setFont(this.messageFont);
+		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
+
+		canvasUtils.clipRect(0, 0, w, h);
 	},
 
 	onLoad: function (e) {
@@ -138,12 +248,19 @@ Page({
 
 	onUnload: function () {
 		this.stopRolling();
+
+		canvasUtils.clear();
 	},
 
 	// 配置Canvas
 	setupBarCanvas() {
 		const query = this.createSelectorQuery()
-		// 获取canvas
+
+		// 海报Canvas
+		setTimeout(() => canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas), 1000);
+
+		/*
+		// 获取canvas（原来的）
 		query.select('#canvasArcCir')
 			.fields({
 				node: true,
@@ -164,6 +281,7 @@ Page({
 				this.clearMinuteProgress();
 				this.startTimer();
 			})
+		*/
 	},
 
 	// 正式开始计时

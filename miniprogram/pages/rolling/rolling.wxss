@@ -68,19 +68,27 @@ page {
   margin-bottom: 40rpx;
   font-size: 32rpx;
 }
-.post-container {
-  position: fixed;
-  background: #f0f0f0;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+.post-prompt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 90%;
+  background-color: transparent !important;
 }
-.post {
+.post-prompt #post-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 720px;
+  height: 1280px;
+}
+.post-prompt .post {
   position: relative;
   height: 90%;
 }
-.post text {
+.post-prompt .post text {
   position: absolute;
   width: 67.5%;
   color: #FFDB93;
@@ -89,23 +97,23 @@ page {
   text-align: center;
   font-family: "海派腔调清夏简";
 }
-.post .time {
+.post-prompt .post .time {
   top: 13%;
   left: 31.5%;
   transform: skewY(-26.8deg);
 }
-.post .day {
+.post-prompt .post .day {
   top: 45%;
   left: 37%;
   transform: skewY(36.2deg);
 }
-.post .play {
+.post-prompt .post .play {
   top: 67.5%;
   left: 1%;
   text-align: right;
   transform: skewY(-29.6deg);
 }
-.post .foods {
+.post-prompt .post .foods {
   position: absolute;
   left: 0;
   right: 0;
@@ -114,76 +122,76 @@ page {
   width: 100%;
   height: 100%;
 }
-.post .foods food-display {
+.post-prompt .post .foods food-display {
   position: absolute;
   width: 25%;
   height: 15%;
 }
-.post .foods .food1 {
+.post-prompt .post .foods .food1 {
   top: -10%;
   left: -2%;
 }
-.post .foods .food2 {
+.post-prompt .post .foods .food2 {
   top: 0%;
   left: 20%;
 }
-.post .foods .food3 {
+.post-prompt .post .foods .food3 {
   top: -7%;
   left: 45%;
 }
-.post .foods .food4 {
+.post-prompt .post .foods .food4 {
   top: 26%;
   left: -9%;
 }
-.post .foods .food5 {
+.post-prompt .post .foods .food5 {
   top: 34%;
   left: 12%;
 }
-.post .foods .food6 {
+.post-prompt .post .foods .food6 {
   top: 43%;
   left: 35%;
 }
-.post .foods .food7 {
+.post-prompt .post .foods .food7 {
   top: 50%;
   left: 10%;
 }
-.post .foods .food8 {
+.post-prompt .post .foods .food8 {
   top: 42%;
   left: -14%;
 }
-.post .foods .food9 {
+.post-prompt .post .foods .food9 {
   top: 58%;
   left: -16%;
 }
-.post .foods .food10 {
+.post-prompt .post .foods .food10 {
   top: 21%;
   left: 54%;
 }
-.post .foods .food11 {
+.post-prompt .post .foods .food11 {
   top: 14%;
   left: 80%;
 }
-.post .foods .food12 {
+.post-prompt .post .foods .food12 {
   top: 31%;
   left: 78%;
 }
-.post .foods .food13 {
+.post-prompt .post .foods .food13 {
   top: 64%;
   left: 70%;
 }
-.post .foods .food14 {
+.post-prompt .post .foods .food14 {
   top: 72%;
   left: 47%;
 }
-.post .foods .food15 {
+.post-prompt .post .foods .food15 {
   top: 80%;
   left: 25%;
 }
-.post .foods .food16 {
+.post-prompt .post .foods .food16 {
   top: 75%;
   left: 95%;
 }
-.post .post-bottom {
+.post-prompt .post .post-bottom {
   position: absolute;
   display: block;
   width: 100%;
@@ -191,7 +199,7 @@ page {
   right: 0;
   bottom: 0;
 }
-.post .post-bottom .avatar {
+.post-prompt .post .post-bottom .avatar {
   position: absolute;
   display: block;
   height: 70%;
@@ -200,7 +208,7 @@ page {
   bottom: 15%;
   border-radius: 100%;
 }
-.post .post-bottom .info {
+.post-prompt .post .post-bottom .info {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -213,25 +221,16 @@ page {
   height: 70%;
   color: var(--postFontColor);
 }
-.post .post-bottom .info .name {
+.post-prompt .post .post-bottom .info .name {
   width: 100%;
   font-size: 32rpx;
 }
-.post .post-bottom .info .message {
+.post-prompt .post .post-bottom .info .message {
   width: 100%;
   display: block;
   font-size: 24rpx;
   margin-top: 8rpx;
   text-align: left;
-}
-.post-prompt {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 90%;
-  background-color: transparent !important;
 }
 .post-prompt .share {
   display: flex;
