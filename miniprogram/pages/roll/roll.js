@@ -192,6 +192,8 @@ Page({
 		if (!this.data.name) 
 			wx.showToast({ title: '口味不能为空！', icon: 'none' });
 		else {
+			this.refreshRollCount();
+
 			var title = '确定要制作' + this.data.duration + '分钟吗？';
 			if (this.data.strictMode)
 				title += "严格模式下，制作过程中不可退出、切换页面和熄屏哦！";
@@ -203,15 +205,17 @@ Page({
 
 	// 真的开始啦！
 	doStartRoll() {
-		var foodId = this.data.foodList[this.data.chosenFoodIdx]._id;
+		var food = this.data.foodList[this.data.chosenFoodIdx];
+		var quality = this.data.qualityIdx;
 
 		var data = {
 			name: this.data.name,
 			duration: this.data.duration,
 			count: this.data.rollCount,
 			strictMode: this.data.strictMode ? 1 : 0,
-			quality: this.data.qualityIdx,
-			foodId,
+			foodName: food.name,
+			foodImage: food.images[quality],
+			quality
 		}
 
 		navigateUtils.push('../rolling/rolling', data);
