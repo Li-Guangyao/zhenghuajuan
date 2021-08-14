@@ -33,6 +33,8 @@ Page({
 		duration: 15,
 		count: 15,
 		strict: false,
+		foodImageUrl:null,
+		foodName:null,
 
 		startTime: null,
 		curMilliSecond: 0,
@@ -68,16 +70,7 @@ Page({
 
 	// 绘制数据（单位：百分比）
 	background: "../../../../../images/post.png",
-	foodImgs: [
-		"../../../../../images/foods/a.png",
-		"../../../../../images/foods/b.png",
-		"../../../../../images/foods/d.png",
-		"../../../../../images/foods/e.png",
-		"../../../../../images/foods/f.png",
-		"../../../../../images/foods/g.png",
-		"../../../../../images/foods/h.png",
-		"../../../../../images/foods/i.png"
-	],
+
 	foodSize: [25, 15], // x, y
 	foodPositions: [
 		[-10, -2], // y, x
@@ -97,25 +90,22 @@ Page({
 		[80, 25],
 		[75, 95]
 	],
-	font: "30px 海派腔调清夏简",
-	fontColor: "#FFDB93",
+
 	texts: ["本次蒸了分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
 	textPositions: [
 		// y, x, w, align
-		[35, 33, 67.5], [20, 42, 67.5], [82, 1, 67.5, 'right']
+		[35, 33, 67.5], [20, 42, 67.5], [82, 10, 67.5, 'right']
 	],
 	textSkewYs: [-0.513, 0.72, -0.546],
 
-	nickNameFont: "20px 微软雅黑",
-	messageFont: "16px 微软雅黑",
+	fontColor: "#FFDB93",
+
 	infoFontColor: "#613b10",
 
 	postBottom: "../../../../../images/postBottom.png",
 	
-	avatar: "../../../../../images/defaultAvatar.jpeg",
 	avatarRect: [5, 15, 70], // x, y, h
 
-	nickName: '昵称',
 	nickNameRect: [27.5, 15, 45], // x, y, w
 
 	message: "我正乐14321321分钟花卷哈哈哈哈哈哈哈！",
@@ -126,21 +116,22 @@ Page({
 		var h = w/9*16;
 		var fw = w * this.foodSize[0] / 100;
 		var fh = h * this.foodSize[1] / 100;
-		var fCnt = this.foodImgs.length;
-
+		var nickNameFont=new Number(Math.round(40*w/750)).toString()+"px 微软雅黑";
+		var messageFont=new Number(Math.round(35*w/750)).toString()+"px 微软雅黑";
+		var font=new Number(Math.round(60*w/750)).toString()+"px 海派腔调清夏简";
 		canvasUtils.clipRect(0, 0, w, h);
 
 		// 绘制背景和菜品
 		await canvasUtils.drawImage(this.background, 0, 0, w, h);
 		for (var i = 0; i < this.foodPositions.length; ++i) {
 			var p = this.foodPositions[i];
-			var src = this.foodImgs[Math.floor(Math.random() * fCnt)];
+			var src = this.data.foodImageUrl;
 			var x = w * p[1] / 100, y = h * p[0] / 100;
 			await canvasUtils.drawFood(src, undefined, x, y, fw, fh, false);
 		}
 		
 		// 绘制文本
-		canvasUtils.setFont(this.font);
+		canvasUtils.setFont(font);
 		this.texts.forEach((t, i) => {
 			var pos = this.textPositions[i];
 			var skew = this.textSkewYs[i];
@@ -162,21 +153,21 @@ Page({
 		var ap = this.avatarRect;
 		var ax = w * ap[0] / 100, ay = by + bh * ap[1] / 100;
 		var ah = bh * ap[2] / 100, aw = ah;
-		await canvasUtils.drawImage(this.avatar, ax, ay, aw, ah, 'round')
+		await canvasUtils.drawImage(this.data.userInfo.avatarUrl, ax, ay, aw, ah, 'round')
 
 		var np = this.nickNameRect;
 		var nx = w * np[0] / 100, ny = by + bh * np[1] / 100 + 20;
 		var nw = w * np[2] / 100;
 		canvasUtils.setColor(this.infoFontColor);
-		canvasUtils.setFont(this.nickNameFont);
+		canvasUtils.setFont(nickNameFont);
 		canvasUtils.drawText(this.data.userInfo.nickName, nx, ny);
 
-		canvasUtils.setFont(this.messageFont);
+		canvasUtils.setFont(messageFont);
 		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
 	},
 
 	onLoad: async function (e) {
-
+		
 		this.setData({
 			userInfo:await userUtils.getUserInfo(),
 			durationOfDays:(await wx.cloud.callFunction({
@@ -200,7 +191,9 @@ Page({
 			name: e.name,
 			duration: e.duration,
 			count: e.count,
-			strict: e.strict == 1,
+			strict: e.strictMode == '1',
+			foodImageUrl:e.foodImage,
+			foodName:e.foodName,
 			stopped: false
 		})
 
@@ -328,7 +321,7 @@ Page({
 		// var now = new Date();
 		// var s = this.data.startTime;
 
-		var ms = this.data.curMilliSecond + updateInterval*100;
+		var ms = this.data.curMilliSecond + updateInterval*1000;
 
 		// var nTime = now.getTime();
 		// var sTime = s.getTime();
@@ -477,11 +470,11 @@ Page({
 		var things=[];
 		var type=0;
 		if(duration<=40){
-			things={短视频:['看',0.5,'条'],王者荣耀:['玩',15,'局']};
+			things={短视频:['刷',0.5,'条'],王者荣耀:['玩',15,'局']};
 			type=Math.round(Math.random());
 		}
 		else if(duration<=60){
-			things={短视频:['看',0.5,'条'],王者荣耀:['玩',15,'局'],电视剧:['煲',40,'集']};
+			things={短视频:['刷',0.5,'条'],王者荣耀:['玩',15,'局'],电视剧:['煲',40,'集']};
 			type=Math.round(Math.random()*2)
 		}
 		else{
