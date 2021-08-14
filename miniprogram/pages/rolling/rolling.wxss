@@ -9,55 +9,49 @@ page {
   margin: 128rpx 0 0 0;
 }
 .content {
-  padding: 0 96rpx 0 96rpx;
-}
-.progress-bar {
-  margin: 64rpx auto 32rpx auto;
-  width: fit-content;
-}
-.progress-bar .circle {
-  width: 256px;
-  height: 256px;
-  margin: 0 0 32rpx 0;
-}
-.progress-bar .circle image {
   position: absolute;
-  transform: translateY(-50%);
+  width: 80%;
+  top: 70%;
   left: 0;
   right: 0;
-  top: 50%;
-  height: 35%;
-  margin: auto;
+  margin: 0 auto;
 }
-.progress-bar text {
+.circle {
+  width: 70%;
+  height: calc(750rpx*0.7/9*16);
+  margin: 64rpx auto auto auto ;
+}
+.circle image {
+  transform: translateY(30%);
+  height: 30%;
+}
+.chicken-soup {
   font-size: 32rpx;
   color: #515151;
 }
-.total-progress {
-  margin-top: 96rpx;
-  border: #FEA403 solid 1px;
-  border-radius: 12px;
+.process-time {
+  font-size: 70rpx;
+  color: #FEA403;
+  margin-top: 50rpx;
 }
 .small-tip {
   position: relative;
-  display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: center;
+  margin: 50rpx auto;
+}
+.small-tip .text1 {
   color: #808080;
   font-size: 24rpx;
-  margin: 12rpx 0 32rpx 0;
+  margin: auto;
 }
 .small-tip .number1 {
   color: #FEA403;
+  margin: auto;
 }
 .small-tip image {
   height: 42rpx;
   margin-left: 12rpx;
-}
-.small-tip .number2 {
-  position: absolute;
-  color: #FEA403;
-  right: 0;
 }
 .share__canvas {
   position: fixed;
@@ -80,7 +74,7 @@ page {
 .post-prompt #post-canvas {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 0%;
   width: 720px;
   height: 1280px;
 }
@@ -262,4 +256,18 @@ page {
   font-size: 20rpx;
   line-height: 20rpx;
   font-weight: lighter;
+}
+.cancel-btn-wrapper {
+  width: 67.5%;
+  height: auto;
+  z-index: 0;
+}
+.cancel-btn {
+  height: auto;
+  color: white;
+  margin-top: 15rpx;
+  margin-left: auto;
+  text-decoration: underline;
+  text-align: right;
+  font-size: 25rpx;
 }

@@ -1,33 +1,35 @@
 <view class="title">{{name}}味花卷</view>
-<view class="content">
-	<view class="progress-bar">
-		<!-- 旋转 -->
+<!-- 旋转 -->
 		<!-- 暂时隐藏 -->
-		<canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{false}}">
-			<image src="../../icon2/rolling.png" mode="heightFix"></image>
-		</canvas>
-		<text>{{curMinute < duration ? status[statusIndex] : finishedText}}</text>
+<canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{true}}">
+		<image src="../../icon2/rolling.png" mode="heightFix"></image>
+</canvas>
+<view class="content">
+	<view class="chicken-soup">
+		<text>-你要在孤寂里自成一个世界-</text>
 	</view>
+	<view class="process-time">{{processTime.hours}}:{{processTime.minutes}}:{{processTime.seconds}}</view>
 	<view class="total-content"> 
-		<!-- 进度条 -->
+		<!-- 进度条
 		<progress class="total-progress" percent="{{curMinute/duration*100}}" border-radius="6" activeColor="#FEA403"
-			backgroundColor="#FFFFFF" stroke-width="12"></progress>
-		<view class="small-tip">预计可获得
+			backgroundColor="#FFFFFF" stroke-width="12"></progress> -->
+		<view class="small-tip">
+			<text class="text1">预计可获得</text>
 			<text class="number1">{{count}}</text>
 			<image src="../../icon/roll2.png" mode="heightFix"></image>
-			<text class="number2">{{curCount}}/{{count}}</text>
+			<!-- <text class="number2">{{curCount}}/{{count}}</text> -->
 		</view>
 	</view>
 </view>
 
 <!-- 海报弹窗 -->
-<van-popup custom-class="post-prompt" show="{{ true }}" bind:close="onClose">
-	<canvas id="post-canvas" type="2d"></canvas>
+<van-popup custom-class="post-prompt" show="{{isShowSharingDialog}}" bind:close="onClose">
+	<canvas id="post-canvas" type="2d" ></canvas>
 
 	<image class="post" src="../../images/post.png" mode="heightFix" bindtap="testWxml2Canvas">
-		<text class="time">本次蒸了120分钟</text>
-		<text class="day">连续蒸了6天</text>
-		<text class="play">相当于打了120局\n和平精英</text>
+		<text class="time">本次蒸了{{duration}}分钟</text>
+		<text class="day">连续蒸了{{durationOfDays}}天</text>
+		<text class="play">相当于{{equalThingInfo.verb}}了{{equalThingInfo.count}}\n{{equalThingInfo.thing}}</text>
 		<view class="foods">
 			<food-display class="food1" src="../../images/foods/a.png" mode="aspectFit"></food-display>
 			<food-display class="food2" src="../../images/foods/b.png" mode="aspectFit"></food-display>
@@ -47,18 +49,18 @@
 			<food-display class="food16" src="../../images/foods/e.png" mode="aspectFit"></food-display>
 		</view>
 		<image class="post-bottom" src="../../images/postBottom.png" mode="widthFix">
-			<image class="avatar" src="../../images/defaultAvatar.jpeg" mode="heightFix"></image>
+			<image class="avatar" src="{{userInfo.avatarUrl}}" mode="heightFix"></image>
 			<view class="info">
-				<view clsas="name">超级长的名字</view>
-				<textarea class="message" placeholder="输入你的感想吧~" value="我蒸了啊分钟花卷！" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
+				<view clsas="name">{{userInfo.nickName}}</view>
+				<textarea class="message" placeholder="输入你的感想吧~" value="我蒸了{{duration}}分钟花卷！" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
 			</view>
 		</image>
 	</image>
 
 	<view class="share">
-		<van-button custom-class="share-button" round color="#ffa600" bind:click="testWxml2Canvas">
+		<van-button open-type="share" custom-class="share-button" round color="#ffa600" bind:click="testWxml2Canvas">
 			<view class="button-content">
-				<view class="big">分享到朋友圈</view>
+				<view class="big">分享给朋友</view>
 				<view class="small">每日首次分享3倍奖励</view>
 			</view>
 		</van-button>
@@ -69,4 +71,7 @@
 			</view>
 		</van-button>
 	</view>
+	<view class="cancel-btn-wrapper">
+          <view class='cancel-btn' bindtap="cancelShare">取消分享</view>
+  </view>
 </van-popup>

@@ -1,10 +1,13 @@
 import { canvasUtils } from "../../utils/canvasUtils";
+import { userUtils } from "../../utils/userUtils"
 
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
-var x = 128,
-	y = 128,
-	r = 120,
-	w = 8;
+var windowWidth=wx.getSystemInfoSync().windowWidth;
+var windowHeight=wx.getSystemInfoSync().windowHeight;
+var w=8,
+	r=windowWidth*0.7/2-8,
+	x=windowWidth*0.7/2,
+	y=windowWidth*0.7/2;
 
 // 每隔125毫秒重绘图形
 var updateInterval = 125;
@@ -25,6 +28,7 @@ const MaxExitTime = 5 * 1000;
 
 Page({
 	data: {
+		userInfo:null,
 		name: "学习",
 		duration: 15,
 		count: 15,
@@ -46,6 +50,20 @@ Page({
 
 		exitTime: null,
 
+		isShowSharingDialog:false,
+
+		durationOfDays:0,
+		equalThingInfo:{
+			verb:'动作',
+			count:'计量',
+			thing:'物',
+		},
+
+		processTime:{
+			hours:0,
+			minutes:0,
+			seconds:0
+		}
 	},
 
 	// 绘制数据（单位：百分比）
@@ -81,7 +99,7 @@ Page({
 	],
 	font: "30px 海派腔调清夏简",
 	fontColor: "#FFDB93",
-	texts: ["本次蒸了120分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
+	texts: ["本次蒸了分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
 	textPositions: [
 		// y, x, w, align
 		[35, 33, 67.5], [20, 42, 67.5], [82, 1, 67.5, 'right']
@@ -97,13 +115,15 @@ Page({
 	avatar: "../../../../../images/defaultAvatar.jpeg",
 	avatarRect: [5, 15, 70], // x, y, h
 
-	nickName: "超级长的名字",
+	nickName: '昵称',
 	nickNameRect: [27.5, 15, 45], // x, y, w
 
 	message: "我正乐14321321分钟花卷哈哈哈哈哈哈哈！",
 
 	testWxml2Canvas: async function() {
-		var w = 720 / 2, h = 1280 / 2;
+		console.log("绘制canvas")
+		var w = wx.getSystemInfoSync().windowWidth*0.7;
+		var h = w/9*16;
 		var fw = w * this.foodSize[0] / 100;
 		var fh = h * this.foodSize[1] / 100;
 		var fCnt = this.foodImgs.length;
@@ -149,7 +169,7 @@ Page({
 		var nw = w * np[2] / 100;
 		canvasUtils.setColor(this.infoFontColor);
 		canvasUtils.setFont(this.nickNameFont);
-		canvasUtils.drawText(this.nickName, nx, ny);
+		canvasUtils.drawText(this.data.userInfo.nickName, nx, ny);
 
 		canvasUtils.setFont(this.messageFont);
 		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
@@ -157,7 +177,22 @@ Page({
 		canvasUtils.clipRect(0, 0, w, h);
 	},
 
-	onLoad: function (e) {
+	onLoad: async function (e) {
+
+		this.setData({
+			userInfo:await userUtils.getUserInfo(),
+			durationOfDays:(await wx.cloud.callFunction({
+				name:'getDurationOfDays'
+			})).result,
+			equalThingInfo:this.getEqualThingInfo()
+		})
+		let verb=this.data.equalThingInfo.verb;
+		let count=this.data.equalThingInfo.count;
+		let thing=this.data.equalThingInfo.thing;
+		let duration=this.data.duration;
+		this.texts=['本次蒸了'+new Number(duration).toString()+'分钟','连续蒸了'+new Number(this.data.durationOfDays).toString()+'天','相当于'+verb+'了'+count+thing];
+		//TODO 从xml里边获取内容
+		this.message='我蒸了'+new Number(duration).toString()+'分钟花卷!';
 
 		wx.setKeepScreenOn({
 			keepScreenOn: true
@@ -256,9 +291,8 @@ Page({
 		const query = this.createSelectorQuery()
 
 		// 海报Canvas
-		setTimeout(() => canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas), 1000);
 
-		/*
+		
 		// 获取canvas（原来的）
 		query.select('#canvasArcCir')
 			.fields({
@@ -280,7 +314,7 @@ Page({
 				this.clearMinuteProgress();
 				this.startTimer();
 			})
-		*/
+		
 	},
 
 	// 正式开始计时
@@ -296,7 +330,7 @@ Page({
 		// var now = new Date();
 		// var s = this.data.startTime;
 
-		var ms = this.data.curMilliSecond + updateInterval;
+		var ms = this.data.curMilliSecond + updateInterval*100;
 
 		// var nTime = now.getTime();
 		// var sTime = s.getTime();
@@ -383,31 +417,35 @@ Page({
 
 	onFinished() {
 		if (this.data.stopped) return;
-
 		this.setData({
 			finished: true
 		});
 
 		this.drawMinuteProgress(60);
 		this.stopRolling();
-
+		aniCtx.clearRect(0,0,windowWidth,windowHeight);
 		// TODO: 完成了
 		wx.showModal({
 			title: '蒸花卷完成了！发布到动态后将获得' + this.data.count + '个花卷，快去分享努力成果吧！',
 			showCancel: false,
 
-			success: res => {
-				wx.redirectTo({
-					url: '../postAdd/postAdd?rollName=' + this.data.name +
-						"&rollCount=" + this.data.count +
-						"&rollDuration=" + this.data.duration,
+			success: async res => {
+				// wx.redirectTo({
+				// 	url: '../postAdd/postAdd?rollName=' + this.data.name +
+				// 		"&rollCount=" + this.data.count +
+				// 		"&rollDuration=" + this.data.duration,
+				// })
+				this.setData({
+					isShowSharingDialog:true,
 				})
+				setTimeout(() => canvasUtils.setupById(this.createSelectorQuery(), "post-canvas", this.testWxml2Canvas), 1000);
 			}
 		})
-
+		
 		wx.setKeepScreenOn({
 			keepScreenOn: false
 		});
+		
 	},
 
 	onStopped() {
@@ -430,5 +468,40 @@ Page({
 	stopRolling() {
 		clearInterval(updateId)
 	},
+//获取等价事物
+	getEqualThingInfo(){
+		let duration=this.data.duration;
+		var things=[];
+		var type=0;
+		if(duration<=40){
+			things={短视频:['看',0.5,'条'],王者荣耀:['玩',15,'局']};
+			type=Math.round(Math.random());
+		}
+		else if(duration<=60){
+			things={短视频:['看',0.5,'条'],王者荣耀:['玩',15,'局'],电视剧:['煲',40,'集']};
+			type=Math.round(Math.random()*2)
+		}
+		else{
+			things={王者荣耀:['玩',15,'局'],电视剧:['煲',40,'集']};
+			type=Math.round(Math.random());
+		}
+		var equalThingInfo=Object.values(things)[type];
+		return{ 
+			verb:equalThingInfo[0],
+			count:new Number(Math.round(duration/equalThingInfo[1])).toString()+equalThingInfo[2],
+			thing:Object.keys(things)[type],
+		}
+	},
+	cancelShare(){
+		console.log("取消分享");
+		this.setData({
+			isShowSharingDialog:false,
+		})
+	},
+	onShareAppMessage:function(){
+		return{
+
+		}
+	}
 
 })
