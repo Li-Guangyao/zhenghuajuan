@@ -44,6 +44,7 @@
 	<!-- TODO: 时间显示，需要和上面的拖拽条同步更新 -->
 	<view class="time-tips">
 		制作需要<text>{{duration}}</text>min
+		<van-checkbox class="strict-mode" label-class="strict-mode-label" checked-color="#ffa600" value="{{ strictMode }}" bind:change="onStrictChange">严格模式</van-checkbox>
 	</view>
 
 	<!-- 更改口味 -->
