@@ -210,7 +210,7 @@ Page({
 			duration: this.data.duration,
 			count: this.data.rollCount,
 			strictMode: this.data.strictMode ? 1 : 0,
-			qualityIdx: this.data.qualityIdx,
+			quality: this.data.qualityIdx,
 			foodId,
 		}
 
