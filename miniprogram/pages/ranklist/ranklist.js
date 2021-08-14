@@ -5,8 +5,9 @@ Page({
 		userInfo: null,
 		updateDate: null,
 
+		// 所有的rank信息，包括日/周/月
 		rankList: [],
-		// 用于显示的list
+		// 用于显示的list，在wxml中写死，后端通过改变这个值，改变前端的显示
 		topRankList: [],
 
 		// 三项分别对应日/周/月排名数据
@@ -80,6 +81,10 @@ Page({
 				['myRankInfo[' + i + ']']: [res[i].result.myRank, res[i].result.myValue]
 			})
 		}
+
+		this.setData({
+			topRankList: this.data.rankList[0]
+		})
 		wx.hideLoading()
 	},
 
