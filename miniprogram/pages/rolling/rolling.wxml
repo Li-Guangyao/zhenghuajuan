@@ -28,7 +28,7 @@
 <van-popup custom-class="post-prompt" show="{{isShowSharingDialog}}" bind:close="onClose">
 	<canvas id="post-canvas" type="2d" ></canvas>
 
-	<image class="post" src="../../images/post.png" mode="heightFix" bindtap="testWxml2Canvas">
+	<image class="post" src="../../images/post.png" mode="heightFix" >
 		<text class="time">本次蒸了{{duration}}分钟</text>
 		<text class="day">连续蒸了{{durationOfDays}}天</text>
 		<text class="play">相当于{{equalThingInfo.verb}}了{{equalThingInfo.count}}\n{{equalThingInfo.thing}}</text>
@@ -60,13 +60,13 @@
 	</image>
 
 	<view class="share">
-		<van-button open-type="share" custom-class="share-button" round color="#ffa600" bind:click="testWxml2Canvas">
+		<van-button open-type="share" custom-class="share-button" round color="#ffa600" >
 			<view class="button-content">
 				<view class="big">分享给朋友</view>
 				<view class="small">每日首次分享3倍奖励</view>
 			</view>
 		</van-button>
-		<van-button custom-class="share-button" round color="#ffa600">
+		<van-button custom-class="share-button" round color="#ffa600" bindtap="shareToPost">
 			<view class="button-content">
 				<view class="big">分享到动态</view>
 				<view class="small">每日首次分享2倍奖励</view>

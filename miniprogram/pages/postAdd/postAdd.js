@@ -15,22 +15,32 @@ Page({
 		rollName: null,
 		rollCount: null,
 		rollDuration: null,
+		shareImgUrl:null,
 	},
 
 	onLoad: async function (e) {
 		await this.judgeLogin()
 
-		if (e.rollName && e.rollCount && e.rollDuration) {
+		if (e.rollName && e.rollCount && e.rollDuration&& e.foodName&&e.shareImgUrl) {
 			var rollName = e.rollName;
 			var rollCount = e.rollCount;
 			var rollDuration = e.rollDuration;
+			var foodName=e.foodName;
+			var shareImgUrl=e.shareImgUrl;
 
 			var content = "我花了" + rollDuration + "分钟，蒸了" + 
-				rollCount + "个" + rollName + "味花卷~";
+				rollCount + "个" + rollName + "味"+foodName+"~";
 
-			this.setData({
-				content, rollName, rollCount, rollDuration
+			this.data.fileList.push({
+				type:'image',
+				url:shareImgUrl,
+				name:'tempPoster.png'
 			})
+			this.setData({
+				content, rollName, rollCount, rollDuration,fileList:this.data.fileList
+			})
+			console.log(this.data.fileList);
+			
 
 		} else {
 			var tempPost = wx.getStorageSync('tempPost')
