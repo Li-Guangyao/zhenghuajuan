@@ -1,6 +1,6 @@
 import { canvasUtils } from "../../utils/canvasUtils";
-import { userUtils } from "../../utils/userUtils"
-
+import { userUtils } from "../../utils/userUtils";
+import {navigateUtils} from"../../utils/navigateUtils";
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
 var windowWidth=wx.getSystemInfoSync().windowWidth;
 var windowHeight=wx.getSystemInfoSync().windowHeight;
@@ -94,7 +94,7 @@ Page({
 	texts: ["本次蒸了分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
 	textPositions: [
 		// y, x, w, align
-		[35, 33, 67.5], [20, 42, 67.5], [82, 10, 67.5, 'right']
+		[35, 33, 67.5], [20, 42, 67.5], [81, 1, 67.5, 'right']
 	],
 	textSkewYs: [-0.513, 0.72, -0.546],
 
@@ -109,6 +109,8 @@ Page({
 	nickNameRect: [27.5, 15, 45], // x, y, w
 
 	message: "我正乐14321321分钟花卷哈哈哈哈哈哈哈！",
+
+	posterImgUrl:null,
 
 	testWxml2Canvas: async function() {
 		console.log("绘制canvas")
@@ -164,6 +166,19 @@ Page({
 
 		canvasUtils.setFont(messageFont);
 		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
+		this.savePosterImg(canvasUtils.canvas.toDataURL());
+		//TODO 做一张5:4的分享用图片
+	},
+
+	savePosterImg(base64Url){
+		wx.getFileSystemManager().writeFile({
+			filePath: wx.env.USER_DATA_PATH+"/tempPoster.png",
+			data: base64Url.slice(22),
+			encoding:'base64',
+			success:res=>{
+				this.posterImgUrl=wx.env.USER_DATA_PATH+'/tempPoster.png';
+			}
+		})
 	},
 
 	onLoad: async function (e) {
@@ -179,7 +194,7 @@ Page({
 		let count=this.data.equalThingInfo.count;
 		let thing=this.data.equalThingInfo.thing;
 		let duration=this.data.duration;
-		this.texts=['本次蒸了'+new Number(duration).toString()+'分钟','连续蒸了'+new Number(this.data.durationOfDays).toString()+'天','相当于'+verb+'了'+count+thing];
+		this.texts=['本次蒸了'+new Number(duration).toString()+'分钟','连续蒸了'+new Number(this.data.durationOfDays).toString()+'天','相当于'+verb+'了'+count+'\n'+thing];
 		//TODO 从xml里边获取内容
 		this.message='我蒸了'+new Number(duration).toString()+'分钟花卷!';
 
@@ -409,8 +424,7 @@ Page({
 	onFinished() {
 		if (this.data.stopped) return;
 		const query = this.createSelectorQuery()
-		canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas);
-
+		
 		this.setData({
 			finished: true
 		});
@@ -418,6 +432,7 @@ Page({
 		this.drawMinuteProgress(60);
 		this.stopRolling();
 		aniCtx.clearRect(0,0,windowWidth,windowHeight);
+		canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas);
 		
 		// TODO: 完成了
 		
@@ -426,15 +441,9 @@ Page({
 			showCancel: false,
 
 			success: async res => {
-				// wx.redirectTo({
-				// 	url: '../postAdd/postAdd?rollName=' + this.data.name +
-				// 		"&rollCount=" + this.data.count +
-				// 		"&rollDuration=" + this.data.duration,
-				// })
 				this.setData({
 					isShowSharingDialog:true,
 				})
-				setTimeout(() => canvasUtils.setupById(this.createSelectorQuery(), "post-canvas", this.testWxml2Canvas), 1000);
 			}
 		})
 		
@@ -494,9 +503,21 @@ Page({
 			isShowSharingDialog:false,
 		})
 	},
+
+	shareToPost(){
+		var data={
+			rollName:this.data.name,
+			rollCount:this.data.count,
+			rollDuration:this.data.duration,
+			foodName:this.data.foodName,
+			shareImgUrl:this.posterImgUrl,
+		}
+		navigateUtils.push('../postAdd/postAdd',data);
+	},
 	onShareAppMessage:function(){
 		return{
-
+			title:'测试',
+			imageUrl:this.posterImgUrl,
 		}
 	}
 

@@ -55,10 +55,10 @@ page {
 }
 .post-canvas {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 720px;
-  height: 1280px;
+  left: 200%;
+  top: 200%;
+  width: 70%;
+  height: calc(750rpx*0.7/9*16);
 }
 .post-prompt {
   display: flex;
