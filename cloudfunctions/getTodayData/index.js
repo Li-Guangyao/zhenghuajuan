@@ -34,7 +34,14 @@ exports.main = async (event, context) => {
       result.timesCount=res.list[0]._timesCount;
     
 
+  
   var res=(await db.collection('t_post').aggregate().match(matcher).group({
+    _id:null,
+    _rollDuration: $.sum('$rollDuration')
+  })
+  .project({
+    _id:0,
+  })
   .end())
 
   if(res.list.length==0)

@@ -1,6 +1,9 @@
 import {
 	userUtils
 } from "../../utils/userUtils"
+import {
+	navigateUtils
+} from "../../utils/navigateUtils"
 
 Page({
 	data: {
@@ -8,36 +11,29 @@ Page({
 		postList: [],
 		strictMode: true,
 
-		name: '学习味花卷',
+		name: '学习',
 		showNameEdit: false,
 		showPopup: false,
 
-		// 学习时间长短，默认15min
-		duration: 15,
+		duration: 15, // 学习时间长短，默认15min
+		rollCount: 0, // 可获得的小麦数量
 
 		foodList: [],
-		// 浏览到第几个菜品
-		foodIdx: 0,
-		// 选择了第几个菜品
-		chosenFoodIdx: 0,
-		// 当前选择的时间，对应第几级别食物
-		qualityIdx: 0
+		
+		foodIdx: 0, // 浏览到第几个菜品
+		chosenFoodIdx: 0, // 选择了第几个菜品
+		qualityIdx: 0 // 当前选择的时间，对应第几级别食物
 	},
 
 	async onLoad(options) {
 		// 获得食物列表
 		var res = await wx.cloud.callFunction({
 			name: 'operFoods',
-			data: {
-				method: 'GET'
-			}
+			data: { method: 'GET' }
 		})
-		this.setData({
-			foodList: res.result
-		})
-		if (!this.data.userInfo) {
-			await this.judgeLogin();
-		}
+		this.setData({ foodList: res.result })
+		if (!this.data.userInfo) await this.judgeLogin();
+		
 		this.initFoodInfo()
 	},
 
@@ -70,63 +66,15 @@ Page({
 
 	// 是否选择严格模式
 	onStrictChange(e) {
-		console.log(e)
 		this.setData({
 			strictMode: !this.data.strictMode
 		})
+		this.refreshRollCount();
 		// if (this.data.strictMode)
 		// 	wx.showToast({
 		// 		title: '严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！',
 		// 		icon: 'none'
 		// 	});
-	},
-
-	// 输入完蒸花卷信息之后
-	onDialogClose(e) {
-		switch (e.detail) {
-			case "confirm":
-				if (!this.data.name) {
-					wx.showToast({
-						title: '花卷口味不能为空！',
-						icon: 'none'
-					});
-					this.setData({
-						showDialog: true
-					});
-				} else {
-					var duration = this.data.durations[this.data.durationIndex];
-					var count = this.data.counts[this.data.durationIndex];
-
-					if (!this.data.strictMode)
-						count = Math.floor(count / 2);
-
-					var title = '确定要蒸' + duration + '分钟花卷吗？';
-					if (this.data.strictMode)
-						title += "严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！";
-
-					wx.showModal({
-						title,
-						showCancel: true,
-						success: res => {
-							if (res.confirm) {
-								wx.navigateTo({
-									url: '../rolling/rolling?name=' + this.data.name +
-										"&duration=" + duration + "&count=" + count + "&strict=" + (this.data.strictMode ? 1 : 0),
-								})
-							} else if (res.cancel)
-								this.setData({
-									showDialog: false
-								});
-						}
-					})
-				}
-				break;
-			default:
-				this.setData({
-					showDialog: false
-				});
-				break;
-		}
 	},
 
 	// 点击菜品
@@ -152,7 +100,7 @@ Page({
 	},
 
 	// 解锁食物
-	unlockFood() {
+	async unlockFood() {
 		var userInfo = this.data.userInfo
 		var foodList = this.data.foodList
 		var foodIdx = this.data.foodIdx
@@ -163,32 +111,30 @@ Page({
 				title: '小麦数量不够！',
 			})
 		} else {
-			wx.showModal({
+			var res = await wx.showModal({
 				title: '确定要解锁吗？',
-				showCancel: true,
-				success: res => {
-					if (res.confirm) {
-						userInfo.rollCount -= foodList[foodIdx].cost
-						userInfo.unlockFoods.push(foodList[foodIdx]._id)
-
-						wx.cloud.callFunction({
-							name: 'operFoods',
-							data: {
-								method: 'BUY',
-								foodId: foodList[foodIdx]._id
-							}
-						})
-
-						this.setData({
-							['userInfo.unlockFood']: userInfo.unlockFoods,
-							['userInfo.rollCount']: userInfo.rollCount
-						})
-
-						this.initFoodInfo()
-
-					} else if (res.cancel) {}
-				}
+				showCancel: true
 			})
+
+			if (res.confirm) {
+				userInfo.rollCount -= foodList[foodIdx].cost
+				userInfo.unlockFoods.push(foodList[foodIdx]._id)
+
+				await wx.cloud.callFunction({
+					name: 'operFoods',
+					data: {
+						method: 'BUY',
+						foodId: foodList[foodIdx]._id
+					}
+				})
+
+				this.setData({
+					['userInfo.unlockFood']: userInfo.unlockFoods,
+					['userInfo.rollCount']: userInfo.rollCount
+				})
+
+				this.initFoodInfo()
+			}
 		}
 	},
 
@@ -202,40 +148,73 @@ Page({
 
 	// 拖动进度条
 	onDrag(e) {
-		var value = e.detail.value
-		var length = this.data.foodList[this.data.chosenFoodIdx].images.length
+		var duration = e.detail.value
+		var food = this.data.foodList[this.data.chosenFoodIdx];
+		var maxQ = this.maxQuality(food), min = this.minTime(food);
+		var qualityIdx = this.calcQuality(maxQ, min, duration);
+
 		this.setData({
-			duration: value,
-			qualityIdx: parseInt((length - 1) * (value - 15) / 105)
+			duration, qualityIdx
 		})
+
+		this.refreshRollCount();
 	},
+
+	refreshRollCount() {
+		var rollCount = this.calcRollCount(this.data.duration)
+		if (!this.data.strictMode) 
+			rollCount = Math.floor(rollCount / 2);
+		this.setData({ rollCount })
+	},
+
+	maxQuality: (food) => food.images.length,
+	minTime: (food) => food.minTime || 15,
+	calcQuality: (maxQ, min, t) => Math.floor((maxQ - 1) * (t - min) / (120 - min)),
+	calcRollCount: (t) => Math.round(t / 5 + Math.floor(t / 30) * 2 + Math.floor(t / 60) * 5),
 
 	// 修改学习任务的名字
 	showNameEdit() {
-		this.setData({
-			showNameEdit: true
-		})
+		this.setData({ showNameEdit: true })
 	},
 
 	// 输入活动的名称
 	inputActivityName(e) {
-		this.setData({
-			name: e.detail.value + '味花卷'
-		})
+		this.setData({ name: e.detail.value })
 	},
 
 	// 完成输入，失去焦点触发
 	finishNameEdit() {
-		this.setData({
-			showNameEdit: false
-		})
+		this.setData({ showNameEdit: false })
 	},
 
 	// 点击“开始蒸花卷”
-	beginActivity() {
-		wx.navigateTo({
-			url: '../rolling/rolling?name=' + this.data.name + '&duration=' + this.data.duration,
-		})
+	async startRoll() {
+		if (!this.data.name) 
+			wx.showToast({ title: '口味不能为空！', icon: 'none' });
+		else {
+			var title = '确定要制作' + this.data.duration + '分钟吗？';
+			if (this.data.strictMode)
+				title += "严格模式下，制作过程中不可退出、切换页面和熄屏哦！";
+
+			var res = await wx.showModal({ title, showCancel: true })
+			if (res.confirm) this.doStartRoll();
+		}
+	},
+
+	// 真的开始啦！
+	doStartRoll() {
+		var foodId = this.data.foodList[this.data.chosenFoodIdx]._id;
+
+		var data = {
+			name: this.data.name,
+			duration: this.data.duration,
+			count: this.data.rollCount,
+			strictMode: this.data.strictMode ? 1 : 0,
+			qualityIdx: this.data.qualityIdx,
+			foodId,
+		}
+
+		navigateUtils.push('../rolling/rolling', data);
 	},
 
 	toPost() {
@@ -251,14 +230,10 @@ Page({
 	},
 
 	toRollRecord() {
-		wx.navigateTo({
-			url: '../rollRecord/rollRecord',
-		})
+		navigateUtils.push('../rollRecord/rollRecord');
 	},
 
 	toRanklist() {
-		wx.navigateTo({
-			url: '../ranklist/ranklist',
-		})
+		navigateUtils.push('../ranklist/ranklist');
 	}
 })
