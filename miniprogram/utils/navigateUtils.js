@@ -2,8 +2,8 @@ var navigateUtils = {}
 
 /**
  * 进入页面
- * @param {页面地址} page 
- * @param {要传递的数据（Object）} data 
+ * @param {String} page 页面地址
+ * @param {Object} data 要传递的数据
  */
 navigateUtils.push = function(page, data) {
 	var url = page;

@@ -116,9 +116,13 @@ Page({
 		var h = w/9*16;
 		var fw = w * this.foodSize[0] / 100;
 		var fh = h * this.foodSize[1] / 100;
-		var nickNameFont=new Number(Math.round(40*w/750)).toString()+"px 微软雅黑";
-		var messageFont=new Number(Math.round(35*w/750)).toString()+"px 微软雅黑";
-		var font=new Number(Math.round(60*w/750)).toString()+"px 海派腔调清夏简";
+		var nickNameSize = Math.round(42*w/750);
+		var nickNameFont = nickNameSize + "px 微软雅黑";
+		var messageSize = Math.round(36*w/750);
+		var messageFont = messageSize + "px 微软雅黑";
+		var fontSize = Math.round(60*w/750);
+		var font = fontSize + "px 海派腔调清夏简";
+
 		canvasUtils.clipRect(0, 0, w, h);
 
 		// 绘制背景和菜品
@@ -156,14 +160,15 @@ Page({
 		await canvasUtils.drawImage(this.data.userInfo.avatarUrl, ax, ay, aw, ah, 'round')
 
 		var np = this.nickNameRect;
-		var nx = w * np[0] / 100, ny = by + bh * np[1] / 100 + 20;
-		var nw = w * np[2] / 100;
+		var nx = w * np[0] / 100, nw = w * np[2] / 100;
+		var ny = by + bh * np[1] / 100 + nickNameSize;
 		canvasUtils.setColor(this.infoFontColor);
 		canvasUtils.setFont(nickNameFont);
 		canvasUtils.drawText(this.data.userInfo.nickName, nx, ny);
 
 		canvasUtils.setFont(messageFont);
-		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
+		canvasUtils.drawTextEx(this.message, 
+			nx, ny + nickNameSize, nw, messageSize);
 	},
 
 	onLoad: async function (e) {
@@ -181,7 +186,7 @@ Page({
 		let duration=this.data.duration;
 		this.texts=['本次蒸了'+new Number(duration).toString()+'分钟','连续蒸了'+new Number(this.data.durationOfDays).toString()+'天','相当于'+verb+'了'+count+thing];
 		//TODO 从xml里边获取内容
-		this.message='我蒸了'+new Number(duration).toString()+'分钟花卷!';
+		this.message='我蒸了'+new Number(duration).toString()+'分钟花卷!是的范德萨发电风扇的范德萨范德萨';
 
 		wx.setKeepScreenOn({
 			keepScreenOn: true

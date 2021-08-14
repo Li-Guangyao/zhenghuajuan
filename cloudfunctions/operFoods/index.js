@@ -43,7 +43,7 @@ async function buyFood(userInfo, foodId) {
 		}).update({
 			data: {
 				rollCount: _.inc(-cost),
-				unlockFoods: unlockFoods.push(foodId)
+				unlockFoods: _.push(foodId)
 			}
 		})
 	}
@@ -70,7 +70,7 @@ function getRollCountAndTools(openId) {
 }
 
 function getCost(foodId) {
-	return db.collection('t_user').doc(foodId).get().then(res => {
+	return db.collection('t_food').doc(foodId).get().then(res => {
 		return res.data.cost
 	})
 }
