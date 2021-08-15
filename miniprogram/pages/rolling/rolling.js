@@ -171,7 +171,7 @@ Page({
 		canvasUtils.setFont(messageFont);
 		canvasUtils.drawTextEx(this.message, 
 			nx, ny + nickNameSize, nw, messageSize);
-		canvasUtils.drawTextEx(this.message, nx, ny + 20, nw, 18);
+			
 		this.savePosterImg(canvasUtils.canvas.toDataURL());
 
 		//TODO 做一张5:4的分享用图片
@@ -487,25 +487,22 @@ Page({
 	// 获取等价活动
 	getEqualActInfo(){
 		let duration = this.data.duration;
+		var act1 = ['刷',0.5,'条','短视频']
+		var act2 = ['玩',15,'局','王者荣耀']
+		var act3 = ['煲',40,'集','电视剧']
 		var acts = [], type = 0;
-		if(duration<=40){
-			acts={短视频:['刷',0.5,'条'], 王者荣耀:['玩',15,'局']};
-			type = Math.round(Math.random());
-		}
-		else if(duration<=60){
-			acts = {短视频:['刷',0.5,'条'], 王者荣耀:['玩',15,'局'], 电视剧:['煲',40,'集']};
-			type = Math.round(Math.random()*2)
-		}
-		else{
-			acts = {王者荣耀:['玩',15,'局'], 电视剧:['煲',40,'集']};
-			type = Math.round(Math.random());
-		}
-		var equalActInfo = Object.values(acts)[type];
+
+		if (duration <= 40) acts = [act1, act2];
+		else if (duration <= 60) acts = [act1, act2, act3];
+		else acts = [act2, act3];
+		type = Math.floor(Math.random() * acts.length);
+
+		var equalActInfo = acts[type];
 
 		return { 
 			verb: equalActInfo[0],
 			count: Math.round(duration/equalActInfo[1]) + equalActInfo[2],
-			act: Object.keys(acts)[type],
+			act: equalActInfo[3],
 		}
 	},
 	cancelShare(){

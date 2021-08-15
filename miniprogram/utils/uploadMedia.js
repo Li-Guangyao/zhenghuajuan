@@ -3,7 +3,7 @@
  * @param {Array} fileList 文件列表
  * @param {String} savePath 指定储存的文件夹路径
  */
-export default async function uploadImage(fileList, savePath) {
+export default async function uploadMedia(fileList, savePath) {
 	const uploadTasks = fileList.map(file => uploadFilePromise(file, savePath))
 	// uploadTasks是若干Promise对象的集合，此时已经上传成功
 	// 用下面的方法，data就是提取出来的返回结果
@@ -17,12 +17,12 @@ export default async function uploadImage(fileList, savePath) {
 		}
 		//把固定地址返回，保存进数据库
 		return uploadedFileList;
-	})/*.catch(e => {
+	}).catch(e => {
 		wx.showToast({
 			title: '上传失败',
 			icon: 'none'
 		});
-	});*/
+	});
 }
 /**
  * 执行函数，单个文件上传到云存储
