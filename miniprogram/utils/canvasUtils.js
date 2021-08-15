@@ -9,13 +9,10 @@ canvasUtils.imageCache = {};
 /**
  * 配置Canvas
  */
-canvasUtils.setupById = function(query, id, onSuccess) {
-	query.select('#' + id).fields({
-		node: true, size: true
-	}).exec((res) => {
-		this.setupByRes(res);
-		if (onSuccess) onSuccess(canvasUtils);
-	})
+canvasUtils.setupById = async function(query, id) {
+	var res = await this.querySelect(query, '#' + id);
+	this.setupByRes(res);
+	return res;
 }
 canvasUtils.setupByRes = function(res) {
 	this.setupByCanvas(res[0].node, res[0].width, res[0].height);
@@ -32,7 +29,14 @@ canvasUtils.setupByCanvas = function(canvas, width, height) {
 	console.info("canvasUtils.setupByCanvas: ", this);
 }
 
-canvasUtils.clear = function() {
+canvasUtils.querySelect = (query, selector, fields) =>
+	new Promise((resolve, reject) => 
+		query.select(selector)
+			.fields(fields || { node: true, size: true })
+			.exec(resolve)
+	);
+
+canvasUtils.reset = function() {
 	this.canvas = this.ctx = null;
 	this.dpr = 1;
 }
@@ -169,7 +173,7 @@ canvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
 		var cw = this.ctx.measureText(c).width;
 		if (c == "\n") nextLine()
 		else {
-			console.log(c, x, ox, (x - cw) <= ox + cw, i)
+			console.log(c, x, ox, (x - cw) <= ox, i)
 			if (right && ((x -= cw) <= ox)) { nextLine(); x -= cw; }
 			if (!right && ((cx += cw) >= ox + w)) nextLine();
 			flag ? i-- : line += c;

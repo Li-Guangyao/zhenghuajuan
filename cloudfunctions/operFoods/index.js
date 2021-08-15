@@ -12,7 +12,7 @@ const TOKEN = "dOXi^w$7D0BOwG!UIA";
 exports.main = async (event, context) => {
 	switch (event.method.toUpperCase()) {
 		case "GET":
-			return (await getFoods(event.cond)).data;
+			return await getFoods(event.cond);
 		case "BUY":
 			return await buyFood(event.userInfo, event.foodId);
 		case "UPDATE":
@@ -22,31 +22,29 @@ exports.main = async (event, context) => {
 
 async function getFoods(cond) {
 	// cond: 判断条件，为空则获取全部
-	if (cond)
-		return await db.collection('t_food').where(cond).get();
-	else
-		return await db.collection('t_food').get();
+	var oper = cond ? 
+		db.collection('t_food').where(cond) :
+		db.collection('t_food');
+
+	return (await oper.get()).data;
 }
 
 // 购买食物
 async function buyFood(userInfo, foodId) {
-	var {
-		rollCount,
-		unlockFoods
-	} = await getRollCountAndTools(userInfo.openId)
+	var { rollCount, unlockFoods } = await getRollCountAndFoods(userInfo.openId)
+	if (unlockFoods.includes(foodId)) return;
+
 	var cost = await getCost(foodId)
-	if (rollCount < cost) {
-		return
-	} else {
-		return db.collection('t_user').where({
-			_openid: userInfo.openId
-		}).update({
-			data: {
-				rollCount: _.inc(-cost),
-				unlockFoods: _.push(foodId)
-			}
-		})
-	}
+	if (rollCount < cost) return
+
+	return db.collection('t_user').where({
+		_openid: userInfo.openId
+	}).update({
+		data: {
+			rollCount: _.inc(-cost),
+			unlockFoods: _.push(foodId)
+		}
+	})
 }
 
 function updateFoods(token, foods) {
@@ -58,19 +56,15 @@ function updateFoods(token, foods) {
 	);
 }
 
-function getRollCountAndTools(openId) {
-	return db.collection('t_user').where({
-		_openid: openId
-	}).get().then(res => {
-		return {
-			rollCount: res.data.rollCount,
-			unlockFoods: res.data.unlockFoods
-		}
-	})
+async function getRollCountAndFoods(openId) {
+	var res = await db.collection('t_user').where({ _openid: openId }).get()
+	return {
+		rollCount: res.data.rollCount,
+		unlockFoods: res.data.unlockFoods
+	}
 }
 
-function getCost(foodId) {
-	return db.collection('t_food').doc(foodId).get().then(res => {
-		return res.data.cost
-	})
+async function getCost(foodId) {
+	var res = await db.collection('t_food').doc(foodId).get()
+	return res.data.cost;
 }

@@ -54,7 +54,7 @@
 			<image class="avatar" src="{{userInfo.avatarUrl}}" mode="heightFix"></image>
 			<view class="info">
 				<view clsas="name">{{userInfo.nickName}}</view>
-				<textarea class="message" placeholder="输入你的感想吧~" value="我蒸了{{duration}}分钟花卷！" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
+				<textarea class="message" placeholder="输入你的感想吧~" value="我花了{{duration}}分钟，制作了{{name}}味{{foodName}}！" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
 			</view>
 		</image>
 	</image>
@@ -63,7 +63,7 @@
 		<van-button open-type="share" custom-class="share-button" round color="#ffa600" >
 			<view class="button-content">
 				<view class="big">分享给朋友</view>
-				<view class="small">每日首次分享3倍奖励</view>
+				<view class="small">每日首次分享2倍奖励</view>
 			</view>
 		</van-button>
 		<van-button custom-class="share-button" round color="#ffa600" bindtap="shareToPost">

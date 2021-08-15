@@ -112,17 +112,20 @@ Page({
 
 	posterImgUrl:null,
 
-	testWxml2Canvas: async function() {
+	generatePoster: async function() {
+
 		console.log("绘制canvas")
-		var w = wx.getSystemInfoSync().windowWidth*0.7;
-		var h = w/9*16;
+
+		var w = wx.getSystemInfoSync().windowWidth * 0.7;
+		var h = w / 9 * 16;
 		var fw = w * this.foodSize[0] / 100;
 		var fh = h * this.foodSize[1] / 100;
-		var nickNameSize = Math.round(42*w/750);
+		// 屏幕宽度固定位750rpx
+		var nickNameSize = Math.round(42 * w / 750);
 		var nickNameFont = nickNameSize + "px 微软雅黑";
-		var messageSize = Math.round(36*w/750);
+		var messageSize = Math.round(36 * w / 750);
 		var messageFont = messageSize + "px 微软雅黑";
-		var fontSize = Math.round(60*w/750);
+		var fontSize = Math.round(60 * w / 750);
 		var font = fontSize + "px 海派腔调清夏简";
 
 		canvasUtils.clipRect(0, 0, w, h);
@@ -171,10 +174,14 @@ Page({
 		canvasUtils.setFont(messageFont);
 		canvasUtils.drawTextEx(this.message, 
 			nx, ny + nickNameSize, nw, messageSize);
-			
-		this.savePosterImg(canvasUtils.canvas.toDataURL());
 
-		//TODO 做一张5:4的分享用图片
+		this.savePosterImg(canvasUtils.canvas.toDataURL());
+	},
+
+	generateSharePoster: async function() {
+
+		// TODO 做一张5:4的分享用图片
+
 	},
 
 	savePosterImg(base64Url){
@@ -202,6 +209,7 @@ Page({
 		let count = this.data.equalActInfo.count;
 		let act = this.data.equalActInfo.act;
 		let duration = this.data.duration;
+
 		this.texts = ['本次蒸了' + duration + '分钟',
 			'连续蒸了' + this.data.durationOfDays + '天',
 			'相当于' + verb + '了' + count + '\n' + act];
@@ -252,9 +260,7 @@ Page({
 
 		var now = new Date();
 		if (this.data.strict && now - this.data.exitTime >= MaxExitTime) {
-			this.setData({
-				stopped: true
-			})
+			this.setData({ stopped: true })
 			this.stopRolling();
 			this.onStopped();
 		} else
@@ -291,25 +297,20 @@ Page({
 		})
 		*/
 
-		// 退出设置exitTime，下次进入用于判断
-		this.setData({
-			exitTime: new Date()
-		});
+		// 退出设置exitTime，用于下次进入判断
+		this.setData({ exitTime: new Date() });
 	},
 
 	onUnload: function () {
 		this.stopRolling();
 
-		canvasUtils.clear();
+		canvasUtils.reset();
 	},
 
 	// 配置Canvas
 	setupBarCanvas() {
 		const query = this.createSelectorQuery()
 
-		// 海报Canvas
-
-		
 		// 获取canvas（原来的）
 		query.select('#canvasArcCir')
 			.fields({
@@ -431,53 +432,33 @@ Page({
 		aniCtx.closePath();
 	},
 
-	onFinished() {
+	async onFinished() {
 		if (this.data.stopped) return;
-		const query = this.createSelectorQuery()
 		
-		this.setData({
-			finished: true
-		});
+		this.setData({ finished: true });
 
-		this.drawMinuteProgress(60);
+		// this.drawMinuteProgress(60);
 		this.stopRolling();
-		aniCtx.clearRect(0,0,windowWidth,windowHeight);
-		canvasUtils.setupById(query, "post-canvas", this.testWxml2Canvas);
-		
-		// TODO: 完成了
-		
-		wx.showModal({
-			title: '蒸花卷完成了！发布到动态后将获得' + this.data.count + '个花卷，快去分享努力成果吧！',
-			showCancel: false,
 
-			success: async res => {
-				this.setData({
-					isShowSharingDialog:true,
-				})
-			}
-		})
+		aniCtx.clearRect(0,0,windowWidth,windowHeight);
 		
-		wx.setKeepScreenOn({
-			keepScreenOn: false
-		});
-		
+		const query = this.createSelectorQuery()
+		await canvasUtils.setupById(query, "post-canvas");
+		await this.generatePoster()
+
+		// TODO: 完成了
+		var title = "制作完成！快去炫耀一下吧~"
+		wx.showToast({ title })
+		wx.setKeepScreenOn({ keepScreenOn: false });
+
+		this.setData({ isShowSharingDialog: true })		
 	},
 
-	onStopped() {
-		wx.disableAlertBeforeUnload({
-			success: (res) => {
-				wx.showModal({
-					title: '太可惜了，由于您在蒸花卷过程中分心，花卷全坏掉了，再来一次吧！下次记得不要分心了哦~',
-					showCancel: false,
-
-					success: res => {
-						wx.navigateBack({
-							delta: 1
-						})
-					}
-				})
-			},
-		})
+	async onStopped() {
+		var title = "太可惜了，由于您在制作过程中分心，" + this.data.foodName + "坏掉了，再来一次吧！下次记得不要分心了哦~"
+		wx.disableAlertBeforeUnload();
+		await wx.showModal({ title, showCancel: false });
+		wx.navigateBack({ delta: 1 })
 	},
 
 	stopRolling() {
