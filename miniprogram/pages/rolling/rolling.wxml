@@ -30,7 +30,7 @@
 
 	<image class="post" src="../../images/post.png" mode="heightFix" >
 		<text class="time">本次制作{{duration}}分钟</text>
-		<text class="day">连续制作{{continuity}}天</text>
+		<text class="day">超过{{defeat}}%的人</text>
 		<text class="play">相当于{{equalActInfo.verb}}了{{equalActInfo.count}}\n{{equalActInfo.act}}</text>
 		<view class="foods">
 			<food-display class="food1" src="{{foodImage}}" mode="aspectFit"></food-display>

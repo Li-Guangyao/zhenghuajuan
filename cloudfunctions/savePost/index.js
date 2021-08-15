@@ -40,6 +40,7 @@ exports.main = async (event, context) => {
 		data.foodId = event.foodId
 		data.quality = event.quality
 		data.isPrivate = event.isPrivate
+		data.strictMode = event.strictMode
 	}
 
 	return db.collection('t_post').add({ data })

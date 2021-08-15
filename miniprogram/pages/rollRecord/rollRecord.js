@@ -37,7 +37,7 @@ Page({
 	},
 
 	onUnload: function () {
-		canvasUtils.clear();
+		canvasUtils.reset();
 	},
 
 	getUserInfo: async function() {
@@ -108,35 +108,6 @@ Page({
 		})
 
 		this.refreshData();
-
-		/*
-		const query = this.createSelectorQuery()
-		// 获取canvas
-		query.select('#foods')
-			.fields({
-				node: true,
-				size: true
-			})
-			.exec((res) => {
-				this.foodsCanvas = res[0].node
-				this.foodsCtx = this.foodsCanvas.getContext('2d')
-
-				const dpr = wx.getSystemInfoSync().pixelRatio
-				this.foodsCanvas.width = res[0].width * dpr
-				this.foodsCanvas.height = res[0].height * dpr
-				this.foodsCanvas.dpr = dpr;
-				// 缩放
-				this.foodsCtx.scale(dpr, dpr);
-
-				console.info(this.foodsCanvas);
-
-				this.setData({
-					positions: this.generatePositions(), // 每个菜品的位置
-				})
-
-				this.refreshData();
-			})
-		*/
 	},
 
 	/**
@@ -202,9 +173,11 @@ Page({
 			var date = time.getDate();
 			var month = time.getMonth() + 1;
 			var year = time.getFullYear();
-			var hour = time.getHours();
-			var minute = time.getMinutes();
+			var hour = time.getHours() + '';
+			var minute = time.getMinutes() + '';
 
+			hour = hour.padStart(2, 0);
+			minute = minute.padStart(2, 0);
 			r.time = month + "月" + date + "日 " + hour + ":" + minute;
 
 			var key = year + "年" + month + "月" + date + "日";

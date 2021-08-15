@@ -34,6 +34,7 @@ Page({
 			var shareImgUrl = e.shareImgUrl;
 			var foodId = e.foodId;
 			var quality = e.quality;
+			var strictMode = e.strictMode;
 
 			var content = "我花了" + rollDuration + "分钟，制作了" + rollName + "味" + foodName + "~";
 			
@@ -45,7 +46,7 @@ Page({
 				name: openId + '-' + Date.now() + '-poster.png'
 			})
 			this.setData({
-				content, rollName, rollCount, rollDuration, foodId, quality,
+				content, rollName, rollCount, rollDuration, foodId, quality, strictMode,
 				sharing: await this.loadSharingRecord(),
 				fileList: this.data.fileList
 			})
@@ -222,7 +223,8 @@ Page({
 					rollCount,
 					rollDuration: this.data.rollDuration,
 					foodId: this.data.foodId,
-					quality: this.data.quality
+					quality: this.data.quality,
+					strictMode: this.data.strictMode
 				}
 			})).result;
 
@@ -301,7 +303,8 @@ Page({
 				rollCount: this.data.rollCount,
 				rollDuration: this.data.rollDuration,
 				foodId: this.data.foodId,
-				quality: this.data.quality
+				quality: this.data.quality,
+				strictMode: this.data.strictMode
 			}
 		})).result;
 		

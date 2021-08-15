@@ -68,6 +68,7 @@ Page({
 		// 海报数据
 		sharings: [false, false],
 		continuity: 0,
+		defeat: 0, // 打败人数比例
 		equalActInfo: {
 			verb: '动作',
 			count: '计量',
@@ -186,7 +187,8 @@ Page({
 				rollCount: this.data.count,
 				rollDuration: this.data.duration,
 				foodId: this.data.foodId,
-				quality: this.data.quality
+				quality: this.data.quality,
+				strictMode: this.data.strictMode
 			}
 		})).result;
 		
@@ -215,6 +217,7 @@ Page({
 			userInfo: await userUtils.getUserInfo(),
 			sharings: await this.loadSharingRecord(),
 			continuity: 0, // await this.loadContinuity(),
+			defeat: await this.getDefeat(),
 			equalActInfo: this.getEqualActInfo()
 		})
 	},
@@ -235,9 +238,16 @@ Page({
 	},
 
 	// 读取连续卷的天数
-	loadContinuity: async function(params) {
+	loadContinuity: async function() {
 		return (await wx.cloud.callFunction({
 			name: 'getContinuity'
+		})).result;
+	},
+
+	// 获取打败人数比例
+	getDefeat: async function() {
+		return (await wx.cloud.callFunction({
+			name: 'getDefeat', data: { duration: this.data.duration }
 		})).result;
 	},
 
@@ -389,7 +399,7 @@ Page({
 		let act = equalAct.act;
 
 		this.texts = ['本次制作' + duration + '分钟',
-			'连续制作' + this.data.continuity + '天',
+			'超过' + this.data.defeat + '%的人',
 			'相当于' + verb + '了' + count + '\n' + act
 		];
 	},
@@ -410,6 +420,7 @@ Page({
 			foodId: this.data.foodId,
 			quality: this.data.quality,
 			shareImgUrl: this.posterImgUrl,
+			strictMode: this.data.strictMode
 		}
 		navigateUtils.switch('../postAdd/postAdd', data);
 	},

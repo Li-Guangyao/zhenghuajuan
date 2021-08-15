@@ -22,7 +22,6 @@ Page({
 	},
 
 	async onLoad(options) {
-		this.setData({ userInfo: await userUtils.getUserInfo() });
 		
 		// 获得食物列表
 		var res = await wx.cloud.callFunction({
@@ -33,6 +32,10 @@ Page({
 		if (!this.data.userInfo) await this.judgeLogin();
 		
 		this.initFoodInfo()
+	},
+
+	async onShow() {
+		this.setData({ userInfo: await userUtils.getUserInfo() });
 	},
 
 	// 拿到foodList，判断某些food是否解锁
@@ -214,7 +217,7 @@ Page({
 			foodId: food._id,
 			foodName: food.name,
 			foodImage: food.images[quality],
-			quality
+			quality,
 		}
 
 		navigateUtils.push('../rolling/rolling', data);
