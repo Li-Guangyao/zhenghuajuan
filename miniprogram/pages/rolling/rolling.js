@@ -55,10 +55,10 @@ Page({
 		isShowSharingDialog:false,
 
 		durationOfDays:0,
-		equalThingInfo:{
+		equalActInfo:{
 			verb:'动作',
 			count:'计量',
-			thing:'物',
+			act:'物',
 		},
 
 		processTime:{
@@ -191,19 +191,23 @@ Page({
 	onLoad: async function (e) {
 		
 		this.setData({
-			userInfo:await userUtils.getUserInfo(),
-			durationOfDays:(await wx.cloud.callFunction({
+			userInfo: await userUtils.getUserInfo(),
+			durationOfDays: (await wx.cloud.callFunction({
 				name:'getDurationOfDays'
 			})).result,
-			equalThingInfo:this.getEqualThingInfo()
+			equalActInfo: this.getEqualActInfo()
 		})
-		let verb=this.data.equalThingInfo.verb;
-		let count=this.data.equalThingInfo.count;
-		let thing=this.data.equalThingInfo.thing;
-		let duration=this.data.duration;
-		this.texts=['本次蒸了'+new Number(duration).toString()+'分钟','连续蒸了'+new Number(this.data.durationOfDays).toString()+'天','相当于'+verb+'了'+count+'\n'+thing];
+
+		let verb = this.data.equalActInfo.verb;
+		let count = this.data.equalActInfo.count;
+		let act = this.data.equalActInfo.act;
+		let duration = this.data.duration;
+		this.texts = ['本次蒸了' + duration + '分钟',
+			'连续蒸了' + this.data.durationOfDays + '天',
+			'相当于' + verb + '了' + count + '\n' + act];
+
 		//TODO 从xml里边获取内容
-		this.message='我蒸了'+new Number(duration).toString()+'分钟花卷!是的范德萨发电风扇的范德萨范德萨';
+		this.message = '我蒸了' + duration + '分钟花卷!';
 
 		wx.setKeepScreenOn({
 			keepScreenOn: true
@@ -233,7 +237,7 @@ Page({
 	onShow: function (e) {
 		if (!this.data.exitTime) return;
 
-		/*
+		/* 尝试检测手机运动状态的代码
 		wx.stopDeviceMotionListening({})
 
 		if (this.data.stopped) {
@@ -387,7 +391,6 @@ Page({
 		return parseInt(second / delta);
 	},
 
-
 	drawMinuteProgress(second) {
 		if (!aniCtx) return;
 
@@ -480,28 +483,29 @@ Page({
 	stopRolling() {
 		clearInterval(updateId)
 	},
-//获取等价事物
-	getEqualThingInfo(){
-		let duration=this.data.duration;
-		var things=[];
-		var type=0;
+
+	// 获取等价活动
+	getEqualActInfo(){
+		let duration = this.data.duration;
+		var acts = [], type = 0;
 		if(duration<=40){
-			things={短视频:['刷',0.5,'条'],王者荣耀:['玩',15,'局']};
-			type=Math.round(Math.random());
+			acts={短视频:['刷',0.5,'条'], 王者荣耀:['玩',15,'局']};
+			type = Math.round(Math.random());
 		}
 		else if(duration<=60){
-			things={短视频:['刷',0.5,'条'],王者荣耀:['玩',15,'局'],电视剧:['煲',40,'集']};
-			type=Math.round(Math.random()*2)
+			acts = {短视频:['刷',0.5,'条'], 王者荣耀:['玩',15,'局'], 电视剧:['煲',40,'集']};
+			type = Math.round(Math.random()*2)
 		}
 		else{
-			things={王者荣耀:['玩',15,'局'],电视剧:['煲',40,'集']};
-			type=Math.round(Math.random());
+			acts = {王者荣耀:['玩',15,'局'], 电视剧:['煲',40,'集']};
+			type = Math.round(Math.random());
 		}
-		var equalThingInfo=Object.values(things)[type];
-		return{ 
-			verb:equalThingInfo[0],
-			count:new Number(Math.round(duration/equalThingInfo[1])).toString()+equalThingInfo[2],
-			thing:Object.keys(things)[type],
+		var equalActInfo = Object.values(acts)[type];
+
+		return { 
+			verb: equalActInfo[0],
+			count: Math.round(duration/equalActInfo[1]) + equalActInfo[2],
+			act: Object.keys(acts)[type],
 		}
 	},
 	cancelShare(){

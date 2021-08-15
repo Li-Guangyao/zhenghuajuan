@@ -17,12 +17,12 @@ export default async function uploadImage(fileList, savePath) {
 		}
 		//把固定地址返回，保存进数据库
 		return uploadedFileList;
-	}).catch(e => {
+	})/*.catch(e => {
 		wx.showToast({
 			title: '上传失败',
 			icon: 'none'
 		});
-	});
+	});*/
 }
 /**
  * 执行函数，单个文件上传到云存储
