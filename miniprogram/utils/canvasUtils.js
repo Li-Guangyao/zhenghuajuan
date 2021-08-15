@@ -199,6 +199,13 @@ canvasUtils.clipRect = function(x, y, w, h, draw) {
 
 canvasUtils.wait = t => new Promise(d => setTimeout(() => d(), t));
 
+canvasUtils.clearAll = function() {
+	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+}
+canvasUtils.clearRect = function(x, y, w, h) {
+	this.ctx.clearRect(x, y, w, h)
+}
+
 // 蒸花卷绘制相关函数封装
 canvasUtils.drawFood = async function(food, quality, x, y, w, h, adjust, shadow) {
 	if (adjust === undefined) adjust = true;

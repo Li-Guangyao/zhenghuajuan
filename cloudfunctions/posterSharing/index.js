@@ -17,8 +17,15 @@ exports.main = async (event, context) => {
 
 	switch (method.toUpperCase()) {
 		case "ADD": addShare(wxContext, type); break;
-		case "QUERY": return await queryShare(wxContext, type, startTime, endTime);
-	}
+		case "QUERY": 
+			return await queryShare(wxContext, type, startTime, endTime);
+		case "TODAY": 
+			var startTime = new Date();
+			startTime.setHours(0, 0, 0);
+			var endTime = new Date();
+			endTime.setHours(23, 59, 59);
+			return await queryShare(wxContext, type, startTime, endTime);
+		}
 }
 
 function addShare(wxContext, type) {

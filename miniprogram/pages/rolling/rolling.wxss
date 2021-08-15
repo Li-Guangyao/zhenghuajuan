@@ -2,7 +2,6 @@ page {
   --postFontColor: #613b10;
   background-color: var(--themeBackgroundColor);
   text-align: center;
-  overflow: hidden;
 }
 .title {
   font-size: 64rpx;
@@ -56,10 +55,10 @@ page {
 }
 .post-canvas {
   position: absolute;
-  left: 200%;
-  top: 200%;
+  left: 0;
+  top: 0;
   width: 70%;
-  height: calc(750rpx*0.7/9*16);
+  height: calc(750rpx/9*16);
 }
 .post-prompt {
   display: flex;
@@ -87,17 +86,17 @@ page {
   color: #FFDB93;
   font-size: 44rpx;
   line-height: 44rpx;
-  text-align: center;
+  text-align: left;
   font-family: "海派腔调清夏简";
 }
 .post-prompt .post .time {
-  top: 13%;
-  left: 31.5%;
+  top: 12.5%;
+  left: 32%;
   transform: skewY(-26.8deg);
 }
 .post-prompt .post .day {
-  top: 45%;
-  left: 37%;
+  top: 47%;
+  left: 42%;
   transform: skewY(36.2deg);
 }
 .post-prompt .post .play {
