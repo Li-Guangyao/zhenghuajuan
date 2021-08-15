@@ -48,7 +48,7 @@ page {
 			z-index: 1;
 	}
 
-	.content {
+	.content-frame {
 		position: absolute;
 		width: 100%;
 		top: 192rpx;
@@ -56,6 +56,10 @@ page {
 
 		overflow-x: hidden;
 		overflow-y: scroll;
+
+		.content {
+			min-height: 101%;
+		}
 
 		.block {
 			width: 100%;

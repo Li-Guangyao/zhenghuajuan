@@ -40,10 +40,11 @@ Page({
 		name: "学习",
 		duration: 15,
 		count: 15,
-		quality: 0,
 		strictMode: false,
+		foodId: "",
 		foodImage: null,
 		foodName: null,
+		quality: 0,
 
 		// 海报自定义信息
 		message: "",
@@ -59,6 +60,7 @@ Page({
 		// 状态变量
 		finished: false,
 		stopped: false,
+		sharePost: false,
 
 		// 退出控制
 		exitTime: null,
@@ -166,6 +168,37 @@ Page({
 		this.stopRolling();
 
 		canvasUtils.reset();
+
+		// 如果是完成了，但没有去分享的话
+		if (this.data.finished && !this.data.sharePost)
+			this.addPrivateRollPost();
+	},
+
+	// 添加一个私有的花卷记录
+	addPrivateRollPost: async function() {
+		var res = (await wx.cloud.callFunction({
+			name: 'savePost',
+			data: {
+				isPrivate: true,
+
+				// 如果帖子属性包含这3个，就是蒸花卷记录
+				rollName: this.data.name,
+				rollCount: this.data.count,
+				rollDuration: this.data.duration,
+				foodId: this.data.foodId,
+				quality: this.data.quality
+			}
+		})).result;
+		
+		wx.cloud.callFunction({
+			name: 'saveRollRecord',
+			data: {
+				postId: res._id,
+				postAuthorOpenId: this.data.userInfo._openid,
+				count: this.data.count,
+				duration: this.data.duration,
+			}
+		});
 	},
 
 	// 读取异步数据（边制作边读取）
@@ -344,7 +377,6 @@ Page({
 
 	// 取消分享
 	cancelShare() {
-		// TODO: 发布一张隐藏帖子
 		navigateUtils.pop();
 	},
 
@@ -368,11 +400,15 @@ Page({
 
 		await this.generatePoster();
 
+		this.setData({sharePost: true});
+
 		var data = {
 			rollName: this.data.name,
 			rollCount: this.data.count,
 			rollDuration: this.data.duration,
 			foodName: this.data.foodName,
+			foodId: this.data.foodId,
+			quality: this.data.quality,
 			shareImgUrl: this.posterImgUrl,
 		}
 		navigateUtils.switch('../postAdd/postAdd', data);
@@ -457,8 +493,8 @@ Page({
 	posterImgUrl: null,
 
 	generatePoster: async function () {
-		const query = this.createSelectorQuery()
-		await canvasUtils.setupById(query, "post-canvas");
+		// const query = this.createSelectorQuery()
+		// await canvasUtils.setupById(query, "post-canvas");
 
 		canvasUtils.clearAll();
 
@@ -467,9 +503,9 @@ Page({
 		var fw = w * this.foodSize[0] / 100;
 		var fh = h * this.foodSize[1] / 100;
 		// 屏幕宽度固定位750rpx
-		var nickNameSize = Math.round(42 * w / 750);
+		var nickNameSize = Math.round(36 * w / 750);
 		var nickNameFont = nickNameSize + "px 微软雅黑";
-		var messageSize = Math.round(36 * w / 750);
+		var messageSize = Math.round(32 * w / 750);
 		var messageFont = messageSize + "px 微软雅黑";
 		var fontSize = Math.round(60 * w / 750);
 		var font = fontSize + "px 海派腔调清夏简";
@@ -526,7 +562,7 @@ Page({
 
 		canvasUtils.setFont(messageFont);
 		canvasUtils.drawTextEx(this.data.message,
-			nx, ny + nickNameSize, nw, messageSize);
+			nx, ny + nickNameSize + 2, nw, messageSize + 2);
 
 		var data = canvasUtils.canvas.toDataURL();
 		this.posterImgUrl = wx.env.USER_DATA_PATH + '/tempPoster.png';

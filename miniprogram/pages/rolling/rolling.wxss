@@ -69,13 +69,6 @@ page {
   height: 90%;
   background-color: transparent !important;
 }
-.post-prompt #post-canvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 720px;
-  height: 1280px;
-}
 .post-prompt .post {
   position: relative;
   height: 90%;

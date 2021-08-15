@@ -59,7 +59,7 @@ Page({
 		var dayEnd = new Date(year, month, date + 1);
 
 		var weekStart = new Date(year, month, date - day);
-		var weekEnd = new Date(year, month, date - day + 7);
+		var weekEnd = new Date(year, month, date - day + 8);
 
 		var monthStart = new Date(year, month, 1);
 		var monthEnd = new Date(year, month + 1, 0);
@@ -96,20 +96,18 @@ Page({
 	},
 
 	// 配置Canvas（桌面图片onload后执行）
-	setupCanvas() {
+	async setupCanvas() {
 		var query = this.createSelectorQuery()
-		canvasUtils.setupById(query, "foods", 
-			u => {
-				this.foodsCanvas = u.canvas;
-				this.foodsCtx = u.ctx;
-				
-				this.setData({
-					positions: this.generatePositions(), // 每个菜品的位置
-				})
+		await canvasUtils.setupById(query, "foods")
 
-				this.refreshData();
-			}
-		);
+		this.foodsCanvas = canvasUtils.canvas;
+		this.foodsCtx = canvasUtils.ctx;
+		
+		this.setData({
+			positions: this.generatePositions(), // 每个菜品的位置
+		})
+
+		this.refreshData();
 
 		/*
 		const query = this.createSelectorQuery()
@@ -202,7 +200,7 @@ Page({
 		records.forEach(r => {
 			var time = new Date(r.createdAt);
 			var date = time.getDate();
-			var month = time.getMonth();
+			var month = time.getMonth() + 1;
 			var year = time.getFullYear();
 			var hour = time.getHours();
 			var minute = time.getMinutes();
@@ -316,7 +314,7 @@ Page({
 
 	// 清空画布的内容
 	clearCanvas: function () {
-		this.foodsCtx.clearRect(0, 0, this.foodsCanvas.width, this.foodsCanvas.height)
+		canvasUtils.clearAll()
 
 		/* 测试用
 		for (let x = 0; x < this.width(); x += 100) {

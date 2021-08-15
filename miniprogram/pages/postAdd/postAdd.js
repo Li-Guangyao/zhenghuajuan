@@ -16,17 +16,24 @@ Page({
 		rollCount: null,
 		rollDuration: null,
 		shareImgUrl:null,
+		foodId: "", 
+		quality: 0,
+
+		sharing: false,
+		sharePost: false
 	},
 
 	onLoad: async function (e) {
 		await this.judgeLogin()
 
-		if (e.rollName && e.rollCount && e.rollDuration && e.foodName && e.shareImgUrl) {
+		if (e.rollName) {
 			var rollName = e.rollName;
 			var rollCount = e.rollCount;
 			var rollDuration = e.rollDuration;
 			var foodName = e.foodName;
 			var shareImgUrl = e.shareImgUrl;
+			var foodId = e.foodId;
+			var quality = e.quality;
 
 			var content = "我花了" + rollDuration + "分钟，制作了" + rollName + "味" + foodName + "~";
 			
@@ -38,17 +45,26 @@ Page({
 				name: openId + '-' + Date.now() + '-poster.png'
 			})
 			this.setData({
-				content, rollName, rollCount, rollDuration,fileList:this.data.fileList
+				content, rollName, rollCount, rollDuration, foodId, quality,
+				sharing: await this.loadSharingRecord(),
+				fileList: this.data.fileList
 			})
 			console.log(this.data.fileList);
-			
-
 		} else {
 			var tempPost = wx.getStorageSync('tempPost')
 			if (tempPost) this.setData({ ...tempPost })
 		}
 	},
 
+	// 读取分享数据
+	loadSharingRecord: async function() {
+		var res = await wx.cloud.callFunction({
+			name: 'posterSharing', data: {
+				method: "TODAY", type: "post"
+			}
+		})
+		return res.result.length > 0
+	},
 	// 判断用户是否登录
 	async judgeLogin() {
 		this.setData({ userInfo: await userUtils.judgeLogin() })
@@ -132,25 +148,24 @@ Page({
 	},
 
 	// 点击发布按钮
-	publishPost() {
-		if (this.data.content == '') {
+	async publishPost() {
+		if (this.data.content == '') 
 			wx.showToast({
 				title: '内容不能为空！',
 				icon: 'none'
 			});
-		} else {
-			wx.showModal({
-				content: '确定要发布吗？',
-				success: async (e) => {
-					if (e.confirm) {
-						wx.showLoading({
-							title: '保存中', mask: true
-						})
-						var uploadedFileList = await this.getFileID()
-						this.savePost(uploadedFileList)
-					}
-				}
+		else {
+			var res = await wx.showModal({
+				content: '确定要发布吗？'
 			})
+
+			if (res.confirm) {
+				wx.showLoading({
+					title: '保存中', mask: true
+				})
+				var uploadedFileList = await this.getFileID()
+				this.savePost(uploadedFileList)
+			}
 		}
 	},
 
@@ -183,6 +198,8 @@ Page({
 
 	// 执行储存
 	async savePost(uploadedFileList) {
+		var rollCount = this.data.rollName ? this.data.rollCount : null;
+		if (this.data.rollName && !this.data.sharing) rollCount *= 2;
 		if (await this.checkPost(uploadedFileList.uploadedPhotoList)) {
 			var res = (await wx.cloud.callFunction({
 				name: 'savePost',
@@ -194,8 +211,10 @@ Page({
 
 					// 如果帖子属性包含这3个，就是蒸花卷记录
 					rollName: this.data.rollName,
-					rollCount: this.data.rollCount,
+					rollCount,
 					rollDuration: this.data.rollDuration,
+					foodId: this.data.foodId,
+					quality: this.data.quality
 				}
 			})).result;
 
@@ -215,10 +234,16 @@ Page({
 					data: {
 						postId: res._id,
 						postAuthorOpenId: this.data.userInfo._openid,
-						count: this.data.rollCount,
-						duration: this.data.rollDuration,
+						count: rollCount,
+						duration: this.data.rollDuration
 					}
 				});
+				
+				wx.cloud.callFunction({
+					name: "posterSharing", 
+					data: { method: "ADD", type: "post" }
+				})
+				this.setData({sharePost: true})
 			}
 
 			setTimeout(() => {
@@ -242,6 +267,10 @@ Page({
 
 	// 退出，把已经输入的内容缓存起来
 	onUnload: function () {
+		// 如果是完成了，但没有去分享的话
+		if (this.data.rollName && !this.data.sharePost)
+			this.addPrivateRollPost();
+
 		wx.setStorage({
 			key: 'tempPost',
 			data: {
@@ -250,6 +279,33 @@ Page({
 				fileList: this.data.fileList,
 			}
 		})
+	},
+
+	// 添加一个私有的花卷记录
+	addPrivateRollPost: async function() {
+		var res = (await wx.cloud.callFunction({
+			name: 'savePost',
+			data: {
+				isPrivate: true,
+
+				// 如果帖子属性包含这3个，就是蒸花卷记录
+				rollName: this.data.rollName,
+				rollCount: this.data.rollCount,
+				rollDuration: this.data.rollDuration,
+				foodId: this.data.foodId,
+				quality: this.data.quality
+			}
+		})).result;
+		
+		wx.cloud.callFunction({
+			name: 'saveRollRecord',
+			data: {
+				postId: res._id,
+				postAuthorOpenId: this.data.userInfo._openid,
+				count: this.data.rollCount,
+				duration: this.data.rollDuration,
+			}
+		});
 	},
 
 	// 内容安全检查

@@ -1,9 +1,5 @@
-import {
-	userUtils
-} from "../../utils/userUtils"
-import {
-	navigateUtils
-} from "../../utils/navigateUtils"
+import { userUtils } from "../../utils/userUtils"
+import { navigateUtils } from "../../utils/navigateUtils"
 
 Page({
 	data: {
@@ -213,6 +209,7 @@ Page({
 			duration: this.data.duration,
 			count: this.data.rollCount,
 			strictMode: this.data.strictMode ? 1 : 0,
+			foodId: food._id,
 			foodName: food.name,
 			foodImage: food.images[quality],
 			quality

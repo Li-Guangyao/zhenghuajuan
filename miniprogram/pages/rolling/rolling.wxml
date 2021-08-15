@@ -26,7 +26,7 @@
 
 <!-- 海报弹窗 -->
 <van-popup custom-class="post-prompt" show="{{finished}}" bind:close="onClose">
-	<canvas id="post-canvas" type="2d" ></canvas>
+	<!-- <canvas id="post-canvas" type="2d" ></canvas> -->
 
 	<image class="post" src="../../images/post.png" mode="heightFix" >
 		<text class="time">本次制作{{duration}}分钟</text>
