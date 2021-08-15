@@ -3,7 +3,7 @@
  * @param {Array} fileList 文件列表
  * @param {String} savePath 指定储存的文件夹路径
  */
-export default async function uploadImage(fileList, savePath) {
+export default async function uploadMedia(fileList, savePath) {
 	const uploadTasks = fileList.map(file => uploadFilePromise(file, savePath))
 	// uploadTasks是若干Promise对象的集合，此时已经上传成功
 	// 用下面的方法，data就是提取出来的返回结果

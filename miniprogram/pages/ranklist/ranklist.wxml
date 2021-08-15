@@ -1,12 +1,10 @@
 <view>
-	<!-- 左上角返回按钮 -->
-	<view class="back-button" bindtap="toRoll">
-		<image src="../../icon/backArrow.png" mode="widthFix"></image>
-		排行榜
-	</view>
+	
+	<!-- 左上角标题 -->
+	<van-nav-bar border="{{false}}" fixed left-text="排行榜" left-arrow bind:click-left="back"/>
 
 	<!-- 背景 -->
-	<image class="background" src="../../images/rankListBackground.png" mode="widthFix" />
+	<image class="background" src="../../images/rankListBackground.jpg" mode="widthFix" />
 
 	<!-- 主页 -->
 	<view class="main">
@@ -19,7 +17,7 @@
 			<van-tab wx:for="{{tab}}" wx:key="index" title="{{tab[index][0]}}" name="{{tab[index][1]}}"></van-tab>
 		</van-tabs>
 		<!-- 记录页按钮 -->
-		<image class="record-button" src="../../icon/recordButton.png" mode="heightFix"></image>
+		<image class="record-button" src="../../icon/recordButton.png" mode="heightFix" bindtap="toRollRecord"></image>
 
 		<!-- 前三名 -->
 		<view class="top3">

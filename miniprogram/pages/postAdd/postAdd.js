@@ -1,6 +1,6 @@
 //获取标准的时间格式yyyy-mm-dd hh:mm，而非时间戳
 import judgeImageFormat from '../../utils/judgeImageFormat'
-import uploadMedia from '../../utils/uploadImage'
+import uploadMedia from '../../utils/uploadMedia'
 import { userUtils } from "../../utils/userUtils"
 
 Page({
@@ -15,22 +15,33 @@ Page({
 		rollName: null,
 		rollCount: null,
 		rollDuration: null,
+		shareImgUrl:null,
 	},
 
 	onLoad: async function (e) {
 		await this.judgeLogin()
 
-		if (e.rollName && e.rollCount && e.rollDuration) {
+		if (e.rollName && e.rollCount && e.rollDuration && e.foodName && e.shareImgUrl) {
 			var rollName = e.rollName;
 			var rollCount = e.rollCount;
 			var rollDuration = e.rollDuration;
+			var foodName = e.foodName;
+			var shareImgUrl = e.shareImgUrl;
 
-			var content = "我花了" + rollDuration + "分钟，蒸了" + 
-				rollCount + "个" + rollName + "味花卷~";
+			var content = "我花了" + rollDuration + "分钟，制作了" + rollName + "味" + foodName + "~";
+			
+			var openId = this.data.userInfo._openid;
 
-			this.setData({
-				content, rollName, rollCount, rollDuration
+			this.data.fileList.push({
+				type:'image',
+				url:shareImgUrl,
+				name: openId + '-' + Date.now() + '-poster.png'
 			})
+			this.setData({
+				content, rollName, rollCount, rollDuration,fileList:this.data.fileList
+			})
+			console.log(this.data.fileList);
+			
 
 		} else {
 			var tempPost = wx.getStorageSync('tempPost')

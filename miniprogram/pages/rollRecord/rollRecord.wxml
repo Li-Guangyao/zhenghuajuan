@@ -1,13 +1,9 @@
 <!--pages/rollRecord/rollRecord.wxml-->
 <view class="page">
 
-	<view class="background"></view>
+	<!-- 左上角标题 -->
+	<van-nav-bar border="{{false}}" fixed left-text="{{userInfo.shopName}}" left-arrow bind:click-left="back"/>
 
-	<!-- 左上角返回按钮 -->
-	<view class="back-button" bindtap="toRoll">
-		<image src="../../icon/backArrow.png" mode="widthFix"></image>
-		{{userInfo.shopName}}
-	</view>
 
 	<!-- 主页 -->
 	<view class="main">
@@ -21,7 +17,7 @@
 		</van-tabs>
 
 		<!-- 排行榜按钮 -->
-		<image class="rank-button" src="../../icon/rankButton2.png" mode="heightFix"></image>
+		<image class="rank-button" src="../../icon/rankButton2.png" mode="heightFix" bindtap="toRanklist"></image>
 
 		<!-- 内容 -->
 		<view class="content">

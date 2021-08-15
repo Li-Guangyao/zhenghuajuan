@@ -11,85 +11,83 @@ page {
 }
 
 .content {
-	padding: 0 96rpx 0 96rpx;
-
+	position:absolute;
+	width: 80%;
+	top:70%;
+	left:0;
+	right:0;
+	margin:0 auto;
 }
 
-.progress-bar {
-	margin: 64rpx auto 32rpx auto;
-	width: fit-content;
+.circle {
+	width: 70%;
+	height: calc(750rpx*0.7/9*16);
+	margin: 64rpx auto auto auto ;
 
-	.circle {
-		width: 256px;
-		height: 256px;
-		margin: 0 0 32rpx 0;
-
-		image {
-			position: absolute;
-			transform: translateY(-50%);
-
-			left: 0;
-			right: 0;
-			top: 50%;
-			height: 35%;
-			margin: auto;
-		}
+	image {
+		transform: translateY(32%);
+		height: 32%;
 	}
-
-	text {
-		font-size: 32rpx;
-		color: #515151;
-	}
-
 }
 
-.total-progress {
-	margin-top: 96rpx;
-	border: #FEA403 solid 1px;
-	border-radius: 12px;
+.chicken-soup {
+	font-size: 32rpx;
+	color: #515151;
 }
+
+.left-time{
+	font-size:70rpx;
+	color:#FEA403;
+	margin-top:50rpx;
+}
+
+// .total-progress {
+// 	margin-top: 96rpx;
+// 	border: #FEA403 solid 1px;
+// 	border-radius: 12px;
+// }
 
 .small-tip {
 	position: relative;
-	display: flex;
 	align-items: center;
-	justify-content: left;
+	justify-content: center;
+	margin: 50rpx auto;
 
-	color: #808080;
-	font-size: 24rpx;
-	margin: 12rpx 0 32rpx 0;
-
+	.text1{
+		color: #808080;
+		font-size: 24rpx;
+		margin: auto;
+	}
+	
 	.number1 {
-		color: #FEA403
+		color: #FEA403;
+		margin:auto;
 	}
 
 	image {
 		height: 42rpx;
-		margin-left: 12rpx
+		margin-left: 12rpx;
 	}
 
-	.number2 {
-		position: absolute;
+	// .number2 {
+	// 	position: absolute;
 		
-		color: #FEA403;
-		right: 0
-	}
+	// 	color: #FEA403;
+	// 	right: 0
+	// }
 }
 
-.share__canvas {
-	position: fixed;
-	top:100%;
-	width: 720rpx;
-	height: 1280rpx;
-	background: #f0f0f0;
-	margin-bottom: 40rpx;
-	font-size: 32rpx;
+.post-canvas {
+	position: absolute;
+	left: 0; top: 0;
+	width: 70%;
+	height: calc(750rpx/9*16);
 }
 
 .post-prompt {
-
+	
 	display: flex;
-
+	
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
@@ -118,20 +116,20 @@ page {
 			color: #FFDB93;
 			font-size: 44rpx;
 			line-height: 44rpx;
-			text-align: center;
+			text-align: left;
 	
 			font-family: "海派腔调清夏简";
 		}
 	
 		.time {
-			top: 13%;
-			left: 31.5%;
+			top: 12.5%;
+			left: 32%;
 	
 			transform: skewY(-26.8deg);
 		}
 		.day {
-			top: 45%;
-			left: 37%;
+			top: 47%;
+			left: 42%;
 	
 			transform: skewY(36.2deg);
 		}
@@ -261,4 +259,19 @@ page {
 			}
 		}
 	}
+}
+
+.cancel-btn-wrapper {
+  width:  67.5%;
+	height: auto;
+	z-index: 0;
+}
+.cancel-btn {
+  height: auto;
+  color: white;
+  margin-top: 15rpx;
+  margin-left: auto;
+	text-decoration: underline;
+	text-align: right;
+  font-size: 25rpx;
 }

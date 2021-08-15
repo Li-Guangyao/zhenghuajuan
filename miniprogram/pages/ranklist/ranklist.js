@@ -125,10 +125,13 @@ Page({
 	onReachBottom: function () {
 
 	},
-
-	toRoll(){
-		wx.navigateBack({
-		  delta: 1,
+	
+	toRollRecord() {
+		wx.navigateTo({
+			url: '../rollRecord/rollRecord',
 		})
+	},
+	back() {
+		wx.navigateBack({ delta: 1 })
 	}
 })

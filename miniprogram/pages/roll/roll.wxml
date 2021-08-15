@@ -9,7 +9,7 @@
 <!-- 店名 -->
 <navigator class="shop-board" url="../shopName/shopName">
 	<image src="../../images/titleBoard.png" mode="widthFix">
-		<view>{{userInfo.shopName}}店</view>
+		<view>{{userInfo.shopName}}</view>
 	</image>
 </navigator>
 
@@ -36,7 +36,7 @@
 			如果中途切换了菜品，导致最低时限改变了，这里也需要同步改变
 		 -->
 		<van-slider use-button-slot bar-height="20" active-color="#F2B771" step="1" inactive-color="#EBD6BC"
-			bind:drag="onDrag" min="15" max="120">
+			bind:drag="onDrag" min="{{foodList[chosenFoodIdx].minTime || 15}}" max="120">
 			<image class="bar-icon" src="../../icon/barIcon.png" slot="button" mode="aspectFit">
 			</image>
 		</van-slider>
@@ -44,20 +44,21 @@
 	<!-- TODO: 时间显示，需要和上面的拖拽条同步更新 -->
 	<view class="time-tips">
 		制作需要<text>{{duration}}</text>min
+		<van-checkbox class="strict-mode" label-class="strict-mode-label" checked-color="#ffa600" value="{{ strictMode }}" bind:change="onStrictChange">严格模式</van-checkbox>
 	</view>
 
 	<!-- 更改口味 -->
 	<view class="name-edit">
 		<!-- TODO: 点击切换后把原有的元素隐藏掉，显示下面的input -->
 		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{!showNameEdit}}"></image>
-		<view class="value" wx:if="{{!showNameEdit}}" bindtap="showNameEdit">{{name}}</view>
+		<view class="value" wx:if="{{!showNameEdit}}" bindtap="showNameEdit">{{name}}味{{foodList[chosenFoodIdx].name}}</view>
 		<!-- TODO: 输入完毕后（失去焦点后，应该是用bindblur来绑定事件）成功修改口味，退回上一个状态 -->
 		<input class="input" bindinput="inputActivityName" bindblur="finishNameEdit" maxlength="5"
 			placeholder="写下你专注的内容吧" wx:if="{{showNameEdit}}"></input>
 	</view>
 
 	<!-- TODO: 开始制作！（复用原来的代码） -->
-	<van-button custom-class="start-button" round color="#ffa600" bindtap="beginActivity">
+	<van-button custom-class="start-button" round color="#ffa600" bindtap="startRoll">
 		<view class="button-content">
 			<view class="big">开始制作</view>
 			<view class="small">Get Started!</view>
@@ -81,7 +82,7 @@
 			<!-- TODO: 菜品图像 -->
 			<image class="food-image" src="{{foodList[foodIdx].images[0]}}" mode="aspectFit"></image>
 			<!-- TODO: 菜品价格 -->
-			<view class="food-price" wx:if="{{!judgeFoodLock.judge(foodList[foodIdx]._id, userInfo)}}">
+			<view class="food-price" wx:if="{{!foodList[foodIdx].unlock}}">
 				<image src="../../icon/roll2.png" mode="heightFix"></image>{{foodList[foodIdx].cost}}
 			</view>
 		</image>

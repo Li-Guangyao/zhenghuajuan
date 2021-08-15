@@ -1,26 +1,31 @@
 page {
+	--grey: #F2F2F2;
+	--greyFontColor: rgba(0, 0, 0, 0.3);
 	background-color: var(--themeBackgroundColor);
-	--grey: rgb(220, 220, 220);
-	--grey2: rgb(160, 160, 160);
 }
 
-.back-button {
-	position: absolute;
-	display: flex;
-
-	top: 6%;
-	left: 6%;
-
-	font-size: 36rpx;
-	line-height: 42rpx;
+// 标题
+.van-nav-bar {
+	background-color: var(--themeBackgroundColor) !important;
+}
+.van-icon:before {
+	color: var(--fontColor) !important;
+	font-size: 36rpx !important;
+}
+.van-nav-bar__text {
+	margin-left: -12rpx !important;
+	color: var(--fontColor) !important;
+	font-size: 36rpx !important;
+	line-height: 36rpx !important;
+	background-color: transparent !important;
 }
 
 .user-avatar {
 	position: absolute;
 	top: 15%;
 
-	width: 200rpx;
-	border-radius: 100rpx;
+	width: 192rpx;
+	border-radius: 100%;
 	margin-left: 80rpx;
 }
 
@@ -30,8 +35,8 @@ page {
 	width: 100%;
 
 	.tag {
-		margin: 25rpx 85rpx;
-		color: var(--grey2);
+		margin: 32rpx 80rpx;
+		color: var(--greyFontColor);
 
 		.shopName {
 			display: inline;
@@ -42,20 +47,20 @@ page {
 	.input-shopName {
 		background-color: var(--grey);
 		border-radius: 5rpx;
-		margin: 0 30rpx;
-		height: 90rpx;
+		margin: 0 32rpx;
+		height: 96rpx;
+
+		font-size: 28rpx;
 
 		display: flex;
 		align-items: center;
 
 		input {
 			width: 100%;
-			margin: 0 20rpx;
+			margin: 0 48rpx;
 		}
 	}
 }
-
-
 
 #affirm {
 	position: absolute;

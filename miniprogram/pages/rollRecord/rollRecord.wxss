@@ -2,18 +2,19 @@ page {
   --greyColor: rgba(0, 0, 0, 0.3);
   background-color: var(--themeColor);
 }
-.back-button {
-  position: absolute;
-  display: flex;
-  top: 6%;
-  left: 8%;
-  color: white;
-  font-size: 36rpx;
-  line-height: 42rpx;
+.van-nav-bar {
+  background-color: var(--themeColor) !important;
 }
-.back-button image {
-  width: 24rpx;
-  margin-right: 20rpx;
+.van-icon:before {
+  color: white !important;
+  font-size: 36rpx !important;
+}
+.van-nav-bar__text {
+  margin-left: -12rpx !important;
+  color: white !important;
+  font-size: 36rpx !important;
+  line-height: 36rpx !important;
+  background-color: transparent !important;
 }
 .main {
   position: absolute;

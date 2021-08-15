@@ -283,6 +283,8 @@ Page({
 	},
 
 	drawFood: async function (i, rec, pos) {
+		if (!pos) return;
+		
 		console.info("drawFood: ", i, rec, pos)
 		// pos = this.adjustPos(pos);
 
@@ -339,9 +341,12 @@ Page({
 		*/
 	},
 
-	toRoll(){
-		wx.navigateBack({
-		  delta: 1,
+	toRanklist() {
+		wx.navigateTo({
+			url: '../ranklist/ranklist',
 		})
+	},
+	back() {
+		wx.navigateBack({ delta: 1 })
 	}
 })

@@ -9,13 +9,10 @@ canvasUtils.imageCache = {};
 /**
  * 配置Canvas
  */
-canvasUtils.setupById = function(query, id, onSuccess) {
-	query.select('#' + id).fields({
-		node: true, size: true
-	}).exec((res) => {
-		this.setupByRes(res);
-		if (onSuccess) onSuccess(canvasUtils);
-	})
+canvasUtils.setupById = async function(query, id) {
+	var res = await this.querySelect(query, '#' + id);
+	this.setupByRes(res);
+	return res;
 }
 canvasUtils.setupByRes = function(res) {
 	this.setupByCanvas(res[0].node, res[0].width, res[0].height);
@@ -32,14 +29,21 @@ canvasUtils.setupByCanvas = function(canvas, width, height) {
 	console.info("canvasUtils.setupByCanvas: ", this);
 }
 
-canvasUtils.clear = function() {
+canvasUtils.querySelect = (query, selector, fields) =>
+	new Promise((resolve, reject) => 
+		query.select(selector)
+			.fields(fields || { node: true, size: true })
+			.exec(resolve)
+	);
+
+canvasUtils.reset = function() {
 	this.canvas = this.ctx = null;
 	this.dpr = 1;
 }
 
 /**
  * 获取图片信息
- * @param {图片路径} src 
+ * @param {String} src 图片路径
  */
 canvasUtils.getImageInfo = async function(src) {
 	var isCloud = src.startsWith("cloud://");
@@ -59,14 +63,14 @@ canvasUtils.getImageInfo = async function(src) {
 
 /**
  * 绘制图片
- * @param {图片路径} src 
- * @param {X坐标} x 
- * @param {Y坐标} y 
- * @param {宽度（拉伸）} w 
- * @param {高度（拉伸）} h 
- * @param {绘制风格: 
+ * @param {String} src 图片路径
+ * @param {Number} x X坐标
+ * @param {Number} y Y坐标
+ * @param {Number} w 宽度（拉伸）
+ * @param {Number} h 高度（拉伸）
+ * @param {"normal" | "round"} style 绘制风格: 
  * 	normal: 普通绘制
- * 	round: 圆形绘制} style 
+ * 	round: 圆形绘制
  */
 canvasUtils.drawImage = async function(src, x, y, w, h, style) {
 	var cache = await this.getImageInfo(src);
@@ -125,9 +129,9 @@ canvasUtils.setColor = function(color) {
 
 /**
  * 绘制单行文本
- * @param {文本} text 
- * @param {X坐标} x 
- * @param {Y坐标} y 
+ * @param {String} text 文本
+ * @param {Number} x X坐标
+ * @param {Number} y Y坐标
  */
 canvasUtils.drawText = function(text, x, y) {
 	console.log("drawText: ", text, x, y);
@@ -136,12 +140,12 @@ canvasUtils.drawText = function(text, x, y) {
 
 /**
  * 绘制文本拓展（可绘制多行、自动换行、两种对齐方式）
- * @param {文本} text 
- * @param {X坐标} x 
- * @param {Y坐标} y 
- * @param {宽度} w 
- * @param {行高} lineHeight 
- * @param {对齐方式（目前仅支持left和right）} align 
+ * @param {String} text 文本
+ * @param {Number} x X坐标
+ * @param {Number} y Y坐标
+ * @param {Number} w 宽度
+ * @param {Number} lineHeight 行高
+ * @param {"left" | "right"} align 对齐方式（目前仅支持left和right）
  */
 canvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
 	console.log("drawTextEx: ", text, x, y, w, lineHeight, align);
@@ -150,32 +154,37 @@ canvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
 	var right = align == 'right';
 
 	var ox = x, oy = y, cx; // cx 仅用于计算 
-	var line = ""; text += "\n";
+	var line = "", flag; text += "\n";
 
 	var restartX = () => cx = x = right ? ox + w : ox;
 	var nextLine = () => {
 		this.drawText(line, x, y);
 		y += lineHeight; 
 		restartX();
+		flag = true;
 		line = "";
 	}
 
 	restartX();
 
 	for (var i = 0; i < text.length; ++i) {
+		flag = false;
 		var c = text[i];
 		var cw = this.ctx.measureText(c).width;
 		if (c == "\n") nextLine()
 		else {
-			if (right && ((x -= cw) <= ox)) nextLine();
+			console.log(c, x, ox, (x - cw) <= ox, i)
+			if (right && ((x -= cw) <= ox)) { nextLine(); x -= cw; }
 			if (!right && ((cx += cw) >= ox + w)) nextLine();
-			line += c;
+			flag ? i-- : line += c;
 		}
 	}
 }
 
 canvasUtils.setTransform = function(scaleX, skewY, skewX, scaleY, posX, posY) {
 	scaleX *= this.dpr; scaleY *= this.dpr;
+	skewY *= this.dpr; skewX *= this.dpr;
+	posX *= this.dpr; posY *= this.dpr;
 	this.ctx.setTransform(scaleX, skewY, skewX, scaleY, posX, posY);
 }
 canvasUtils.resetTransform = function() {
@@ -189,6 +198,13 @@ canvasUtils.clipRect = function(x, y, w, h, draw) {
 }
 
 canvasUtils.wait = t => new Promise(d => setTimeout(() => d(), t));
+
+canvasUtils.clearAll = function() {
+	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+}
+canvasUtils.clearRect = function(x, y, w, h) {
+	this.ctx.clearRect(x, y, w, h)
+}
 
 // 蒸花卷绘制相关函数封装
 canvasUtils.drawFood = async function(food, quality, x, y, w, h, adjust, shadow) {

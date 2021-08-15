@@ -1,9 +1,6 @@
 <view>
-	<!-- 左上角返回按钮 -->
-	<view class="back-button" bindtap="toRoll">
-		<van-icon name="arrow-left" color="black" />
-		<view>更改店名</view>
-	</view>
+	<!-- 左上角标题 -->
+	<van-nav-bar border="{{false}}" fixed left-text="更改店名" left-arrow bind:click-left="back"/>
 
 	<image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
 
@@ -12,8 +9,7 @@
 		<view class="input-shopName">
 			<input type="text" model:value="{{shopName}}" maxlength="10"></input>
 		</view>
-		<view class="tag">点击确认更改，将店名修改为
-			<view class="shopName">{{shopName}}</view> 店
+		<view class="tag">点击确认更改，将店名修改为 <view class="shopName">{{shopName}}</view>
 		</view>
 
 	</view>
