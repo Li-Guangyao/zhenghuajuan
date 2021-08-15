@@ -1,14 +1,14 @@
-<view class="title">{{name}}味花卷</view>
+<view class="title">{{name}}味{{foodName}}</view>
 <!-- 旋转 -->
 		<!-- 暂时隐藏 -->
 <canvas id="canvasArcCir" type="2d" class="circle" wx:if="{{true}}">
-		<image src="../../icon2/rolling.png" mode="heightFix"></image>
+		<image src="{{foodImageUrl}}" mode="heightFix"></image>
 </canvas>
 <view class="content">
 	<view class="chicken-soup">
 		<text>-你要在孤寂里自成一个世界-</text>
 	</view>
-	<view class="process-time">{{processTime.hours}}:{{processTime.minutes}}:{{processTime.seconds}}</view>
+	<view class="left-time">{{leftTimeStr}}</view>
 	<view class="total-content"> 
 		<!-- 进度条
 		<progress class="total-progress" percent="{{curMinute/duration*100}}" border-radius="6" activeColor="#FEA403"

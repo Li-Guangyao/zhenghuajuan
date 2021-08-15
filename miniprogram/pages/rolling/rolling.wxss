@@ -2,6 +2,7 @@ page {
   --postFontColor: #613b10;
   background-color: var(--themeBackgroundColor);
   text-align: center;
+  overflow: hidden;
 }
 .title {
   font-size: 64rpx;
@@ -22,14 +23,14 @@ page {
   margin: 64rpx auto auto auto ;
 }
 .circle image {
-  transform: translateY(30%);
-  height: 30%;
+  transform: translateY(32%);
+  height: 32%;
 }
 .chicken-soup {
   font-size: 32rpx;
   color: #515151;
 }
-.process-time {
+.left-time {
   font-size: 70rpx;
   color: #FEA403;
   margin-top: 50rpx;
