@@ -61,11 +61,7 @@ Page({
 			act:'物',
 		},
 
-		processTime:{
-			hours:0,
-			minutes:0,
-			seconds:0
-		}
+		leftTimeStr:"00:00"
 	},
 
 	// 绘制数据（单位：百分比）
@@ -221,6 +217,13 @@ Page({
 			keepScreenOn: true
 		});
 
+		var minutes;
+		if(e.duration>=60){
+			minutes=e.duration%60;
+		}
+		else{
+			minutes=e.duration;
+		}
 		this.setData({
 			name: e.name,
 			duration: e.duration,
@@ -228,7 +231,10 @@ Page({
 			strict: e.strictMode == '1',
 			foodImageUrl:e.foodImage,
 			foodName:e.foodName,
+			'leftTime.minutes':minutes,
+			leftTimeStr:this.formatTimeStr(minutes,0),
 			stopped: false
+
 		})
 
 		wx.enableAlertBeforeUnload({
@@ -348,7 +354,8 @@ Page({
 		// var now = new Date();
 		// var s = this.data.startTime;
 
-		var ms = this.data.curMilliSecond + updateInterval*1000;
+		var ms = this.data.curMilliSecond + updateInterval*100;
+	
 
 		// var nTime = now.getTime();
 		// var sTime = s.getTime();
@@ -361,14 +368,15 @@ Page({
 		var sIndex = this.getStatusIndex(second);
 		var curCount = this.getCurCount(minute);
 
-		this.drawMinuteProgress(second);
+		this.drawMinuteProgress(minute);
 
 		this.setData({
 			curCount,
 			curMinute: minute,
 			curSecond: second,
 			statusIndex: sIndex,
-			curMilliSecond: ms
+			curMilliSecond: ms,
+			leftTimeStr:this.getLeftTimeStr()
 		});
 
 		if (minute >= this.data.duration)
@@ -392,14 +400,14 @@ Page({
 		return parseInt(second / delta);
 	},
 
-	drawMinuteProgress(second) {
+	drawMinuteProgress(minute) {
 		if (!aniCtx) return;
 
 		this.clearMinuteProgress();
 		// s代表start，定义绘制弧线的开始点
 		var s = 1.5 * Math.PI;
 		// e代表end，定义绘制弧线的结束点
-		var e = s + second / 60 * 2 * Math.PI;
+		var e = s + minute/this.data.duration * 2 * Math.PI;
 		// API，创建一个渐变颜色
 		const grd = aniCtx.createLinearGradient(0, 0, x * 2, 0)
 		grd.addColorStop(0, '#FEA403')
@@ -508,6 +516,19 @@ Page({
 			title:'测试',
 			imageUrl:this.posterImgUrl,
 		}
+	},
+
+	//格式化时间
+	formatTimeStr(minutes,seconds){
+		var minuteStr=(minutes/10>=1? '':'0')+new Number(minutes).toString();
+		var secondStr=(seconds/10>=1? '':'0')+new Number(seconds).toString();
+		return minuteStr+':'+secondStr;
+	},
+
+	getLeftTimeStr(){
+		var leftMinutes=this.data.duration-1-Math.floor(this.data.curMinute);
+		var leftSeconds=59-Math.floor(this.data.curSecond);
+		return this.formatTimeStr(leftMinutes,leftSeconds);
 	}
 
 })
