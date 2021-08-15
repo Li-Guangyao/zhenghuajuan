@@ -17,7 +17,6 @@ Page({
 					shopName: this.data.shopName
 				}
 			}).then(res => {
-				console.log(res)
 				if (res.result.stats.updated == 0) {
 					wx.showToast({
 						icon: 'error',
@@ -27,6 +26,10 @@ Page({
 					wx.showToast({
 						title: '修改成功！',
 					})
+					this.setData({
+						['userInfo.shopName']: this.data.shopName
+					})
+					wx.setStorageSync('userInfo', this.data.userInfo)
 				}
 			})
 		} else {}

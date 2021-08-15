@@ -41,6 +41,12 @@ Page({
 		this.initFoodInfo()
 	},
 
+	async onShow(){
+		this.setData({
+			userInfo: wx.getStorageSync('userInfo')
+		})
+	},
+
 	// 拿到foodList，判断某些food是否解锁
 	initFoodInfo() {
 		var unlockFoods = this.data.userInfo.unlockFoods
