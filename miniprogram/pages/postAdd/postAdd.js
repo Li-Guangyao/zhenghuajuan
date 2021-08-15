@@ -164,7 +164,15 @@ Page({
 					title: '保存中', mask: true
 				})
 				var uploadedFileList = await this.getFileID()
-				this.savePost(uploadedFileList)
+				try {
+					this.savePost(uploadedFileList)
+				} catch (e) {
+					wx.hideLoading()
+					wx.showToast({
+						title: '保存失败，请重试',
+						icon: 'error'
+					});
+				}
 			}
 		}
 	},

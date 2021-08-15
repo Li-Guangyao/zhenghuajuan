@@ -214,7 +214,7 @@ Page({
 			message,
 			userInfo: await userUtils.getUserInfo(),
 			sharings: await this.loadSharingRecord(),
-			continuity: await this.loadContinuity(),
+			continuity: 0, // await this.loadContinuity(),
 			equalActInfo: this.getEqualActInfo()
 		})
 	},
@@ -473,9 +473,9 @@ Page({
 	texts: ["本次蒸了分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
 	textPositions: [
 		// y, x, w, align
-		[35, 33, 67.5],
-		[20, 42, 67.5],
-		[81, 1, 67.5, 'right']
+		[35.25, 33.5, 67.5],
+		[20.25, 42.75, 67.5],
+		[81.75, 1, 67.5, 'right']
 	],
 	textSkewYs: [-0.513, 0.72, -0.546],
 
@@ -504,11 +504,11 @@ Page({
 		var fh = h * this.foodSize[1] / 100;
 		// 屏幕宽度固定位750rpx
 		var nickNameSize = Math.round(36 * w / 750);
-		var nickNameFont = nickNameSize + "px 微软雅黑";
+		var nickNameFont = nickNameSize + "px Arial,sans-serif";
 		var messageSize = Math.round(32 * w / 750);
-		var messageFont = messageSize + "px 微软雅黑";
+		var messageFont = messageSize + "px Arial,sans-serif";
 		var fontSize = Math.round(60 * w / 750);
-		var font = fontSize + "px 海派腔调清夏简";
+		var font = "normal bold " + fontSize + "px Arial,sans-serif";
 
 		canvasUtils.clipRect(0, 0, w, h);
 
@@ -533,7 +533,7 @@ Page({
 
 			canvasUtils.setColor(this.fontColor);
 			canvasUtils.setTransform(1, skew, 0, 1, 0, 0);
-			canvasUtils.drawTextEx(t, x, y, tw, 32, pos[3]);
+			canvasUtils.drawTextEx(t, x, y, tw, fontSize + 2, pos[3]);
 		})
 		canvasUtils.resetTransform();
 
@@ -567,6 +567,8 @@ Page({
 		var data = canvasUtils.canvas.toDataURL();
 		this.posterImgUrl = wx.env.USER_DATA_PATH + '/tempPoster.png';
 		await this.savePosterImg(data, this.posterImgUrl);
+
+		canvasUtils.clearAll();
 		
 	},
 

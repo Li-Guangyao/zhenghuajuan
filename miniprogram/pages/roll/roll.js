@@ -22,6 +22,8 @@ Page({
 	},
 
 	async onLoad(options) {
+		this.setData({ userInfo: await userUtils.getUserInfo() });
+		
 		// 获得食物列表
 		var res = await wx.cloud.callFunction({
 			name: 'operFoods',
