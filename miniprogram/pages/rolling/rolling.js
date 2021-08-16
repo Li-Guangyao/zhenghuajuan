@@ -358,6 +358,8 @@ Page({
 		this.setData({ finished: true });
 		this.stopRolling();
 
+		wx.disableAlertBeforeUnload();
+
 		canvasUtils.clearAll();
 
 		this.prepareSharing();
@@ -439,9 +441,16 @@ Page({
 			data: { method: "ADD", type: "wx" }
 		})
 
+		var texts = [
+			"来蒸花卷，争做最卷的“卷王”吧",
+			"来蒸花卷，记录你学习的点滴",
+			"来蒸花卷，沉浸在学习的快乐中吧"
+		]
+
 		return {
-			title: '测试',
+			title: texts[Math.floor(Math.random() * texts.length)],
 			imageUrl: this.posterImgUrl,
+			path: '/pages/roll/roll'
 		}
 	},
 

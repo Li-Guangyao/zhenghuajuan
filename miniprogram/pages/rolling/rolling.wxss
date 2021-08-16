@@ -36,18 +36,19 @@ page {
 }
 .small-tip {
   position: relative;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: 50rpx auto;
+  margin: 48rpx auto;
 }
 .small-tip .text1 {
   color: #808080;
   font-size: 24rpx;
-  margin: auto;
 }
 .small-tip .number1 {
   color: #FEA403;
-  margin: auto;
+  margin-left: 12rpx;
 }
 .small-tip image {
   height: 42rpx;

@@ -6,7 +6,7 @@
 </canvas>
 <view class="content">
 	<view class="chicken-soup">
-		<text>-你要在孤寂里自成一个世界-</text>
+		<text>-　你要在孤寂里自成一个世界　-</text>
 	</view>
 	<view class="left-time">{{leftTimeStr}}</view>
 	<view class="total-content"> 

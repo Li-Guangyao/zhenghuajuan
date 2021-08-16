@@ -24,7 +24,7 @@
 			<view class="content">
 				<view class="day" wx:for="{{records[curIndex]}}" wx:for-index="key" wx:for-item="item" wx:if="{{key != 'records'}}">
 					<view class="day-title">{{key}}
-						<image src="../../icon/arrowDown.png"/>
+						<!-- <image src="../../icon/arrowDown.png"/> -->
 						<!-- <image src="../../icon/arrowLeft.png"/> -->
 					</view>
 					<view class="record" wx:for="{{item}}" wx:for-item="item2">
