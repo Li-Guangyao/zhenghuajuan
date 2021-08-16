@@ -107,7 +107,7 @@ Page({
 	},
 
 	onShow: function (e) {
-		if (!this.data.exitTime) return;
+		if (this.data.finished || !this.data.exitTime) return;
 
 		/* 尝试检测手机运动状态的代码
 		wx.stopDeviceMotionListening({})
@@ -291,7 +291,7 @@ Page({
 	},
 
 	update() {
-		var ms = this.data.curMilliSecond + updateInterval * 1000;
+		var ms = this.data.curMilliSecond + updateInterval * 100;
 
 		var dtTime = ms / 1000;
 		var minute = dtTime / 60;

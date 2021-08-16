@@ -20,13 +20,11 @@ exports.main = async (event, context) => {
                rollName:{$ne:null}
               };
 
-
   var res= (await db.collection('t_post').aggregate().match(matcher).count('_timesCount').end());
   if(res.list.length==0)
       result.timesCount=0;
   else
-      result.timesCount=res.list[0]._timesCount;
-    
+      result.timesCount=res.list[0]._timesCount;    
 
   var res=(await db.collection('t_post').aggregate().match(matcher).group({
     _id:null,

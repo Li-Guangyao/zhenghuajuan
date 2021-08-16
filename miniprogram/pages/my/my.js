@@ -20,9 +20,12 @@ Page({
 
 	onLoad: async function (options) {
 		this.setData({ userInfo: await userUtils.getUserInfo() });
+
+	},
+
+	onShow: async function() {
 		this.getTotalData();
 		this.getTodayData();
-
 	},
 
 	getTotalData(){

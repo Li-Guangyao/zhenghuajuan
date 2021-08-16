@@ -206,17 +206,21 @@ page {
   width: 45%;
   height: 70%;
   color: var(--postFontColor);
+  text-align: left;
 }
 .post-prompt .post .post-bottom .info .name {
   width: 100%;
   font-size: 32rpx;
+  line-height: 36rpx;
+  min-height: 36rpx;
+  max-height: 36rpx;
+  overflow-y: hidden;
 }
 .post-prompt .post .post-bottom .info .message {
   width: 100%;
   display: block;
   font-size: 24rpx;
   margin-top: 8rpx;
-  text-align: left;
 }
 .post-prompt .share {
   display: flex;

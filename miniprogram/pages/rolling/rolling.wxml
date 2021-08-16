@@ -53,7 +53,7 @@
 		<image class="post-bottom" src="../../images/postBottom.png" mode="widthFix">
 			<image class="avatar" src="{{userInfo.avatarUrl}}" mode="heightFix"></image>
 			<view class="info">
-				<view clsas="name">{{userInfo.nickName}}</view>
+				<view class="name">{{userInfo.nickName}}</view>
 				<textarea class="message" model:value="{{message}}" placeholder="输入你的感想吧~" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
 			</view>
 		</image>
