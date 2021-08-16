@@ -40,10 +40,11 @@ Page({
 		name: "学习",
 		duration: 15,
 		count: 15,
-		quality: 0,
 		strictMode: false,
+		foodId: "",
 		foodImage: null,
 		foodName: null,
+		quality: 0,
 
 		// 海报自定义信息
 		message: "",
@@ -59,6 +60,7 @@ Page({
 		// 状态变量
 		finished: false,
 		stopped: false,
+		sharePost: false,
 
 		// 退出控制
 		exitTime: null,
@@ -66,6 +68,7 @@ Page({
 		// 海报数据
 		sharings: [false, false],
 		continuity: 0,
+		defeat: 0, // 打败人数比例
 		equalActInfo: {
 			verb: '动作',
 			count: '计量',
@@ -166,6 +169,38 @@ Page({
 		this.stopRolling();
 
 		canvasUtils.reset();
+
+		// 如果是完成了，但没有去分享的话
+		if (this.data.finished && !this.data.sharePost)
+			this.addPrivateRollPost();
+	},
+
+	// 添加一个私有的花卷记录
+	addPrivateRollPost: async function() {
+		var res = (await wx.cloud.callFunction({
+			name: 'savePost',
+			data: {
+				isPrivate: true,
+
+				// 如果帖子属性包含这3个，就是蒸花卷记录
+				rollName: this.data.name,
+				rollCount: this.data.count,
+				rollDuration: this.data.duration,
+				foodId: this.data.foodId,
+				quality: this.data.quality,
+				strictMode: this.data.strictMode
+			}
+		})).result;
+		
+		wx.cloud.callFunction({
+			name: 'saveRollRecord',
+			data: {
+				postId: res._id,
+				postAuthorOpenId: this.data.userInfo._openid,
+				count: this.data.count,
+				duration: this.data.duration,
+			}
+		});
 	},
 
 	// 读取异步数据（边制作边读取）
@@ -181,7 +216,8 @@ Page({
 			message,
 			userInfo: await userUtils.getUserInfo(),
 			sharings: await this.loadSharingRecord(),
-			continuity: await this.loadContinuity(),
+			continuity: 0, // await this.loadContinuity(),
+			defeat: await this.getDefeat(),
 			equalActInfo: this.getEqualActInfo()
 		})
 	},
@@ -202,9 +238,16 @@ Page({
 	},
 
 	// 读取连续卷的天数
-	loadContinuity: async function(params) {
+	loadContinuity: async function() {
 		return (await wx.cloud.callFunction({
 			name: 'getContinuity'
+		})).result;
+	},
+
+	// 获取打败人数比例
+	getDefeat: async function() {
+		return (await wx.cloud.callFunction({
+			name: 'getDefeat', data: { duration: this.data.duration }
 		})).result;
 	},
 
@@ -315,6 +358,8 @@ Page({
 		this.setData({ finished: true });
 		this.stopRolling();
 
+		wx.disableAlertBeforeUnload();
+
 		canvasUtils.clearAll();
 
 		this.prepareSharing();
@@ -344,7 +389,6 @@ Page({
 
 	// 取消分享
 	cancelShare() {
-		// TODO: 发布一张隐藏帖子
 		navigateUtils.pop();
 	},
 
@@ -357,7 +401,7 @@ Page({
 		let act = equalAct.act;
 
 		this.texts = ['本次制作' + duration + '分钟',
-			'连续制作' + this.data.continuity + '天',
+			'超过' + this.data.defeat + '%的人',
 			'相当于' + verb + '了' + count + '\n' + act
 		];
 	},
@@ -368,12 +412,17 @@ Page({
 
 		await this.generatePoster();
 
+		this.setData({sharePost: true});
+
 		var data = {
 			rollName: this.data.name,
 			rollCount: this.data.count,
 			rollDuration: this.data.duration,
 			foodName: this.data.foodName,
+			foodId: this.data.foodId,
+			quality: this.data.quality,
 			shareImgUrl: this.posterImgUrl,
+			strictMode: this.data.strictMode
 		}
 		navigateUtils.switch('../postAdd/postAdd', data);
 	},
@@ -392,9 +441,16 @@ Page({
 			data: { method: "ADD", type: "wx" }
 		})
 
+		var texts = [
+			"来蒸花卷，争做最卷的“卷王”吧",
+			"来蒸花卷，记录你学习的点滴",
+			"来蒸花卷，沉浸在学习的快乐中吧"
+		]
+
 		return {
-			title: '测试',
+			title: texts[Math.floor(Math.random() * texts.length)],
 			imageUrl: this.posterImgUrl,
+			path: '/pages/roll/roll'
 		}
 	},
 
@@ -437,9 +493,9 @@ Page({
 	texts: ["本次蒸了分钟", "连续蒸了996天", "相当于打了12局\n和平精英"],
 	textPositions: [
 		// y, x, w, align
-		[35, 33, 67.5],
-		[20, 42, 67.5],
-		[81, 1, 67.5, 'right']
+		[35.25, 33.5, 67.5],
+		[20.25, 42.75, 67.5],
+		[81.75, 1, 67.5, 'right']
 	],
 	textSkewYs: [-0.513, 0.72, -0.546],
 
@@ -457,8 +513,8 @@ Page({
 	posterImgUrl: null,
 
 	generatePoster: async function () {
-		const query = this.createSelectorQuery()
-		await canvasUtils.setupById(query, "post-canvas");
+		// const query = this.createSelectorQuery()
+		// await canvasUtils.setupById(query, "post-canvas");
 
 		canvasUtils.clearAll();
 
@@ -467,12 +523,12 @@ Page({
 		var fw = w * this.foodSize[0] / 100;
 		var fh = h * this.foodSize[1] / 100;
 		// 屏幕宽度固定位750rpx
-		var nickNameSize = Math.round(42 * w / 750);
-		var nickNameFont = nickNameSize + "px 微软雅黑";
-		var messageSize = Math.round(36 * w / 750);
-		var messageFont = messageSize + "px 微软雅黑";
+		var nickNameSize = Math.round(36 * w / 750);
+		var nickNameFont = nickNameSize + "px Arial,sans-serif";
+		var messageSize = Math.round(32 * w / 750);
+		var messageFont = messageSize + "px Arial,sans-serif";
 		var fontSize = Math.round(60 * w / 750);
-		var font = fontSize + "px 海派腔调清夏简";
+		var font = "normal bold " + fontSize + "px Arial,sans-serif";
 
 		canvasUtils.clipRect(0, 0, w, h);
 
@@ -497,7 +553,7 @@ Page({
 
 			canvasUtils.setColor(this.fontColor);
 			canvasUtils.setTransform(1, skew, 0, 1, 0, 0);
-			canvasUtils.drawTextEx(t, x, y, tw, 32, pos[3]);
+			canvasUtils.drawTextEx(t, x, y, tw, fontSize + 2, pos[3]);
 		})
 		canvasUtils.resetTransform();
 
@@ -526,11 +582,13 @@ Page({
 
 		canvasUtils.setFont(messageFont);
 		canvasUtils.drawTextEx(this.data.message,
-			nx, ny + nickNameSize, nw, messageSize);
+			nx, ny + nickNameSize + 2, nw, messageSize + 2);
 
 		var data = canvasUtils.canvas.toDataURL();
 		this.posterImgUrl = wx.env.USER_DATA_PATH + '/tempPoster.png';
 		await this.savePosterImg(data, this.posterImgUrl);
+
+		canvasUtils.clearAll();
 		
 	},
 

@@ -23,14 +23,14 @@ exports.main = async (event, context) => {
 		return query(db.collection('t_post').aggregate()
 			.match({ // 小于最新日期的
 				createdAt: _.lt(newestDate),
-				status: 1
+				status: 1, isPrivate: _.neq(true)
 			}).sort({ // 按照时间顺序排列
 				createdAt: -1
 			}).skip(event.skipNum - 1), event.userOpenId)
 	} else {
 		return query(db.collection('t_post').aggregate()
 			.match({
-				status: 1
+				status: 1, isPrivate: _.neq(true)
 			}).sort({
 				createdAt: -1
 			}), event.userOpenId)

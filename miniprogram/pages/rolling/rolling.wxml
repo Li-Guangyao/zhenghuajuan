@@ -6,7 +6,7 @@
 </canvas>
 <view class="content">
 	<view class="chicken-soup">
-		<text>-你要在孤寂里自成一个世界-</text>
+		<text>-　你要在孤寂里自成一个世界　-</text>
 	</view>
 	<view class="left-time">{{leftTimeStr}}</view>
 	<view class="total-content"> 
@@ -26,11 +26,11 @@
 
 <!-- 海报弹窗 -->
 <van-popup custom-class="post-prompt" show="{{finished}}" bind:close="onClose">
-	<canvas id="post-canvas" type="2d" ></canvas>
+	<!-- <canvas id="post-canvas" type="2d" ></canvas> -->
 
 	<image class="post" src="../../images/post.png" mode="heightFix" >
 		<text class="time">本次制作{{duration}}分钟</text>
-		<text class="day">连续制作{{continuity}}天</text>
+		<text class="day">超过{{defeat}}%的人</text>
 		<text class="play">相当于{{equalActInfo.verb}}了{{equalActInfo.count}}\n{{equalActInfo.act}}</text>
 		<view class="foods">
 			<food-display class="food1" src="{{foodImage}}" mode="aspectFit"></food-display>

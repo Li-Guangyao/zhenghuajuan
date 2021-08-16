@@ -10,7 +10,7 @@ const $ = db.command.aggregate
 exports.main = async (event, context) => {
 
 	var matcher = {
-		_openid: event.userInfo.openId
+		_openid: event.userInfo.openId, isPrivate: _.neq(true)
 	};
 
 	if (event.roll) matcher.rollName = _.neq(null);

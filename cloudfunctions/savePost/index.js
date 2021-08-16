@@ -16,26 +16,32 @@ exports.main = async (event, context) => {
 		} : null,
 		coordinate: event.location ? new db.Geo.Point(Number(event.location.longitude), Number(event.location.latitude)) : null,
 
-		photoList: event.uploadedFileList.uploadedPhotoList,
-		videoList: event.uploadedFileList.uploadedVideoList,
-		typeList: event.uploadedFileList.typeList,
-
 		isAnonymous: event.isAnonymous,
+
+		createdAt: new Date(),
+		likeValue: 0,
+		status: 1,
+	}
+
+	if (event.uploadedFileList) {
+		data.photoList = event.uploadedFileList.uploadedPhotoList;
+		data.videoList = event.uploadedFileList.uploadedVideoList;
+		data.typeList = event.uploadedFileList.typeList;
 
 		// 图片自动审核，通过了才会保存帖子
 		// 如果有视频，就必须人工审核，状态为0
-		status: event.uploadedFileList.uploadedVideoList.length == 0 ? 1 : 0,
-		createdAt: new Date(),
-		likeValue: 0
+		data.status = event.uploadedFileList.uploadedVideoList.length == 0 ? 1 : 0
 	}
 
 	if (event.rollName && event.rollCount && event.rollCount) {
 		data.rollName = event.rollName
 		data.rollCount = parseInt(event.rollCount)
 		data.rollDuration = parseInt(event.rollDuration)
+		data.foodId = event.foodId
+		data.quality = event.quality
+		data.isPrivate = event.isPrivate
+		data.strictMode = event.strictMode
 	}
 
-	return db.collection('t_post').add({
-		data
-	})
+	return db.collection('t_post').add({ data })
 }

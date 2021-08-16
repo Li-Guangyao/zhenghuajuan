@@ -31,11 +31,11 @@ async function getFoods(cond) {
 
 // 购买食物
 async function buyFood(userInfo, foodId) {
-	var { rollCount, unlockFoods } = await getRollCountAndFoods(userInfo.openId)
-	if (unlockFoods.includes(foodId)) return;
+	var data = await getRollCountAndFoods(userInfo.openId)
+	if (data.unlockFoods.includes(foodId)) return;
 
 	var cost = await getCost(foodId)
-	if (rollCount < cost) return
+	if (data.rollCount < cost) return
 
 	return db.collection('t_user').where({
 		_openid: userInfo.openId
@@ -59,8 +59,8 @@ function updateFoods(token, foods) {
 async function getRollCountAndFoods(openId) {
 	var res = await db.collection('t_user').where({ _openid: openId }).get()
 	return {
-		rollCount: res.data.rollCount,
-		unlockFoods: res.data.unlockFoods
+		rollCount: res.data[0].rollCount,
+		unlockFoods: res.data[0].unlockFoods
 	}
 }
 

@@ -1,3 +1,4 @@
+
 page {
 	--postFontColor: #613b10;
 	background-color: var(--themeBackgroundColor);
@@ -49,19 +50,22 @@ page {
 
 .small-tip {
 	position: relative;
+
+	display: flex;
+
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	margin: 50rpx auto;
+	margin: 48rpx auto;
 
 	.text1{
 		color: #808080;
 		font-size: 24rpx;
-		margin: auto;
 	}
 	
 	.number1 {
 		color: #FEA403;
-		margin:auto;
+		margin-left: 12rpx;
 	}
 
 	image {
@@ -97,12 +101,12 @@ page {
 
 	background-color: transparent !important;
 
-	#post-canvas {
-		position: absolute;
-		left: 0; top: 0;
-		width: 720px;
-		height: 1280px;	
-	}
+	// #post-canvas {
+	// 	position: absolute;
+	// 	left: 0; top: 0;
+	// 	width: 720px;
+	// 	height: 1280px;	
+	// }
 
 	.post {
 		position: relative;
@@ -118,18 +122,20 @@ page {
 			line-height: 44rpx;
 			text-align: left;
 	
-			font-family: "海派腔调清夏简";
+			font-weight: bold;
+
+			// font-family: "海派腔调清夏简";
 		}
 	
 		.time {
 			top: 12.5%;
-			left: 32%;
+			left: 33%;
 	
 			transform: skewY(-26.8deg);
 		}
 		.day {
-			top: 47%;
-			left: 42%;
+			top: 47.5%;
+			left: 43%;
 	
 			transform: skewY(36.2deg);
 		}

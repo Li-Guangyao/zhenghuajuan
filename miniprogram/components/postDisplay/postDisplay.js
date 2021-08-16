@@ -42,6 +42,9 @@ Component({
 	 * 组件的初始数据
 	 */
 	data: {
+		// 菜品数据
+		foods: [],
+
 		// 评论帖子的输入框
 		showInput: false,
 		// 评论评论的输入框
@@ -77,7 +80,15 @@ Component({
 	},
 
 	lifetimes: {
-
+		attached: async function() {
+			var res = await wx.cloud.callFunction({
+				name: "operFoods",
+				data: { method: "GET" }
+			});
+			this.setData({
+				foods: this.processFoods(res.result)
+			});
+		}
 	},
 
 	pageLifetimes: {
@@ -495,6 +506,13 @@ Component({
 			}
 		},
 
-
+		processFoods: function (foods) {
+			let _foods = {}
+			foods.forEach(f => _foods[f._id] = f);
+			return {
+				...foods, ..._foods
+			}
+		},
+	
 	}
 })

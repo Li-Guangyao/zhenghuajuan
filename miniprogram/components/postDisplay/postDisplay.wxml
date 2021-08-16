@@ -33,11 +33,9 @@
 
 			<!-- 蒸花卷显示 -->
 			<view class="roll" wx:if="{{item.rollName}}">
-				{{item.rollName}}味花卷 × {{item.rollCount}}
+				{{item.rollName}}味{{foods[item.foodId].name}}
 			</view>
-
 		</view>
-
 	</view>
 
 	<!-- 帖子文本 -->

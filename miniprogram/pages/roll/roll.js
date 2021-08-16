@@ -1,9 +1,5 @@
-import {
-	userUtils
-} from "../../utils/userUtils"
-import {
-	navigateUtils
-} from "../../utils/navigateUtils"
+﻿import { userUtils } from "../../utils/userUtils"
+import { navigateUtils } from "../../utils/navigateUtils"
 
 Page({
 	data: {
@@ -26,6 +22,7 @@ Page({
 	},
 
 	async onLoad(options) {
+		
 		// 获得食物列表
 		var res = await wx.cloud.callFunction({
 			name: 'operFoods',
@@ -37,10 +34,8 @@ Page({
 		this.initFoodInfo()
 	},
 
-	async onShow(){
-		this.setData({
-			userInfo: wx.getStorageSync('userInfo')
-		})
+	async onShow() {
+		this.setData({ userInfo: await userUtils.getUserInfo() });
 	},
 
 	// 拿到foodList，判断某些food是否解锁
@@ -219,9 +214,10 @@ Page({
 			duration: this.data.duration,
 			count: this.data.rollCount,
 			strictMode: this.data.strictMode ? 1 : 0,
+			foodId: food._id,
 			foodName: food.name,
 			foodImage: food.images[quality],
-			quality
+			quality,
 		}
 
 		navigateUtils.push('../rolling/rolling', data);

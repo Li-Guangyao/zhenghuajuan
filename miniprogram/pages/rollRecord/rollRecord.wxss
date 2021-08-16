@@ -42,7 +42,7 @@ page {
   padding: 12rpx;
   z-index: 1;
 }
-.main .content {
+.main .content-frame {
   position: absolute;
   width: 100%;
   top: 192rpx;
@@ -50,16 +50,19 @@ page {
   overflow-x: hidden;
   overflow-y: scroll;
 }
-.main .content .block {
+.main .content-frame .content {
+  min-height: 101%;
+}
+.main .content-frame .block {
   width: 100%;
   height: 24%;
 }
-.main .content .day {
+.main .content-frame .day {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
 }
-.main .content .day .day-title {
+.main .content-frame .day .day-title {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -68,38 +71,38 @@ page {
   padding-left: 12rpx;
   margin: 20rpx 0;
 }
-.main .content .day .day-title image {
+.main .content-frame .day .day-title image {
   margin-left: 12rpx;
   width: 18rpx;
   height: 18rpx;
 }
-.main .content .day .record {
+.main .content-frame .day .record {
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 128rpx;
 }
-.main .content .day .record .icon {
+.main .content-frame .day .record .icon {
   flex: 1;
   border-radius: 100%;
 }
-.main .content .day .record .info {
+.main .content-frame .day .record .info {
   flex: 4;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-left: 24rpx;
 }
-.main .content .day .record .info .name {
+.main .content-frame .day .record .info .name {
   font-size: 32rpx;
   line-height: 48rpx;
   color: var(--fontColor);
 }
-.main .content .day .record .info .detail {
+.main .content-frame .day .record .info .detail {
   font-size: 24rpx;
   color: var(--greyColor);
 }
-.main .content .day .record .roll {
+.main .content-frame .day .record .roll {
   flex: 1;
   display: flex;
   flex-direction: row;
@@ -107,7 +110,7 @@ page {
   color: var(--themeColor);
   font-size: 36rpx;
 }
-.main .content .day .record .roll image {
+.main .content-frame .day .record .roll image {
   margin-left: 16rpx;
   width: 42rpx;
   height: 42rpx;
