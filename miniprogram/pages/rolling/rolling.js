@@ -291,7 +291,7 @@ Page({
 	},
 
 	update() {
-		var ms = this.data.curMilliSecond + updateInterval * 100;
+		var ms = this.data.curMilliSecond + updateInterval * 1000;
 
 		var dtTime = ms / 1000;
 		var minute = dtTime / 60;

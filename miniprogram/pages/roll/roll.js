@@ -18,7 +18,9 @@ Page({
 		
 		foodIdx: 0, // 浏览到第几个菜品
 		chosenFoodIdx: 0, // 选择了第几个菜品
-		qualityIdx: 0 // 当前选择的时间，对应第几级别食物
+		qualityIdx: 0, // 当前选择的时间，对应第几级别食物
+
+		rate: 0,
 	},
 
 	async onLoad(options) {
@@ -144,21 +146,33 @@ Page({
 		this.setData({
 			chosenFoodIdx: this.data.foodIdx,
 		})
+
 		this.showPopup()
+		this.setDuration(this.data.rate);
 	},
 
 	// 拖动进度条
 	onDrag(e) {
-		var duration = e.detail.value
+		this.setDuration(e.detail.value / 100);
+	},
+
+	onValueChange(e) {
+		this.setDuration(e.detail / 100);
+	},
+
+	setDuration(rate) {
 		var food = this.data.foodList[this.data.chosenFoodIdx];
+		var min = food.minTime || 15;
+		var duration = Math.floor(min + (120 - min) * rate);
 		var maxQ = this.maxQuality(food), min = this.minTime(food);
 		var qualityIdx = this.calcQuality(maxQ, min, duration);
 
 		this.setData({
-			duration, qualityIdx
+			rate, duration, qualityIdx
 		})
 
 		this.refreshRollCount();
+
 	},
 
 	refreshRollCount() {
