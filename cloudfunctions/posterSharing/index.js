@@ -17,30 +17,36 @@ exports.main = async (event, context) => {
 	var openid = event.openid || wxContext.OPENID;
 
 	switch (method.toUpperCase()) {
-		case "ADD": addShare(openid, type); break;
-		case "QUERY": 
+		case "ADD":
+			addShare(openid, type);
+			break;
+		case "QUERY":
 			return await queryShare(openid, type, startTime, endTime);
-		case "TODAY": 
+		case "TODAY":
 			var startTime = new Date();
 			startTime.setHours(0, 0, 0);
 			var endTime = new Date();
 			endTime.setHours(23, 59, 59);
 			return await queryShare(openid, type, startTime, endTime);
-		}
+	}
 }
 
 function addShare(openid, type) {
 	var data = {
-		_openid: openid, type, 
+		_openid: openid,
+		type,
 		createdAt: new Date()
 	}
-	db.collection('t_share').add({ data })
+	db.collection('t_share').add({
+		data
+	})
 }
 
 async function queryShare(openid, type, startTime, endTime) {
 	var matcher = {
-		_openid: openid, type, 
-    createdAt: _.and(_.lte(endTime), _.gte(startTime))
+		_openid: openid,
+		type,
+		createdAt: _.and(_.lte(endTime), _.gte(startTime))
 	}
 	return (await db.collection('t_share').where(matcher).get()).data;
 }

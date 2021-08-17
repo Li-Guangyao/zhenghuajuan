@@ -1,5 +1,9 @@
-﻿import { userUtils } from "../../utils/userUtils"
-import { navigateUtils } from "../../utils/navigateUtils"
+﻿import {
+	userUtils
+} from "../../utils/userUtils"
+import {
+	navigateUtils
+} from "../../utils/navigateUtils"
 
 Page({
 	data: {
@@ -15,27 +19,32 @@ Page({
 		rollCount: 0, // 可获得的小麦数量
 
 		foodList: [],
-		
+
 		foodIdx: 0, // 浏览到第几个菜品
 		chosenFoodIdx: 0, // 选择了第几个菜品
 		qualityIdx: 0 // 当前选择的时间，对应第几级别食物
 	},
 
 	async onLoad(options) {
-		
 		// 获得食物列表
 		var res = await wx.cloud.callFunction({
 			name: 'operFoods',
-			data: { method: 'GET' }
+			data: {
+				method: 'GET'
+			}
 		})
-		this.setData({ foodList: res.result })
+		this.setData({
+			foodList: res.result
+		})
 		if (!this.data.userInfo) await this.judgeLogin();
-		
+
 		this.initFoodInfo()
 	},
 
 	async onShow() {
-		this.setData({ userInfo: await userUtils.getUserInfo() });
+		this.setData({
+			userInfo: await userUtils.getUserInfo()
+		});
 	},
 
 	// 拿到foodList，判断某些food是否解锁
@@ -151,11 +160,13 @@ Page({
 	onDrag(e) {
 		var duration = e.detail.value
 		var food = this.data.foodList[this.data.chosenFoodIdx];
-		var maxQ = this.maxQuality(food), min = this.minTime(food);
+		var maxQ = this.maxQuality(food),
+			min = this.minTime(food);
 		var qualityIdx = this.calcQuality(maxQ, min, duration);
 
 		this.setData({
-			duration, qualityIdx
+			duration,
+			qualityIdx
 		})
 
 		this.refreshRollCount();
@@ -163,9 +174,11 @@ Page({
 
 	refreshRollCount() {
 		var rollCount = this.calcRollCount(this.data.duration)
-		if (!this.data.strictMode) 
+		if (!this.data.strictMode)
 			rollCount = Math.floor(rollCount / 2);
-		this.setData({ rollCount })
+		this.setData({
+			rollCount
+		})
 	},
 
 	maxQuality: (food) => food.images.length,
@@ -175,23 +188,32 @@ Page({
 
 	// 修改学习任务的名字
 	showNameEdit() {
-		this.setData({ showNameEdit: true })
+		this.setData({
+			showNameEdit: true
+		})
 	},
 
 	// 输入活动的名称
 	inputActivityName(e) {
-		this.setData({ name: e.detail.value })
+		this.setData({
+			name: e.detail.value
+		})
 	},
 
 	// 完成输入，失去焦点触发
 	finishNameEdit() {
-		this.setData({ showNameEdit: false })
+		this.setData({
+			showNameEdit: false
+		})
 	},
 
 	// 点击“开始蒸花卷”
 	async startRoll() {
-		if (!this.data.name) 
-			wx.showToast({ title: '口味不能为空！', icon: 'none' });
+		if (!this.data.name)
+			wx.showToast({
+				title: '口味不能为空！',
+				icon: 'none'
+			});
 		else {
 			this.refreshRollCount();
 
@@ -199,7 +221,10 @@ Page({
 			if (this.data.strictMode)
 				title += "严格模式下，制作过程中不可退出、切换页面和熄屏哦！";
 
-			var res = await wx.showModal({ title, showCancel: true })
+			var res = await wx.showModal({
+				title,
+				showCancel: true
+			})
 			if (res.confirm) this.doStartRoll();
 		}
 	},

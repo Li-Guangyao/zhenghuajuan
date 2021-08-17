@@ -12,7 +12,8 @@ exports.main = async (event, context) => {
 	// SAVE
 
 	var queryLike = db.collection('t_post_like').where({
-		_openid: event._openid, postId: event.postId,
+		_openid: event._openid,
+		postId: event.postId,
 	});
 	var queryPost = db.collection('t_post').doc(event.postId);
 	var queryUser = db.collection('t_user').where({
@@ -23,7 +24,7 @@ exports.main = async (event, context) => {
 
 	var oriExist = !!like;
 	var oriValue = oriExist ? like.value : 0;
-	
+
 	// 原本没有数据
 	if (!oriExist) {
 		like = {
@@ -35,26 +36,34 @@ exports.main = async (event, context) => {
 			createdAt: new Date()
 		};
 		// 创建数据
-		db.collection('t_post_like').add({data: like});
+		db.collection('t_post_like').add({
+			data: like
+		});
 	} else {
 		like.value = event.value;
 		like.valueIndex = event.valueIndex;
 
 		if (like.value == 0) // 新数据为取消操作
 			queryLike.remove();
-		else 
-			queryLike.update({data: like});
+		else
+			queryLike.update({
+				data: like
+			});
 	}
 
 	var deltaValue = event.value - oriValue;
 	var post = (await queryPost.get()).data;
 
 	queryPost.update({
-		data: { likeValue: _.inc(deltaValue) }
+		data: {
+			likeValue: _.inc(deltaValue)
+		}
 	})
 	queryUser.update({
-		data: { rollCount: _.inc(deltaValue) }
+		data: {
+			rollCount: _.inc(deltaValue)
+		}
 	})
-	
+
 	return post.likeValue + deltaValue;
 }
