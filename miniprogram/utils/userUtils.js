@@ -22,7 +22,7 @@ userUtils.login = async function(force, desc) {
 		desc ||= "获取用户信息";
 		var profile = await wx.getUserProfile({desc});
 		res = (await wx.cloud.callFunction({
-			name: 'saveUserInfo',
+			name: 'userInfo',
 			data: { userInfo: profile.userInfo },
 		})).result.userInfo
 		

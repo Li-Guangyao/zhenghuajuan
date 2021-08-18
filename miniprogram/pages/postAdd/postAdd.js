@@ -3,6 +3,8 @@ import judgeImageFormat from '../../utils/judgeImageFormat'
 import uploadMedia from '../../utils/uploadMedia'
 import { userUtils } from "../../utils/userUtils"
 
+import CFM from "../../modules/coreModule/cloudFuncManager"
+
 Page({
 	data: {
 		content: '',
@@ -24,6 +26,7 @@ Page({
 	},
 
 	onLoad: async function (e) {
+
 		await this.judgeLogin()
 
 		if (e.rollName) {
@@ -164,7 +167,7 @@ Page({
 				wx.showLoading({
 					title: '保存中', mask: true
 				})
-				var uploadedFileList = await this.getFileID()
+				var uploadedFileList = await this.getFileLists()
 				try {
 					this.savePost(uploadedFileList)
 				} catch (e) {
@@ -180,28 +183,23 @@ Page({
 
 	// 把fileList分成photo和video两个列表，分别上传
 	// 最后得到两个列表
-	async getFileID() {
+	async getFileLists() {
 		var fileList = this.data.fileList
-		var photoList = []
-		var videoList = []
-		var typeList = []
+		var photoList = [], videoList = [], typeList = []
 
-		for (var i = 0; i < fileList.length; i++) {
-			if (fileList[i].type == 'image') {
-				photoList.push(fileList[i])
-			} else if (fileList[i].type == 'video') {
-				videoList.push(fileList[i])
+		fileList.forEach(f => {
+			switch(f.type) {
+				case 'image': photoList.push(f); break;
+				case 'video': videoList.push(f); break;
 			}
-			typeList.push(fileList[i].type)
-		}
+			typeList.push(f.type)
+		})
 
-		var uploadedPhotoList = await uploadMedia(photoList, 'postPhoto')
-		var uploadedVideoList = await uploadMedia(videoList, 'postVideo')
+		var photoList = await uploadMedia(photoList, 'postPhoto')
+		var videoList = await uploadMedia(videoList, 'postVideo')
 
 		return {
-			uploadedPhotoList,
-			uploadedVideoList,
-			typeList
+			photoList, videoList, typeList
 		}
 	},
 

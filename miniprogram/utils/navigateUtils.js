@@ -10,9 +10,9 @@ navigateUtils.push = function(page, data) {
 	console.log("navigateUtils.push: ", url)
 	wx.navigateTo({ url })
 }
-navigateUtils.switch = function(page, data) {
+navigateUtils.change = function(page, data) {
 	var url = this.makePageUrl(page, data);	
-	console.log("navigateUtils.switch: ", url)
+	console.log("navigateUtils.change: ", url)
 	wx.redirectTo({ url })
 }
 navigateUtils.goto = function(page, data) {
@@ -24,6 +24,11 @@ navigateUtils.pop = function(delta) {
 	delta ||= 1;
 	wx.navigateBack({ delta })
 	console.log("navigateUtils.back: ", delta)
+}
+navigateUtils.switch = function(page, data) {
+	var url = this.makePageUrl(page, data);	
+	console.log("navigateUtils.switch: ", url)
+	wx.switchTab({ url })
 }
 
 navigateUtils.makePageUrl = (page, data) => {

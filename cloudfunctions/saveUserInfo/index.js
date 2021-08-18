@@ -17,7 +17,7 @@ exports.main = async (event, context) => {
 	if (!await judgeUserExist(openId)){
 		Object.assign(userInfo, {
 			// 额外数据（默认值）
-			shopName: "自习早餐店",
+			shopName: "破旧的小店",
 			lastEditTime: null, // 上次修改时间
 			unlockFoods: ["cd045e756105f4e2018e3f8300be0e06"],
 			unlockTools: ["8937eaa96105f5660145d4605ce77780"],	

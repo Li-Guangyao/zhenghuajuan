@@ -1,76 +1,57 @@
 import getAccessToken from '../../utils/getAccessToken'
 import changePhotoListFormat from '../../utils/changePhotoListFormat'
 import { userUtils } from "../../utils/userUtils"
+import CFM from '../../modules/coreModule/cloudFuncManager';
+import UserManager from '../../modules/userModule/userManager';
+import PageCombiner from '../common/pageCombiner';
+import userPage from '../common/userPage';
+import { navigateUtils } from '../../utils/navigateUtils';
 
-Page({
+var main = {
 	data: {
-		userInfo: 0,
 		todayData:{
-			timesCount:0,
-			rollDuration:0,
-			rollCount:0,
+			count: 0,
+			duration: 0,
+			rollCount: 0,
 		},
 		totalData:{
-			timesCount:0,
-			rollDuration:0,
-			rollCount:0,
+			count: 0,
+			duration: 0,
+			rollCount: 0,
 		},
-		
-	},
-
-	onLoad: async function (options) {
-		this.setData({ userInfo: await userUtils.getUserInfo() });
-
 	},
 
 	onShow: async function() {
-		this.getTotalData();
-		this.getTodayData();
+		await this.loadUserStat();
 	},
 
-	getTotalData(){
-		wx.cloud.callFunction({
-			name:'getTotalData'
-		}).then((res)=>{
-			this.setData({
-				'totalData.timesCount': res.result.timesCount,
-				'totalData.rollDuration':res.result.rollDuration,
-				'totalData.rollCount':res.result.rollCount
-			})
-		})
-	},
+	async loadUserStat() {
+		var todayData = await UserManager.getTodayData();
+		var totalData = await UserManager.getTotalData();
 
-	getTodayData(){
-		wx.cloud.callFunction({
-			name:'getTodayData'
-		}).then((res)=>{
-			this.setData({
-				'todayData.timesCount': res.result.timesCount,
-				'todayData.rollDuration':res.result.rollDuration,
-				'todayData.rollCount':res.result.rollCount
-			})
-		})
+		this.setData({todayData, totalData});
 	},
 
 	// 如果是新用户，就需要授权获取
 	async getUserInfo() {
 		this.setData({ userInfo: await userUtils.login(true)})
-		this.getTotalData();
-		this.getTodayData();
+		await this.loadUserStat();
 	},
 
 	toMyPost(){
-		wx.navigateTo({ url: '../myPost/myPost' })
+		navigateUtils.push('../myPost/myPost');
 	},
 	toShopName(){
-		wx.navigateTo({ url: '../shopName/shopName' })
+		navigateUtils.push('../shopName/shopName');
 	},
 
 	toRoll() {
-		wx.switchTab({ url: '../roll/roll' })
+		navigateUtils.switch('../roll/roll');
 	},
 	toPost() {
-		wx.switchTab({ url: '../homepage/homepage' })
+		navigateUtils.switch('../homepage/homepage');
 	},
 
-})
+}
+
+Page(PageCombiner.Combine(main, userPage))

@@ -22,9 +22,7 @@ exports.main = async (event, context) => {
   
   var matcher = {
     _openid: event.userInfo.openId,
-    rollName: {
-      $ne: null
-    },
+    rollName: { $ne: null },
     createdAt: _.and(_.lte(dayEnd), _.gte(dayBegin))
   };
   var res= (await db.collection('t_post').aggregate().match(matcher).count('_timesCount').end());

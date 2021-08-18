@@ -9,7 +9,7 @@
 			<view class="user-detail">
 				<view class="user-nickname" bindtap="getUserInfo">{{userInfo.nickName}}</view>
 				<!-- TODO: 今日制作时长 -->
-				<view class="user-today">今日已制作<text>{{todayData.rollDuration}}</text>min</view>
+				<view class="user-today">今日已制作<text>{{todayData.duration}}</text>min</view>
 			</view>
 			<image class="next-button" src="../../icon/nextArrow.png" mode="aspectFit"></image> 
 		</view>
@@ -40,12 +40,12 @@
 				<view class="count card-item">
 					<view class="key">制作次数</view>
 					<!-- TODO: 今日制作次数 -->
-					<view class="value">{{todayData.timesCount}}</view>
+					<view class="value">{{todayData.count}}</view>
 				</view>
 				<view class="time card-item">
 					<view class="key">制作时长</view>
 					<!-- TODO: 今日制作时长 -->
-					<view class="value">{{todayData.rollDuration}}<text>min</text></view>
+					<view class="value">{{todayData.duration}}<text>min</text></view>
 				</view>
 				<view class="roll card-item">
 					<view class="key">获得小麦数</view>
@@ -60,12 +60,12 @@
 				<view class="count card-item">
 					<view class="key">制作次数</view>
 					<!-- TODO: 累计制作次数 -->
-					<view class="value">{{totalData.timesCount}}</view>
+					<view class="value">{{totalData.count}}</view>
 				</view>
 				<view class="time card-item">
 					<view class="key">制作时长</view>
 					<!-- TODO: 累计制作时长 -->
-					<view class="value">{{totalData.rollDuration}}<text>min</text></view>
+					<view class="value">{{totalData.duration}}<text>min</text></view>
 				</view>
 				<view class="roll card-item">
 					<view class="key">获得小麦数</view>

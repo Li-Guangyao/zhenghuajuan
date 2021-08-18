@@ -424,7 +424,7 @@ Page({
 			shareImgUrl: this.posterImgUrl,
 			strictMode: this.data.strictMode
 		}
-		navigateUtils.switch('../postAdd/postAdd', data);
+		navigateUtils.change('../postAdd/postAdd', data);
 	},
 
 	onShareAppMessage: async function () {

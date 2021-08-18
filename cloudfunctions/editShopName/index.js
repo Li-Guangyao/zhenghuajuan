@@ -12,11 +12,11 @@ exports.main = async (event, context) => {
 
 	return db.collection('t_user').where({
 		_openid: event.userInfo.openId,
-		lastEditTime: _.lt(daysAgo)
+		lastEditTime: _.or(_.lt(daysAgo), _.eq(null))
 	}).update({
 		data: {
 			shopName: event.shopName,
-			lastEditTime: Date()
+			lastEditTime: new Date()
 		}
 	}).then(res => {
 		return res
