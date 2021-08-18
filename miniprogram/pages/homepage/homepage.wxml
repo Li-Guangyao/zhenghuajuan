@@ -3,7 +3,8 @@
 
 <!-- 内容 -->
 <view class="main">
-	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
+	<post-display id="postDisplay" postList="{{postList}}" userInfo="{{userInfo}}" 
+	videotap="previewMadia" imagetap="previewMadia"></post-display>
 
 	<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="toPostAdd"></image>
 </view>

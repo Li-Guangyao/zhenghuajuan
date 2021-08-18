@@ -1,23 +1,23 @@
-var canvasUtils = {}
+var CanvasUtils = {}
 
-canvasUtils.canvas = null;
-canvasUtils.ctx = null;
-canvasUtils.dpr = 1;
+CanvasUtils.canvas = null;
+CanvasUtils.ctx = null;
+CanvasUtils.dpr = 1;
 
-canvasUtils.imageCache = {};
+CanvasUtils.imageCache = {};
 
 /**
  * 配置Canvas
  */
-canvasUtils.setupById = async function(query, id) {
+CanvasUtils.setupById = async function(query, id) {
 	var res = await this.querySelect(query, '#' + id);
 	this.setupByRes(res);
 	return res;
 }
-canvasUtils.setupByRes = function(res) {
+CanvasUtils.setupByRes = function(res) {
 	this.setupByCanvas(res[0].node, res[0].width, res[0].height);
 }
-canvasUtils.setupByCanvas = function(canvas, width, height) {
+CanvasUtils.setupByCanvas = function(canvas, width, height) {
 	this.canvas = canvas
 	this.ctx = this.canvas.getContext('2d')
 
@@ -26,17 +26,17 @@ canvasUtils.setupByCanvas = function(canvas, width, height) {
 	this.canvas.height = height * this.dpr
 	this.ctx.scale(this.dpr, this.dpr);
 
-	console.info("canvasUtils.setupByCanvas: ", this);
+	console.info("CanvasUtils.setupByCanvas: ", this);
 }
 
-canvasUtils.querySelect = (query, selector, fields) =>
+CanvasUtils.querySelect = (query, selector, fields) =>
 	new Promise((resolve, reject) => 
 		query.select(selector)
 			.fields(fields || { node: true, size: true })
 			.exec(resolve)
 	);
 
-canvasUtils.reset = function() {
+CanvasUtils.reset = function() {
 	this.canvas = this.ctx = null;
 	this.dpr = 1;
 }
@@ -45,7 +45,7 @@ canvasUtils.reset = function() {
  * 获取图片信息
  * @param {String} src 图片路径
  */
-canvasUtils.getImageInfo = async function(src) {
+CanvasUtils.getImageInfo = async function(src) {
 	var isCloud = src.startsWith("cloud://");
 	var cache = this.imageCache[src] ||= (isCloud ? 
 			await wx.getImageInfo({ src }) : // 云存储
@@ -72,7 +72,7 @@ canvasUtils.getImageInfo = async function(src) {
  * 	normal: 普通绘制
  * 	round: 圆形绘制
  */
-canvasUtils.drawImage = async function(src, x, y, w, h, style) {
+CanvasUtils.drawImage = async function(src, x, y, w, h, style) {
 	var cache = await this.getImageInfo(src);
 	this.drawImageFromCache(cache, x, y, w, h, style);
 
@@ -91,7 +91,7 @@ canvasUtils.drawImage = async function(src, x, y, w, h, style) {
 	this.drawImageFromCache(cache, x, y, w, h, style);
 	*/
 }
-canvasUtils.drawImageFromCache = function(cache, x, y, w, h, style) {
+CanvasUtils.drawImageFromCache = function(cache, x, y, w, h, style) {
 	var img = cache.img;
 	var iw = cache.width, ih = cache.height;
 
@@ -112,18 +112,18 @@ canvasUtils.drawImageFromCache = function(cache, x, y, w, h, style) {
 	}
 }
 
-canvasUtils.createImage = url =>
+CanvasUtils.createImage = url =>
 	new Promise((resolve, reject) => {
-		var img = canvasUtils.canvas.createImage();
+		var img = CanvasUtils.canvas.createImage();
 		img.onload = () => resolve(img);
 		img.onerror = reject;
 		img.src = url;
 	});
 
-canvasUtils.setFont = function(font) {
+CanvasUtils.setFont = function(font) {
 	this.ctx.font = font;
 }
-canvasUtils.setColor = function(color) {
+CanvasUtils.setColor = function(color) {
 	this.ctx.fillStyle = color;
 }
 
@@ -133,7 +133,7 @@ canvasUtils.setColor = function(color) {
  * @param {Number} x X坐标
  * @param {Number} y Y坐标
  */
-canvasUtils.drawText = function(text, x, y) {
+CanvasUtils.drawText = function(text, x, y) {
 	console.log("drawText: ", text, x, y);
 	this.ctx.fillText(text, x, y);
 }
@@ -147,7 +147,7 @@ canvasUtils.drawText = function(text, x, y) {
  * @param {Number} lineHeight 行高
  * @param {"left" | "right"} align 对齐方式（目前仅支持left和right）
  */
-canvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
+CanvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
 	console.log("drawTextEx: ", text, x, y, w, lineHeight, align);
 
 	// 目前只支持left, right
@@ -181,33 +181,33 @@ canvasUtils.drawTextEx = function(text, x, y, w, lineHeight, align) {
 	}
 }
 
-canvasUtils.setTransform = function(scaleX, skewY, skewX, scaleY, posX, posY) {
+CanvasUtils.setTransform = function(scaleX, skewY, skewX, scaleY, posX, posY) {
 	scaleX *= this.dpr; scaleY *= this.dpr;
 	skewY *= this.dpr; skewX *= this.dpr;
 	posX *= this.dpr; posY *= this.dpr;
 	this.ctx.setTransform(scaleX, skewY, skewX, scaleY, posX, posY);
 }
-canvasUtils.resetTransform = function() {
+CanvasUtils.resetTransform = function() {
 	this.setTransform(1, 0, 0, 1, 0, 0);
 }
 
-canvasUtils.clipRect = function(x, y, w, h, draw) {
+CanvasUtils.clipRect = function(x, y, w, h, draw) {
 	this.ctx.rect(x, y, w, h);
 	if (draw) this.ctx.stroke();
 	this.ctx.clip();
 }
 
-canvasUtils.wait = t => new Promise(d => setTimeout(() => d(), t));
+CanvasUtils.wait = t => new Promise(d => setTimeout(() => d(), t));
 
-canvasUtils.clearAll = function() {
+CanvasUtils.clearAll = function() {
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 }
-canvasUtils.clearRect = function(x, y, w, h) {
+CanvasUtils.clearRect = function(x, y, w, h) {
 	this.ctx.clearRect(x, y, w, h)
 }
 
 // 蒸花卷绘制相关函数封装
-canvasUtils.drawFood = async function(food, quality, x, y, w, h, adjust, shadow) {
+CanvasUtils.drawFood = async function(food, quality, x, y, w, h, adjust, shadow) {
 	if (adjust === undefined) adjust = true;
 	if (shadow === undefined) shadow = true;
 	if (adjust) { x -= w / 2; y -= h / 2; }
@@ -219,4 +219,4 @@ canvasUtils.drawFood = async function(food, quality, x, y, w, h, adjust, shadow)
 	await this.drawImage(src, x, y, w, h);
 }
 
-export { canvasUtils }
+export default CanvasUtils

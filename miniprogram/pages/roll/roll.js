@@ -1,541 +1,188 @@
-import { userUtils } from "../../utils/userUtils"
-import { navigateUtils } from "../../utils/navigateUtils"
+import NavigateUtils from "../../utils/navigateUtils"
 import PageCombiner from "../common/pageCombiner"
 import userPage from "../common/userPage"
 import foodPage from "../common/foodPage"
+import FoodManager from "../../modules/foodModule/foodManager"
+import RollRecord from "../../modules/rollModule/rollRecord"
+import RollManager from "../../modules/rollModule/rollManager"
 
 var main = {
 	data: {
-		// userInfo: wx.getStorageSync('userInfo'),
-		postList: [],
-		strictMode: true,
+		rollRecord: new RollRecord(),
+		/*
+		{
+			flavor: '学习', // 口味
 
-		name: '学习',
-		showNameEdit: false,
-		showPopup: false,
+			strictMode: true, // 严格模式
 
-		duration: 15, // 学习时间长短，默认15min
-		rollCount: 0, // 可获得的小麦数量
+			duration: 15, // 学习时间长短，默认15min
+			rollCount: 0, // 可获得的小麦数量
 
-		// foods: [],
+			foodId: '', // 菜品ID
+			quality: 0, // 当前选择的时间，对应第几级别食物
+		},
+		*/
+
+		showFlavorEdit: false, // 修改口味
+		showPopup: false, // 菜品弹窗
 		
 		foodIdx: 0, // 浏览到第几个菜品
-		chosenFoodIdx: 0, // 选择了第几个菜品
-		qualityIdx: 0, // 当前选择的时间，对应第几级别食物
+		curFoodIdx: 0, // 选择了第几个菜品
 
-		rate: 0,
+		rate: 0, // 时间滑动条的比率
 	},
 
-	/*
-	async onLoad(options) {
-		console.log("load main");
-		// // 获得食物列表
-		// var res = await wx.cloud.callFunction({
-		// 	name: 'operFoods',
-		// 	data: { method: 'GET' }
-		// })
-		// this.setData({ foods: res.result })
-		// if (!this.data.userInfo) await this.judgeLogin();
-		
-		// this.initFoodInfo()
+	// 数据操作
+	// TODO: 提取共有操作
+	getObject() {
+		return this.data.rollRecord;
 	},
-	*/
-
-	/*
-	async onShow() {
-		this.setData({ userInfo: await userUtils.getUserInfo() });
+	getData() {
+		return this.getObject().data;
 	},
-	*/
-
-	/*
-	// 拿到foodList，判断某些food是否解锁
-	initFoodInfo() {
-		var unlockFoods = this.data.userInfo.unlockFoods
-		var foods = this.data.foods
-
-		foods.map(item => {
-			item.unlock = unlockFoods.indexOf(item._id) != -1
-		})
-
-		this.setData({
-			foods
-		})
+	updateData(obj, refresh) {
+		Object.assign(this.getData(), obj)
+		if (refresh) this.refreshData();
 	},
-	*/
+	refreshData() {
+		getObject().refresh();
+		this.setData({ rollRecord: this.getObject() });
+	},
 
-	// 在Dialog中，点击时间
+	// 数据编辑
+	// 菜品弹窗
 	showPopup() {
-		this.setData({
-			showPopup: !this.data.showPopup
-		})
+		this.setData({ showPopup: true })
+	},
+	closePopup() {
+		this.setData({ showPopup: false })
 	},
 
-	// 是否选择严格模式
-	onStrictChange(e) {
-		this.setData({
-			strictMode: !this.data.strictMode
-		})
-		this.refreshRollCount();
-		// if (this.data.strictMode)
-		// 	wx.showToast({
-		// 		title: '严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！',
-		// 		icon: 'none'
-		// 	});
-	},
-
-	// 点击菜品
-	showPopup() {
-		this.setData({
-			showPopup: !this.data.showPopup
-		})
-	},
-
+	// 菜品选择控制
 	prevFood() {
-		var foodIdx = this.data.foodIdx
-		this.setData({
-			foodIdx: foodIdx == 0 ? foodIdx : foodIdx - 1
+		this.changeFoodIdx(this.data.foodIdx - 1)
+	},
+	nextFood() {
+		this.changeFoodIdx(this.data.foodIdx + 1)
+	},
+
+	changeFoodIdx(idx) {
+		var max = FoodManager.foodCount;
+		this.setData({ 
+			foodIdx: Math.max(Math.min(max, idx), 0)
 		})
 	},
 
-	nextFood() {
-		var foodIdx = this.data.foodIdx
-		var length = this.data.foods.length
-		this.setData({
-			foodIdx: foodIdx == length - 1 ? foodIdx : foodIdx + 1
-		})
+	// 当前菜品
+	curFood() {
+		return this.data.foods[this.data.foodIdx];
+	},
+	curFoodId() {
+		return this.curFood()._id;
 	},
 
 	// 解锁食物
 	async unlockFood() {
-		var userInfo = this.data.userInfo
-		var foods = this.data.foods
-		var foodIdx = this.data.foodIdx
+		var food = this.curFood();
+		var res = await wx.showModal({
+			title: '确定要解锁' + food.name + '吗？',
+			showCancel: true
+		})
 
-		if (userInfo.rollCount < foods[foodIdx].cost) {
-			wx.showToast({
-				icon: 'error',
-				title: '小麦数量不够！',
-			})
-		} else {
-			var res = await wx.showModal({
-				title: '确定要解锁吗？',
-				showCancel: true
-			})
-
-			if (res.confirm) {
-				userInfo.rollCount -= foods[foodIdx].cost
-				userInfo.unlockFoods.push(foods[foodIdx]._id)
-
-				await wx.cloud.callFunction({
-					name: 'operFoods',
-					data: {
-						method: 'BUY',
-						foodId: foods[foodIdx]._id
-					}
-				})
-
-				this.setData({
-					['userInfo.unlockFood']: userInfo.unlockFoods,
-					['userInfo.rollCount']: userInfo.rollCount
-				})
-
-				this.initFoodInfo()
-			}
+		if (res.confirm) {
+			await FoodManager.buy(food._id);
+			await this.getUser();
 		}
 	},
 
 	// 选择食物
 	chooseFood() {
 		this.setData({
-			chosenFoodIdx: this.data.foodIdx,
+			curFoodIdx: this.data.foodIdx,
 		})
 
-		this.showPopup()
+		this.closePopup()
 		this.setDuration(this.data.rate);
 	},
 
-	// 拖动进度条
-	onDrag(e) {
-		this.setDuration(e.detail.value / 100);
-	},
-
-	onValueChange(e) {
-		this.setDuration(e.detail / 100);
-	},
-
-	setDuration(rate) {
-		var food = this.data.foods[this.data.chosenFoodIdx];
-		var min = food.minTime || 15;
-		var duration = Math.floor(min + (120 - min) * rate);
-		var maxQ = this.maxQuality(food), min = this.minTime(food);
-		var qualityIdx = this.calcQuality(maxQ, min, duration);
-
-		this.setData({
-			rate, duration, qualityIdx
-		})
-
-		this.refreshRollCount();
-
-	},
-
-	refreshRollCount() {
-		var rollCount = this.calcRollCount(this.data.duration)
-		if (!this.data.strictMode) 
-			rollCount = Math.floor(rollCount / 2);
-		this.setData({ rollCount })
-	},
-
-	maxQuality: (food) => food.images.length,
-	minTime: (food) => food.minTime || 15,
-	calcQuality: (maxQ, min, t) => Math.floor((maxQ - 1) * (t - min) / (120 - min)),
-	calcRollCount: (t) => Math.round(t / 5 + Math.floor(t / 30) * 2 + Math.floor(t / 60) * 5),
-
 	// 修改学习任务的名字
-	showNameEdit() {
+	startNameEdit() {
 		this.setData({ showNameEdit: true })
 	},
-
-	// 输入活动的名称
-	inputActivityName(e) {
-		this.setData({ name: e.detail.value })
-	},
-
 	// 完成输入，失去焦点触发
 	finishNameEdit() {
 		this.setData({ showNameEdit: false })
 	},
-
-	// 点击“开始蒸花卷”
-	async startRoll() {
-		if (!this.data.name) 
-			wx.showToast({ title: '口味不能为空！', icon: 'none' });
-		else {
-			this.refreshRollCount();
-
-			var title = '确定要制作' + this.data.duration + '分钟吗？';
-			if (this.data.strictMode)
-				title += "严格模式下，制作过程中不可退出、切换页面和熄屏哦！";
-
-			var res = await wx.showModal({ title, showCancel: true })
-			if (res.confirm) this.doStartRoll();
-		}
+	// 输入口味的名称
+	inputFlavor(e) {
+		this.updateData({flavor: e.detail.value}, true)
 	},
 
-	// 真的开始啦！
-	doStartRoll() {
-		var food = this.data.foods[this.data.chosenFoodIdx];
-		var quality = this.data.qualityIdx;
-
-		var data = {
-			name: this.data.name,
-			duration: this.data.duration,
-			count: this.data.rollCount,
-			strictMode: this.data.strictMode ? 1 : 0,
-			foodId: food._id,
-			foodName: food.name,
-			foodImage: food.images[quality],
-			quality,
-		}
-
-		navigateUtils.push('../rolling/rolling', data);
-	},
-
-	toPost() {
-		wx.switchTab({
-			url: '../homepage/homepage'
-		})
-	},
-
-	toMy() {
-		wx.switchTab({
-			url: '../my/my'
-		})
-	},
-
-	toRollRecord() {
-		navigateUtils.push('../rollRecord/rollRecord');
-	},
-
-	toRanklist() {
-		navigateUtils.push('../ranklist/ranklist');
-	}
-}
-
-Page(PageCombiner.Combine(main, [userPage, foodPage]));
-
-/*
-Page({
-	data: {
-		userInfo: wx.getStorageSync('userInfo'),
-		postList: [],
-		strictMode: true,
-
-		name: '学习',
-		showNameEdit: false,
-		showPopup: false,
-
-		duration: 15, // 学习时间长短，默认15min
-		rollCount: 0, // 可获得的小麦数量
-
-		foods: [],
-
-		foodIdx: 0, // 浏览到第几个菜品
-		chosenFoodIdx: 0, // 选择了第几个菜品
-		qualityIdx: 0, // 当前选择的时间，对应第几级别食物
-
-		rate: 0,
-	},
-
-	async onLoad(options) {
-		// 获得食物列表
-		var res = await wx.cloud.callFunction({
-			name: 'operFoods',
-			data: {
-				method: 'GET'
-			}
-		})
-		this.setData({ foods: res.result })
-		if (!this.data.userInfo) await this.judgeLogin();
-
-		this.initFoodInfo()
-	},
-
-	async onShow() {
-		this.setData({
-			userInfo: await userUtils.getUserInfo()
-		});
-	},
-
-	// 拿到foodList，判断某些food是否解锁
-	initFoodInfo() {
-		var unlockFoods = this.data.userInfo.unlockFoods
-		var foods = this.data.foods
-
-		foods.map(item => {
-			item.unlock = unlockFoods.indexOf(item._id) != -1
-		})
-
-		this.setData({
-			foods
-		})
-	},
-
-	async judgeLogin() {
-		this.setData({
-			userInfo: await userUtils.judgeLogin()
-		})
-	},
-
-	// 在Dialog中，点击时间
-	showPopup() {
-		this.setData({
-			showPopup: !this.data.showPopup
-		})
-	},
-
-	// 是否选择严格模式
-	onStrictChange(e) {
-		this.setData({
-			strictMode: !this.data.strictMode
-		})
-		this.refreshRollCount();
-		// if (this.data.strictMode)
-		// 	wx.showToast({
-		// 		title: '严格模式下，蒸花卷过程中不可退出、切换页面和熄屏哦！',
-		// 		icon: 'none'
-		// 	});
-	},
-
-	// 点击菜品
-	showPopup() {
-		this.setData({
-			showPopup: !this.data.showPopup
-		})
-	},
-
-	prevFood() {
-		var foodIdx = this.data.foodIdx
-		this.setData({
-			foodIdx: foodIdx == 0 ? foodIdx : foodIdx - 1
-		})
-	},
-
-	nextFood() {
-		var foodIdx = this.data.foodIdx
-		var length = this.data.foods.length
-		this.setData({
-			foodIdx: foodIdx == length - 1 ? foodIdx : foodIdx + 1
-		})
-	},
-
-	// 解锁食物
-	async unlockFood() {
-		var userInfo = this.data.userInfo
-		var foods = this.data.foods
-		var foodIdx = this.data.foodIdx
-
-		if (userInfo.rollCount < foods[foodIdx].cost) {
-			wx.showToast({
-				icon: 'error',
-				title: '小麦数量不够！',
-			})
-		} else {
-			var res = await wx.showModal({
-				title: '确定要解锁吗？',
-				showCancel: true
-			})
-
-			if (res.confirm) {
-				userInfo.rollCount -= foods[foodIdx].cost
-				userInfo.unlockFoods.push(foods[foodIdx]._id)
-
-				await wx.cloud.callFunction({
-					name: 'operFoods',
-					data: {
-						method: 'BUY',
-						foodId: foods[foodIdx]._id
-					}
-				})
-
-				this.setData({
-					['userInfo.unlockFood']: userInfo.unlockFoods,
-					['userInfo.rollCount']: userInfo.rollCount
-				})
-
-				this.initFoodInfo()
-			}
-		}
-	},
-
-	// 选择食物
-	chooseFood() {
-		this.setData({
-			chosenFoodIdx: this.data.foodIdx,
-		})
-
-		this.showPopup()
-		this.setDuration(this.data.rate);
-	},
-
-	// 拖动进度条
+	// 进度条事件
 	onDrag(e) {
 		this.setDuration(e.detail.value / 100);
 	},
-
 	onValueChange(e) {
 		this.setDuration(e.detail / 100);
 	},
 
+	// 设置时间
 	setDuration(rate) {
-		var food = this.data.foods[this.data.chosenFoodIdx];
+		var food = this.curFood();
 		var min = food.minTime || 15;
 		var duration = Math.floor(min + (120 - min) * rate);
-		var maxQ = this.maxQuality(food),
-			min = this.minTime(food);
-		var qualityIdx = this.calcQuality(maxQ, min, duration);
 
-		this.setData({
-			rate, duration, qualityIdx
-		})
-
-		this.refreshRollCount();
-
+		this.setData({ rate })
+		this.updateData({ duration }, true)
 	},
 
-	refreshRollCount() {
-		var rollCount = this.calcRollCount(this.data.duration)
-		if (!this.data.strictMode)
-			rollCount = Math.floor(rollCount / 2);
-		this.setData({
-			rollCount
-		})
-	},
-
-	maxQuality: (food) => food.images.length,
-	minTime: (food) => food.minTime || 15,
-	calcQuality: (maxQ, min, t) => Math.floor((maxQ - 1) * (t - min) / (120 - min)),
-	calcRollCount: (t) => Math.round(t / 5 + Math.floor(t / 30) * 2 + Math.floor(t / 60) * 5),
-
-	// 修改学习任务的名字
-	showNameEdit() {
-		this.setData({
-			showNameEdit: true
-		})
-	},
-
-	// 输入活动的名称
-	inputActivityName(e) {
-		this.setData({
-			name: e.detail.value
-		})
-	},
-
-	// 完成输入，失去焦点触发
-	finishNameEdit() {
-		this.setData({
-			showNameEdit: false
-		})
+	// 严格模式
+	onStrictChange(e) {
+		this.updateData({ strictMode: !this.getData().strictMode }, true);
 	},
 
 	// 点击“开始蒸花卷”
 	async startRoll() {
-		if (!this.data.name)
-			wx.showToast({
-				title: '口味不能为空！',
-				icon: 'none'
+		if (!this.getData().flavor) 
+			return wx.showToast({ 
+				title: '口味不能为空！', icon: 'none' 
 			});
-		else {
-			this.refreshRollCount();
 
-			var title = '确定要制作' + this.data.duration + '分钟吗？';
-			if (this.data.strictMode)
-				title += "严格模式下，制作过程中不可退出、切换页面和熄屏哦！";
+		this.refreshData();
 
-			var res = await wx.showModal({
-				title,
-				showCancel: true
-			})
-			if (res.confirm) this.doStartRoll();
-		}
+		var duration = this.getData().duration;
+		var strictMode = this.getData().strictMode;
+
+		var title = '确定要制作' + duration + '分钟吗？';
+		if (strictMode)
+			title += "严格模式下，制作过程中不可退出、切换页面和熄屏哦！";
+
+		var res = await wx.showModal({ title, showCancel: true })
+		if (res.confirm) this.doStartRoll();
 	},
 
 	// 真的开始啦！
 	doStartRoll() {
-		var food = this.data.foods[this.data.chosenFoodIdx];
-		var quality = this.data.qualityIdx;
+		RollManager.start(this.getObject());
 
-		var data = {
-			name: this.data.name,
-			duration: this.data.duration,
-			count: this.data.rollCount,
-			strictMode: this.data.strictMode ? 1 : 0,
-			foodId: food._id,
-			foodName: food.name,
-			foodImage: food.images[quality],
-			quality,
-		}
-
-		navigateUtils.push('../rolling/rolling', data);
+		NavigateUtils.push('../rolling/rolling');
 	},
 
 	toPost() {
-		wx.switchTab({
-			url: '../homepage/homepage'
-		})
+		NavigateUtils.switch('../homepage/homepage');
 	},
 
 	toMy() {
-		wx.switchTab({
-			url: '../my/my'
-		})
+		NavigateUtils.switch('../my/my');
 	},
 
 	toRollRecord() {
-		navigateUtils.push('../rollRecord/rollRecord');
+		NavigateUtils.push('../rollRecord/rollRecord');
 	},
 
 	toRanklist() {
-		navigateUtils.push('../ranklist/ranklist');
+		NavigateUtils.push('../ranklist/ranklist');
 	}
-})
-*/
+}
+
+Page(PageCombiner.Combine(main, [userPage, foodPage]));

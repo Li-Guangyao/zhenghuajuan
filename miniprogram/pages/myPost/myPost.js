@@ -1,11 +1,14 @@
-import getDateDiff from "../../utils/getDateDiff"
-import changeFileListFormat from "../../utils/changeFileListFormat"
-import { userUtils } from "../../utils/userUtils"
+import PageCombiner from '../common/pageCombiner';
+import postsPage from '../common/postsPage';
+import userPage from '../common/userPage';
 
-Page({
+var main = { }
+
+Page(PageCombiner.Combine(main, [userPage, postsPage('my')]))
+
+	/*
 	data: {
 		postList: [],
-		userInfo: null,
 	},
 
 	queryParams: {
@@ -14,12 +17,7 @@ Page({
 	},
 
 	onLoad: async function (options) {
-		await this.judgeLogin();
 		await this.refreshPage();
-	},
-
-	async judgeLogin() {
-		this.setData({ userInfo: await userUtils.judgeLogin() })
 	},
 
 	async refreshPage() {
@@ -38,7 +36,7 @@ Page({
 			console.log(res)
 			if (res.result) {
 				this.setData({
-					postList: changeFileListFormat(this.dateDiffTrans(res.result))
+					postList: convertFileList(this.dateDiffTrans(res.result))
 				})
 			}
 		})
@@ -82,7 +80,7 @@ Page({
 					title: '没有更多了~',
 				})
 			} else {
-				var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
+				var subPostList = convertFileList(this.dateDiffTrans(res.result))
 				this.setData({
 					postList: [...this.data.postList].concat(...subPostList)
 				})
@@ -90,6 +88,4 @@ Page({
 		})
 
 		wx.hideLoading()
-	},
-
-})
+	},*/

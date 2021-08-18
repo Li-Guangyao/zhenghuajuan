@@ -19,8 +19,12 @@ PostManager.CF = {
  * @param {Post} post 帖子
  */
 PostManager.add = async function(post) {
-	return await CFM.call(this.Post, "add", 
+	if (!await post.check()) 
+		throw new Error("未通过审核！");
+
+	var postId = await CFM.call(this.Post, "add", 
 		{ post: post.data });
+	return post.data._id = postId;
 }
 
 /**
@@ -107,6 +111,9 @@ PostManager.delete = async function(postId) {
  * @param {PostComment} comment 评论对象
  */
 PostManager.addComment = async function(postId, comment) {
+	if (!await comment.check()) 
+		throw new Error("未通过审核！");
+
 	return await CFM.call(this.PostComment, "add", 
 		{ postId, comment: comment.data });
 }

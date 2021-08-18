@@ -1,5 +1,5 @@
 
-import { navigateUtils } from '../../utils/navigateUtils';
+import NavigateUtils from '../../utils/navigateUtils';
 import CFM from '../coreModule/cloudFuncManager'
 import FoodManager from '../foodModule/foodManager';
 import UserInfo from './userInfo'
@@ -16,8 +16,25 @@ UserManager.CF = {
 UserManager.StroageKey = 'userInfo'
 UserManager.LoginPage = '../my/my'
 
+// 用户数据缓存
+UserManager.userCache = {}
+
 // 当前用户
 UserManager.userInfo = null;
+
+/**
+ * 获取单个用户数据
+ * @param {String} openid 用户Openid
+ */
+UserManager.get = async function(userOpenid) {
+	if (userOpenid == this.userInfo.data._openid) 
+		return this.userInfo.data;
+		
+	var res = this.userCache[userOpenid] ||= 
+		await CFM.call(this.CF.UserInfo, 
+			'get_basic', { userOpenid })
+	return res;
+}
 
 /**
  * 设置用户信息（内部调用）
@@ -25,8 +42,7 @@ UserManager.userInfo = null;
 UserManager._setUserInfo = function(data) {
 	this._resetData(); // 重置相关数据
 	wx.setStorage({key: this.StroageKey, data})
-	data = new UserInfo(data);
-	return this.userInfo = data;
+	return this.userInfo = new UserInfo(data);
 }
 UserManager._resetData = function() {
 	FoodManager.foods = null;
@@ -56,18 +72,19 @@ UserManager.login = async function(force, desc) {
  * @param {Function} onConfirm 确认回调
  * @param {Function} onCancel 取消回调
  */
-UserManager.judgeLogin = async function(title, onConfirm, onCancel) {
+UserManager.judgeLogin = async function(
+	refresh, title, onConfirm, onCancel) {
 	if (!this.userInfo) {
 		title ||= "卷王同志，请先登陆再来";
-		onConfirm ||= () => navigateUtils.goto(this.LoginPage);
-		onCancel ||= () => navigateUtils.pop();
+		onConfirm ||= () => NavigateUtils.goto(this.LoginPage);
+		onCancel ||= () => NavigateUtils.pop();
 
 		var response = await wx.showModal({ title, showCancel: true});
 		if (response.confirm) onConfirm();
 		else if (response.cancel) onCancel();
 
 		throw new Error("未登录！该报错是为了中断后续程序运行，并非程序出错！")
-	}
+	} else if (refresh) await this.refresh();
 
 	return this.userInfo;
 }

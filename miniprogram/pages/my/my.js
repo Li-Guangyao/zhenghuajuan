@@ -1,20 +1,16 @@
-import getAccessToken from '../../utils/getAccessToken'
-import changePhotoListFormat from '../../utils/changePhotoListFormat'
-import { userUtils } from "../../utils/userUtils"
-import CFM from '../../modules/coreModule/cloudFuncManager';
 import UserManager from '../../modules/userModule/userManager';
 import PageCombiner from '../common/pageCombiner';
 import userPage from '../common/userPage';
-import { navigateUtils } from '../../utils/navigateUtils';
+import NavigateUtils from '../../utils/navigateUtils';
 
 var main = {
 	data: {
-		todayData:{
+		todayData: {
 			count: 0,
 			duration: 0,
 			rollCount: 0,
 		},
-		totalData:{
+		totalData: {
 			count: 0,
 			duration: 0,
 			rollCount: 0,
@@ -39,17 +35,17 @@ var main = {
 	},
 
 	toMyPost(){
-		navigateUtils.push('../myPost/myPost');
+		NavigateUtils.push('../myPost/myPost');
 	},
 	toShopName(){
-		navigateUtils.push('../shopName/shopName');
+		NavigateUtils.push('../shopName/shopName');
 	},
 
 	toRoll() {
-		navigateUtils.switch('../roll/roll');
+		NavigateUtils.switch('../roll/roll');
 	},
 	toPost() {
-		navigateUtils.switch('../homepage/homepage');
+		NavigateUtils.switch('../homepage/homepage');
 	},
 
 }

@@ -11,7 +11,7 @@ function FileStroageManager() {
 FileStroageManager.uploadFiles = async function(files, path, loading, title, mask) {
 	if (loading == undefined) loading = true;
 	if (mask == undefined) mask = true;
-	title ||= "加载中";
+	title ||= "保存中";
 
 	wx.showLoading({ title, mask })
 
@@ -38,5 +38,14 @@ FileStroageManager._uploadFile = (file, path) =>
 		cloudPath: savePath + '/' + file.name,
 		filePath: file.url		
 	})
+
+FileStroageManager.getFormat = (path) => {
+	//获取最后一个.的位置
+	var index = path.lastIndexOf(".");
+	//获取后缀
+	var ext = path.substr(index + 1);
+	//输出结果
+	return ext;
+}
 
 export default FileStroageManager;

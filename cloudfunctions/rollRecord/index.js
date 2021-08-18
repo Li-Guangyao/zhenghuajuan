@@ -42,7 +42,8 @@ exports.main = async (event, context) => {
 		case "START": // 开始蒸花卷
 			var rollRecord = event.rollRecord; // 蒸花卷记录实例
 
-			startRollRecord(openid, rollRecord); break;
+			// 返回保存后的蒸花卷记录ID
+			return await startRollRecord(openid, rollRecord);
 
 		case "FAIL": // 蒸花卷失败
 			var rollRecord = event.rollRecord; // 蒸花卷记录实例
@@ -77,10 +78,12 @@ startRollRecord = async (openid, data) => {
 	data.createdAt = new Date();
 	data.status = 0;
 
-	db.collection('t_roll_record').add({ data })
+	delete data._id;
+
+	return await db.collection('t_roll_record').add({ data });
 }
 
-failRollRecord = async (openid, data) => {
+failRollRecord = (openid, data) => {
 	var id = data._id;
 
 	data._openid = openid;
@@ -92,7 +95,7 @@ failRollRecord = async (openid, data) => {
 	queryRollRecord(id).update({ data })
 }
 
-finishRollRecord = async (openid, data) => {
+finishRollRecord = (openid, data) => {
 	var id = data._id;
 
 	data._openid = openid;

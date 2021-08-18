@@ -54,7 +54,7 @@ exports.main = async (event, context) => {
 		case "ADD": // 保存帖子
 			var post = event.post; // 帖子数据
 
-			// 返回保存后的帖子数据
+			// 返回保存后的帖子ID
 			return await savePost(openid, post);
 
 		case "DELETE": // 删除帖子
@@ -123,9 +123,9 @@ savePost = async (test, openid, data) => {
 
 	// 非测试模式下重置数据
 	if (!test) {
-		data.likeValue = 0;
-		data.comments = []
-		data.likes = []
+		// data.likeValue = 0;
+		// data.comments = []
+		// data.likes = []
 
 		if (data.anonyFoodId) 
 			data.anonyFoodDesc = processAnony();
@@ -136,14 +136,14 @@ savePost = async (test, openid, data) => {
 		data.createdAt = new Date()
 	}
 
-	db.collection('t_post').add({ data })
-
-	return data;
+	return await db.collection('t_post').add({ data });
 }
 
 // 处理匿名数据
 processAnony = function() {
-	var descs = ["美味", "诱人", "卓越", "黯淡无光", "隔壁家", "精致", "饱满", "极品", "楼上", "楼下", "金色", "粗糙", "普通", "平凡", "香喷喷", "香飘飘", "我最爱", "金黄", "家门口"]
+	var descs = ["美味", "诱人", "卓越", "黯淡无光", "隔壁家", 
+	"精致", "饱满", "极品", "楼上", "楼下", "金色", "粗糙", "普通", 
+	"平凡", "香喷喷", "香飘飘", "我最爱", "金黄", "家门口"]
 	return descs[Math.floor(Math.random() * descs.length)] + "的"
 }
 
@@ -169,7 +169,7 @@ deletePost = (postId) => queryPost(postId).update({
 		} : null,
 		coordinate: event.location ? new db.Geo.Point(Number(event.location.longitude), Number(event.location.latitude)) : null,
 
-		isAnonymous: event.isAnonymous,
+		isAnony: event.isAnony,
 
 		createdAt: new Date(),
 		likeValue: 0,

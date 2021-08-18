@@ -28,6 +28,11 @@ exports.main = async (event, context) => {
 		if (data.videoList.length > 0)
 			data.status = 0;
 
+		if (data.location) 
+			data.coordinate = new db.Geo.Point(
+				Number(data.location.longitude), 
+				Number(data.location.latitude))
+
 		data.createdAt = new Date()
 	}
 
@@ -58,7 +63,7 @@ processAnony = function() {
 		} : null,
 		coordinate: event.location ? new db.Geo.Point(Number(event.location.longitude), Number(event.location.latitude)) : null,
 
-		isAnonymous: event.isAnonymous,
+		isAnony: event.isAnony,
 
 		createdAt: new Date(),
 		likeValue: 0,

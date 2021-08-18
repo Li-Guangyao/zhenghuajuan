@@ -1,13 +1,13 @@
-import { userUtils } from "../../utils/userUtils"
-import { canvasUtils } from "../../utils/canvasUtils"
+import RollManager from "../../modules/rollModule/rollManager";
+import CanvasUtils from "../../utils/canvasUtils"
+import DateUtils from "../../utils/dateUtils";
+import NavigateUtils from "../../utils/navigateUtils";
+import PageCombiner from "../common/pageCombiner";
+import foodPage from "../common/foodPage";
+import userPage from "../common/userPage";
 
-Page({
+var main = {
 	data: {
-		// 用户数据
-		userInfo: null,
-
-		// 菜品数据
-		foods: [],
 		// 菜品显示位置（自动生成）
 		positions: [],
 
@@ -27,81 +27,28 @@ Page({
 	// 菜品尺寸（绘制）
 	foodSize: [92, 92],
 
-	// 图片缓存
-	imageCache: {},
-
 	onLoad: async function (options) {
 		this.setupTimeRanges();
-		await this.getUserInfo();
-		await this.loadFoods();
 	},
 
 	onUnload: function () {
-		canvasUtils.reset();
-	},
-
-	getUserInfo: async function() {
-		this.setData({ userInfo : await userUtils.judgeLogin() })
+		CanvasUtils.reset();
 	},
 
 	/**
 	 * 设置时间范围
 	 */
 	setupTimeRanges: function () {
-		var now = new Date();
-
-		var date = now.getDate(),
-			day = now.getDay() || 7, // 星期数（if (day == 0) day = 7）
-			month = now.getMonth(),
-			year = now.getFullYear();
-
-		var dayStart = new Date(year, month, date);
-		var dayEnd = new Date(year, month, date + 1);
-
-		var weekStart = new Date(year, month, date - day);
-		var weekEnd = new Date(year, month, date - day + 8);
-
-		var monthStart = new Date(year, month, 1);
-		var monthEnd = new Date(year, month + 1, 0);
-
-		var yearStart = new Date(year, 0, 1);
-		var yearEnd = new Date(year + 1, 0, 0);
-
-		this.timeRanges = [
-			[dayStart, dayEnd],
-			[weekStart, weekEnd],
-			[monthStart, monthEnd],
-			[yearStart, yearEnd]
-		];
-	},
-
-	loadFoods: async function () {
-		var res = await wx.cloud.callFunction({
-			name: "operFoods",
-			data: {
-				method: "GET"
-			}
-		});
-		this.setData({
-			foods: this.processFoods(res.result)
-		});
-	},
-
-	processFoods: function (foods) {
-		let _foods = {}
-		foods.forEach(f => _foods[f._id] = f);
-		return {
-			...foods, ..._foods
-		}
+		this.timeRanges = DateUtils.getTimeRages();
 	},
 
 	// 配置Canvas（桌面图片onload后执行）
 	async setupCanvas() {
 		var query = this.createSelectorQuery()
-		await canvasUtils.setupById(query, "foods")
+		await CanvasUtils.setupById(query, "foods")
 
-		this.foodsCanvas = canvasUtils.canvas;
-		this.foodsCtx = canvasUtils.ctx;
+		this.foodsCanvas = CanvasUtils.canvas;
+		this.foodsCtx = CanvasUtils.ctx;
 		
 		this.setData({
 			positions: this.generatePositions(), // 每个菜品的位置
@@ -148,18 +95,16 @@ Page({
 		if (!data) {
 			// 现在选择的那个时间段
 			var range = this.curTimeRange();
-			var res = await wx.cloud.callFunction({
-				name: "getMyRollRecord",
-				data: {
-					beginDate: range[0].getTime(),
-					endDate: range[1].getTime(),
-					skipNum: 0
-				}
-			});
+
+			var res = await RollManager.getMy(
+				range[0], range[1]
+			);
+
 			var key = 'records[' + this.data.curIndex + ']'
 			this.setData({
 				[key]: this.processRecordData(res.result)
 			});
+
 			data = this.curRecords();
 		}
 		this.drawData(data.records);
@@ -170,17 +115,10 @@ Page({
 
 		records.forEach(r => {
 			var time = new Date(r.createdAt);
-			var date = time.getDate();
-			var month = time.getMonth() + 1;
-			var year = time.getFullYear();
-			var hour = time.getHours() + '';
-			var minute = time.getMinutes() + '';
+			
+			r.time = DateUtils.date2MDHM(time);
+			var key = DateUtils.date2YMDChi(time);
 
-			hour = hour.padStart(2, 0);
-			minute = minute.padStart(2, 0);
-			r.time = month + "月" + date + "日 " + hour + ":" + minute;
-
-			var key = year + "年" + month + "月" + date + "日";
 			res[key] ||= []; res[key].push(r)
 		})
 
@@ -263,61 +201,21 @@ Page({
 		var w = this.foodSize[0], h = this.foodSize[1];
 		var food = this.data.foods[rec.foodId];
 
-		await canvasUtils.drawFood(food, rec.quality,
+		await CanvasUtils.drawFood(food, rec.quality,
 			x, y, w, h);
-		
-		/*
-		var src = this.data.foods[rec.foodId].images[rec.quality];
-		var cache = this.imageCache[src] ||= await wx.getImageInfo({ src })
-
-		var draw = () =>
-			// console.log("drawFood", i, pos, this.adjustPos(pos));
-			this.foodsCtx.drawImage(cache.img, 0, 0,
-				cache.width, cache.height, x, y, w, h);
-
-		if (!cache.img) {
-			var img = this.foodsCanvas.createImage();
-			img.src = cache.path;
-			img.onload = () => {
-				cache.img = img; draw();
-			};
-		} else draw();
-		*/
 	},
 
 	// 清空画布的内容
 	clearCanvas: function () {
-		canvasUtils.clearAll()
-
-		/* 测试用
-		for (let x = 0; x < this.width(); x += 100) {
-			this.foodsCtx.moveTo(x, 0);
-
-			this.foodsCtx.lineTo(x, 999);
-			this.foodsCtx.lineWidth = 3; //直线的宽度状态设置
-			this.foodsCtx.strokeStyle = "#000"; //直线的颜色状态设置
-
-			this.foodsCtx.stroke()
-		}
-
-		for (let y = 0; y < this.height(); y += 100) {
-			this.foodsCtx.moveTo(0, y);
-
-			this.foodsCtx.lineTo(999, y);
-			this.foodsCtx.lineWidth = 3; //直线的宽度状态设置
-			this.foodsCtx.strokeStyle = "#000"; //直线的颜色状态设置
-
-			this.foodsCtx.stroke()
-		}
-		*/
+		CanvasUtils.clearAll();
 	},
 
 	toRanklist() {
-		wx.navigateTo({
-			url: '../ranklist/ranklist',
-		})
+		NavigateUtils.change('../ranklist/ranklist');
 	},
-	back() {
-		wx.navigateBack({ delta: 1 })
+	back() { 
+		NavigateUtils.pop(); 
 	}
-})
+}
+
+Page(PageCombiner.Combine(main, [userPage, foodPage]))

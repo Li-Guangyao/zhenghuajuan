@@ -21,6 +21,10 @@ exports.main = async (event, context) => {
 	switch (method.toUpperCase()) {
 		case "GET": // 获取用户数据
 			return await getUserInfo(openid);
+		case "GET_BASIC": // 获取用户基本数据
+			var userOpenid = event.userOpenid; // 要获取的用户openid
+
+			return await getBasicUserInfo(userOpenid);
 		case "SAVE": // 更新用户数据
 			var userInfo = event.userInfo; // 新的用户数据（从wx官方获取的）
 
@@ -32,6 +36,15 @@ queryUser = openid => db.collection('t_user').where({_openid: openid});
 
 getUserInfo = async (openid) =>
 	(await queryUser(openid).get()).data[0];
+
+getBasicUserInfo = async (userOpenid) =>
+	(await queryUser(userOpenid).field({
+		_openid: true,
+		nickName: true, avatarUrl: true, gender: true,
+		country: true, province: true, city: true,
+		language: true, displayName: true, shopName: true,
+		createdAt: true, status: true
+	}).get()).data[0];
 
 saveUserInfo = async (openid, userInfo) => {
 	userInfo._openid = openid;

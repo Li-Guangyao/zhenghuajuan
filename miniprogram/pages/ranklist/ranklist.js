@@ -1,8 +1,10 @@
-import { userUtils } from "../../utils/userUtils"
+import CFM from "../../modules/coreModule/cloudFuncManager"
+import NavigateUtils from "../../utils/navigateUtils"
+import PageCombiner from "../common/pageCombiner"
+import userPage from "../common/userPage"
 
-Page({
+var main = {
 	data: {
-		userInfo: null,
 		updateDate: null,
 
 		// 所有的rank信息，包括日/周/月
@@ -24,17 +26,14 @@ Page({
 			['月榜', 'month']
 		],
 		tabIndex: 0,
-
-		// 初始化wholeRank的高度
-		wholeRankHeight: null
 	},
 
 	onLoad: async function (options) {
-		await this.judgeLogin()
-		this.initPageStyle()
+		// await this.judgeLogin()
 		this.initPageContent()
 	},
 
+	/*
 	// 排行榜更新时间显示，格式标准化
 	setDateFormat(date) {
 		var date = new Date(date)
@@ -45,57 +44,30 @@ Page({
 		var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
 		return M + D + h + m;
 	},
-
-	async judgeLogin() {
-		this.setData({ userInfo : await userUtils.judgeLogin() })
-	},
-
-	initPageStyle() {
-		//根据底部下单区域的高矮，来初始化页面的大小
-		var query = wx.createSelectorQuery()
-
-		query.select('.tabbar').boundingClientRect()
-		query.select('.my-rank').boundingClientRect()
-		setTimeout(
-			query.exec.bind(this, res => {
-				console.log(res)
-				this.setData({
-					wholeRankHeight: res[1].top - res[0].bottom
-				})
-			}), 1000
-		)
-	},
+	*/
 
 	// 初始化页面内容
 	async initPageContent() {
-		wx.showLoading({
-			title: '加载中'
-		})
+		var getRankLists = this.data.tab.map(
+			t => this.getRankList(t[1])
+		)
+		var res = await Promise.all(getRankLists);
 
-		const getRankList = this.data.tab.map(e => this.getRankList(e[1]))
-		var res = await Promise.all(getRankList)
-
-		for (var i = 0; i < res.length; i++) {
-			this.setData({
-				['rankList[' + i + ']']: res[i].result.rankList,
-				['myRankInfo[' + i + ']']: [res[i].result.myRank, res[i].result.myValue]
-			})
-		}
+		res.forEach((r, i) => {
+			this.data.rankList[i] = r.rankList;
+			this.data.myRankInfo[i] = r.myValue;
+		});
 
 		this.setData({
+			rankList: this.data.rankList,
+			myRankInfo: this.data.myRankInfo,
 			topRankList: this.data.rankList[0]
 		})
-		wx.hideLoading()
 	},
 
 	// 获得排行榜信息
 	getRankList(type) {
-		return wx.cloud.callFunction({
-			name: 'getJuanwang',
-			data: {
-				type
-			}
-		})
+		return CFM.call('getJuanwang', null, { type });
 	},
 
 	// 点击切换日/周/月榜
@@ -106,32 +78,15 @@ Page({
 		})
 	},
 
-	onShow: function () {
-	},
-
-	onHide: function () {
-
-	},
-
-	onUnload: function () {
-
-	},
-
 	onPullDownRefresh: function () {
 		this.initPageContent()
 		wx.stopPullDownRefresh()
 	},
-
-	onReachBottom: function () {
-
-	},
 	
 	toRollRecord() {
-		wx.navigateTo({
-			url: '../rollRecord/rollRecord',
-		})
+		NavigateUtils.change('../rollRecord/rollRecord');
 	},
-	back() {
-		wx.navigateBack({ delta: 1 })
-	}
-})
+	back() { NavigateUtils.pop(); }
+}
+
+Page(PageCombiner.Combine(main, userPage))

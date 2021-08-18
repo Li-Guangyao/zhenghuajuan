@@ -1,64 +1,21 @@
-import getDateDiff from "../../utils/getDateDiff"
-import { userUtils } from "../../utils/userUtils"
+import Post from "../../modules/postModule/post";
+import PostManager from "../../modules/postModule/postManager";
+import NavigateUtils from "../../utils/navigateUtils";
+import PageCombiner from "../common/pageCombiner";
+import userPage from "../common/userPage";
 
-Page({
+var main = {
 	data: {
-		post: {},
-		userInfo: null,
-		commentList: [],
-		
-		postIndex: null
+		post: null,
 	},
 
 	async onLoad(e) {
+		var post = await PostManager.getOne(e.postId);
 
-		wx.showLoading({ title: '加载中' })
-
-		this.setData({
-			post: JSON.parse(e.post),
-			postIndex: e.postIndex
-		})
-
-		await this.judgeLogin();
-		await this.refreshComment();
-
-		wx.hideLoading()
+		this.setData({ post })
 	},
 
-	async judgeLogin() {
-		this.setData({ userInfo: await userUtils.judgeLogin() })
-	},
+	back() { NavigateUtils.pop(); }
+}
 
-	async refreshComment() {
-		await wx.cloud.callFunction({
-			name: 'getPostComment',
-			data: {
-				postId: this.data.post._id
-			}
-		}).then(res => {
-			this.setData({
-				commentList: res.result
-			})
-			this.dateDiffTrans()
-		})
-	},
-
-	// 时间距离现在多久
-	dateDiffTrans() {
-		var length = this.data.commentList.length
-		for (var i = 0; i < length; i++) {
-			var item = 'commentList[' + i + '].timeDiff'
-			var originDate = this.data.commentList[i].createdAt
-			this.setData({
-				[item]: getDateDiff(originDate)
-			})
-		}
-	},
-
-	async onUnload() {
-		var postDisplay = this.selectComponent('#postDisplay')
-		await postDisplay.uploadLikes();
-	},
-	
-	back() { wx.navigateBack(); }
-})
+Page(PageCombiner.Combine(main, userPage));

@@ -7,12 +7,12 @@
 		<!-- 左侧头像 -->
 		<view class="left">
 
-			<image class="user-avatar" src="../../images/defaultAvatar.jpeg" mode="aspectFill" wx:if="{{item.isAnonymous}}"></image>
-			<image class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{!item.isAnonymous}}"></image>
+			<image class="user-avatar" src="../../images/defaultAvatar.jpeg" mode="aspectFill" wx:if="{{item.isAnony}}"></image>
+			<image class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{!item.isAnony}}"></image>
 
 			<view class="nickname-time">
-				<view class="user-nickname" wx:if="{{item.isAnonymous}}">匿名用户</view>
-				<view class="user-nickname" wx:if="{{!item.isAnonymous}}">{{item.displayName}}</view>
+				<view class="user-nickname" wx:if="{{item.isAnony}}">匿名用户</view>
+				<view class="user-nickname" wx:if="{{!item.isAnony}}">{{item.displayName}}</view>
 
 				<view class="pub-time">{{item.timeDiff}}
 					<text class="check-info" wx:if="{{item.status==0}}">正在审核</text>

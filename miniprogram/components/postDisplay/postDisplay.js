@@ -1,27 +1,25 @@
+import FoodManager from "../../modules/foodModule/foodManager"
+import PostManager from "../../modules/postModule/postManager"
+import UserManager from "../../modules/userModule/userManager"
+import NavigateUtils from "../../utils/navigateUtils"
+import PostComment from "../../modules/postModule/postComment"
+import PostLike from "../../modules/postModule/postLike"
+
 Component({
 
 	properties: {
-		userInfo: {
-			type: Object,
-			value: null
-		},
-
 		showDelete: {
 			type: Boolean,
 			value: false
 		},
 
-		postList: {
+		posts: {
 			type: Array,
 			value: null
 		},
 		post: {
 			type: Object,
 			value: null
-		},
-		commentList: {
-			type: Array,
-			value: []
 		},
 
 		bindtap: {
@@ -35,7 +33,7 @@ Component({
 		videotap: {
 			type: String,
 			value: "previewMadia"
-		}
+		},
 	},
 
 	/**
@@ -81,27 +79,18 @@ Component({
 
 	lifetimes: {
 		attached: async function() {
-			var res = await wx.cloud.callFunction({
-				name: "operFoods",
-				data: { method: "GET" }
-			});
-			this.setData({
-				foods: this.processFoods(res.result)
-			});
+			this.setData({ foods: FoodManager.foods });
 		}
 	},
 
 	pageLifetimes: {
-
 		hide: function () {
 			this.uploadLikes();
 		},
 	},
 
 	methods: {
-		openId() {
-			return this.properties.userInfo._openid;
-		},
+		openid: () => UserManager.userInfo.data._openid,
 
 		// 帖子
 		// 当前帖子
@@ -110,19 +99,15 @@ Component({
 				return this.properties.post;
 
 			var index = e.currentTarget.dataset.index;
-			return this.properties.postList[index];
+			return this.properties.posts[index];
 		},
 
 		tapPost(e) {
 			if (this.properties.post) return;
 
-			// var post = JSON.stringify(this.data.postList[index])
-			var index = e.currentTarget.dataset.index
-			var post = JSON.stringify(this.currentPost(e));
+			var postId = this.currentPost(e).data._id;
 
-			wx.navigateTo({
-				url: '../postDetail/postDetail?post=' + post + '&postIndex=' + index,
-			})
+			NavigateUtils.push('../postDetail/postDetail', { postId })
 		},
 
 		// 点击视频或者图片预览
@@ -139,200 +124,106 @@ Component({
 
 		// 刷新数据列表
 		refreshPosts() {
+			if (this.properties.post)
+				this.properties.post.refresh();
+			if (this.properties.posts)
+				this.properties.posts.forEach(p => p.refresh());
+				
 			this.setData({
 				post: this.properties.post,
-				postList: this.properties.postList
+				posts: this.properties.posts
 			})
 		},
 
 		// 交互
 
 		// 删除
-		deletePost(e) {
-			var post = this.currentPost(e);
-			var postList = this.properties.postList;
+		async deletePost(e) {
+			var posts = this.properties.posts;
+			var postId = this.currentPost(e).data._id;
 			var index = e.currentTarget.dataset.index;
 
-			wx.showModal({
-				content: '确定删除',
-				success: (res) => {
-					if (res.confirm) {
-						wx.cloud.callFunction({
-							name: 'removePost',
-							data: {
-								postId: post._id
-							},
-							success: res => {
-								wx.showToast({
-									title: '删除成功',
-									icon: 'none'
-								});
-
-								if (this.properties.post)
-									wx.navigateBack({
-										delta: 1
-									})
-								else if (postList) {
-									postList.splice(index, 1);
-									this.refreshPosts();
-								}
-							},
-							fail: console.log
-						})
-					}
-				}
+			var res = await wx.showModal({
+				content: '确定删除'
 			})
+
+			if (!res.confirm) return;
+
+			await PostManager.delete(postId);
+			wx.showToast({
+				title: '删除成功', icon: 'none'
+			});
+
+			if (this.properties.post) // 如果是单个帖子的页面
+				NavigateUtils.pop();
+			else if (posts) { // 否则有多个帖子
+				posts.splice(index, 1);
+				this.refreshPosts();
+			}
 		},
 
 		// 点赞
 		// 点击了点赞的按钮，弹出popup
 		giveLike(e) {
 			var post = this.currentPost(e);
-			this.setData({
-				curLikePost: post
-			})
+			this.setData({ curLikePost: post })
 
-			if (this.openId() == post._openid) {
+			if (this.openid() == post.data._openid)
 				wx.showToast({
 					title: '自己不能给自己点赞哟',
 					icon: 'none'
 				})
-			} else this.showLikePopup();
+			else this.showLikePopup();
 		},
 
 		// 给出赞之后，图标变为彩色，再次点击直接变为无色，即取消点赞
 		async cancelLike(e) {
-			if (this.data.loading) return;
-
 			var post = this.currentPost(e);
-			if (post.likeIndex == -1) return;
+			if (!post.curLike) return; // 已经没有点赞了
+			post.removeLike();
 
-			var likeItem = this.data.likeItems[post.likeIndex];
-
-			post.likeIndex = -1;
-			// post.likeValue -= likeItem.value;
-
-			wx.showLoading({
-				title: '加载中',
-				mask: true
-			})
-
-			await this.uploadLike(post);
-
-			wx.hideLoading()
-
+			await uploadLike(post);
 			this.refreshPosts();
 		},
 
 		// 显示点赞提示框
 		showLikePopup() {
-			this.setData({
-				showLikePopup: true
-			})
+			this.setData({ showLikePopup: true })
 		},
 
 		// 关闭点赞提示框
 		closeLikePopup() {
-			this.setData({
-				showLikePopup: false
-			})
+			this.setData({ showLikePopup: false })
 		},
 
 		// 在popup中选择一项
 		async tapLikeItem(e) {
 			var post = this.data.curLikePost;
+			var like = post.curLike;
+
 			var likeIndex = e.currentTarget.dataset.index;
+			var likeItem = this.data.likeItems[likeIndex];
 
-			if (post.likeIndex != likeIndex) {
-
-				var oriLikeItem = this.data.likeItems[post.likeIndex];
-				var likeItem = this.data.likeItems[likeIndex]
-
-				var oriLikeValue = oriLikeItem ? oriLikeItem.value : 0;
-
-				post.likeIndex = likeIndex;
-				// post.likeValue += likeItem.value;
-
-				wx.showLoading({
-					title: '加载中',
-					mask: true
+			if (!like) { // 新增点赞
+				like = new PostLike(post, {
+					value: likeItem.value, likeIndex
 				})
-				await this.uploadLike(post);
-				wx.hideLoading()
-
-				this.refreshPosts();
+				post.addLike(like);
+			} else if (like.likeIndex != likeIndex) { // 如果点赞有改变
+				like.data.likeIndex = likeIndex;
+				like.data.value = likeItem.value;
 			}
+
+			await uploadLike(post, like);
+
 			this.closeLikePopup();
 		},
 
-		// 上传所有点赞数据
-		async uploadLikes() {
-			// var postList = this.properties.postList;
-			// if (this.properties.post) 
-			// 	await this.uploadLike(this.properties.post);
-			// else 
-			// 	for (var i = 0; i < postList.length; ++i)
-			// 		await this.uploadLike(postList[i]);
-		},
-
 		// 上传点赞数据
-		async uploadLike(post) {
-
-			var oriLikeItem = this.data.likeItems[post.oriLikeIndex];
-			var likeItem = this.data.likeItems[post.likeIndex];
-
-			var oriLikeValue = oriLikeItem ? oriLikeItem.value : 0;
-			var likeValue = likeItem ? likeItem.value : 0;
-
-			if (oriLikeValue == likeValue) return;
-
-			var totalLikeValue = 0;
-			post.oriLikeIndex = post.likeIndex;
-
-			totalLikeValue = (await wx.cloud.callFunction({
-				name: 'savePostLike',
-				data: {
-					postId: post._id,
-					_openid: this.openId(),
-					postAuthorOpenId: post._openid,
-					valueIndex: post.likeIndex,
-					value: likeValue,
-				}
-			})).result;
-
-			/*
-			if (likeValue == 0) { // 取消点赞
-				totalLikeValue = (await wx.cloud.callFunction({
-					name: 'removePostLike',
-					data: {
-						postId: post._id,
-						originValue: oriLikeValue
-					}
-				})).result;
-			} else if (oriLikeValue == 0) { // 新增点赞
-				totalLikeValue = (await wx.cloud.callFunction({
-					name: 'savePostLike',
-					data: {
-						postId: post._id,
-						postAuthorOpenId: post._openid,
-						valueIndex: post.likeIndex,
-						value: likeValue,
-					}
-				})).result;
-			} else { // 修改点赞
-				totalLikeValue = (await wx.cloud.callFunction({
-					name: 'updatePostLike',
-					data: {
-						postId: post._id,
-						valueIndex: post.likeIndex,
-						value: likeValue,
-						originValue: oriLikeValue
-					}
-				})).result;
-			}
-			*/
-
-			post.likeValue = totalLikeValue
+		async uploadLike(post, like) {
+			like = like ? like.data : null;
+			await PostManager.likePost(post.data._id, like);
+			this.refreshPosts();
 		},
 
 		// 评论
@@ -344,33 +235,34 @@ Component({
 
 		// 评论评论
 		currentComment(e) {
-			if (!this.properties.post) return null;
-			return this.properties.commentList[e.currentTarget.dataset.index];
+			var post = this.properties.post;
+			if (!post) return null;
+			
+			var index = e.currentTarget.dataset.index;
+			return post.data.comments[index];
 		},
 
 		// 点击了评论图标
 		showInput() {
 			if (!this.properties.post) return;
-			this.setData({
-				showInput: true
-			})
+			this.setData({ showInput: true })
 		},
 
 		// 评论框失焦
 		foldInput() {
 			if (!this.properties.post) return;
-			this.setData({
-				showInput: false
-			})
+			this.setData({ showInput: false })
 		},
 
 		// 评论评论
-		showInputForComment(e) {
+		async showInputForComment(e) {
 			if (!this.properties.post) return;
 
 			var comment = this.currentComment(e);
+			var userInfo = await comment.getUserInfo();
+
 			this.setData({
-				commentSb: "回复 " + comment.nickName + ' : ',
+				commentSb: "回复 " + userInfo.nickName + ' : ',
 				showInputForComment: true
 			})
 		},
@@ -378,9 +270,7 @@ Component({
 		// 评论框失焦
 		foldInputForComment() {
 			if (!this.properties.post) return;
-			this.setData({
-				showInputForComment: false
-			})
+			this.setData({ showInputForComment: false })
 		},
 
 		// 点击保存评论
@@ -395,124 +285,60 @@ Component({
 		pubCommentComment() {
 			if (!this.properties.post) return;
 
-			if (this.data.inputCommentComment) {
-				var content = this.data.commentSb + this.data.inputCommentComment;
-				this.saveComment(content)
-			}
+			if (this.data.inputCommentComment) 
+				this.saveComment(this.data.commentSb + 
+					this.data.inputCommentComment)
 		},
 
 		inputCommentChange(e) {
 			if (!this.properties.post) return;
 
-			this.setData({
-				inputComment: e.detail.value
-			})
+			this.setData({ inputComment: e.detail.value })
 		},
 
 		inputCommentCommentChange(e) {
 			if (!this.properties.post) return;
 
-			this.setData({
-				inputCommentComment: e.detail.value
-			})
+			this.setData({ inputCommentComment: e.detail.value })
 		},
 
 		// 保存评论
 		async saveComment(content) {
-			if (!this.properties.post) return;
+			var post = this.properties.post;
+			if (!post) return;
 
-			wx.showLoading({
-				title: '保存中',
-				mask: true
-			})
-			if (await this.checkComment(content)) {
-				var commentList = this.properties.commentList;
+			var comment = new PostComment(post, { content });
+			post.addComment(comment);
 
-				var res = await wx.cloud.callFunction({
-					name: 'savePostComment',
-					data: {
-						postId: this.properties.post._id,
-						comment: content,
-					}
-				})
-				console.info(res);
+			await PostManager.addComment(post.data._id, comment);
 
-				wx.showToast({
-					title: '保存成功',
-					icon: 'none'
-				});
+			wx.showToast({
+				title: '保存成功', icon: 'none'
+			});
 
-				commentList.push({
-					...this.properties.userInfo,
-
-					_id: res.result._id,
-					content,
-					timeDiff: "刚刚"
-				})
-
-				this.properties.post.commentCount++;
-				this.setData({
-					post: this.properties.post,
-					commentList
-				})
-			} else {
-				wx.hideLoading();
-				wx.showToast({
-					title: '没有通过审核',
-					icon: 'error'
-				})
-			}
+			this.refreshPosts();
 		},
 
-		// 内容安全检查
-		async checkComment(content) {
-			const res = await wx.cloud.callFunction({
-				name: 'checkPost',
-				data: {
-					postContent: content,
-					postPhotoList: []
-				}
-			})
-
-			return res.result
-		},
+		canDeleteComment = (post, comment) =>
+			this.openid() == comment.data._openid ||
+				this.openid() == post.data._openid,
 
 		// 删除评论
 		deleteComment(e) {
-			if (!this.properties.post) return;
+			var post = this.properties.post
+			if (!post) return;
 
 			var comment = this.currentComment(e);
 
-			// 必须是本人的才能删除
-			if (this.openId() == comment._openid) {
-				var cIndex = e.currentTarget.dataset.index;
-				var commentList = this.properties.commentList;
+			// 必须是本人/贴主才能删除
+			if (!canDeleteComment) return;
 
-				wx.cloud.callFunction({
-					name: 'removeComment',
-					data: {
-						commentId: comment._id
-					},
-					success: res => {
-						commentList.splice(cIndex, 1)
+			var cIndex = comment.data.index;
+			post.removeComment(comment);
 
-						this.properties.post.commentCount--;
-						this.setData({
-							post: this.properties.post,
-							commentList
-						})
-					}
-				})
-			}
+			await PostManager.deleteComment(post.data._id, cIndex);
+
+			this.refreshPosts();
 		},
-
-		processFoods: function (foods) {
-			let _foods = {}
-			foods.forEach(f => _foods[f._id] = f);
-			return {
-				...foods, ..._foods
-			}
-		},
-	
 	}
 })

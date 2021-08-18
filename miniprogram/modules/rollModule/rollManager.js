@@ -71,8 +71,9 @@ RollManager.start = async function(rollRecord) {
 	this.curRollRecord = rollRecord;
 	await this.getTodayShares();
 
-	return await CFM.call(this.Roll, "start", 
+	var rollId = await CFM.call(this.Roll, "start", 
 		{ rollRecord: rollRecord.data });
+	return rollRecord.data._id = rollId;
 }
 
 /**
@@ -139,7 +140,7 @@ RollManager.addShare = async function(type, postId) {
 	if (!shared) data.rollCount *= 2;
 	if (type == 'post' && postId) data.postId = postId;
 	
-	await this.finish();
+	// await this.finish();
 
 	return await CFM.call(this.CF.PosterSharing, 
 		"add", { type })

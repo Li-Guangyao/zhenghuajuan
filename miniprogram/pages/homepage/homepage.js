@@ -1,7 +1,26 @@
-import getDateDiff from "../../utils/getDateDiff"
-import changeFileListFormat from "../../utils/changeFileListFormat"
-import { userUtils } from "../../utils/userUtils"
+import NavigateUtils from '../../utils/navigateUtils';
+import PageCombiner from '../common/pageCombiner';
+import postsPage from '../common/postsPage';
+import userPage from '../common/userPage';
 
+var main = {
+
+	// 发帖
+	toPostAdd() {
+		NavigateUtils.push('../postAdd/postAdd');
+	},
+
+	toRoll() {
+		NavigateUtils.switch('../roll/roll');
+	},
+	toMy() {
+		NavigateUtils.switch('../my/my');
+	}
+}
+
+Page(PageCombiner.Combine(main, [userPage, postsPage('all')]))
+
+/*
 Page({
 	data: {
 		postList: [],
@@ -62,7 +81,7 @@ Page({
 				title: '没有更多了~',
 			})
 		else {
-			var subPostList = changeFileListFormat(this.dateDiffTrans(res.result))
+			var subPostList = convertFileList(this.dateDiffTrans(res.result))
 			this.setData({
 				postList: [...this.data.postList].concat(...subPostList)
 			})
@@ -87,7 +106,7 @@ Page({
 		})
 		if (res.result) 
 			this.setData({
-				postList: changeFileListFormat(this.dateDiffTrans(res.result))
+				postList: convertFileList(this.dateDiffTrans(res.result))
 			})
 
 		wx.hideLoading()
@@ -96,14 +115,6 @@ Page({
 	// 发帖
 	toPostAdd() {
 		wx.navigateTo({ url: '../postAdd/postAdd' })
-	},
-
-	tapPost(e) {
-		var index = e.currentTarget.dataset.index
-		var post = JSON.stringify(this.data.postList[index])
-		wx.navigateTo({
-			url: '../postDetail/postDetail?post=' + post + '&postIndex=' + index,
-		})
 	},
 
 	// 发帖的时间距离现在多久
@@ -133,3 +144,4 @@ Page({
 	},
 
 })
+*/

@@ -20,7 +20,7 @@
 	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
 	<view class="food-select">
 		<!-- TODO: 显示当前选择的菜品的图片 -->
-		<image class="food" src="{{foods[chosenFoodIdx].images[qualityIdx]}}" mode="aspectFit"></image>
+		<image class="food" src="{{foods[curFoodIdx].images[quality]}}" mode="aspectFit"></image>
 		<view class="tips">点击图标可更换菜品</view>
 	</view>
 </view>
@@ -50,11 +50,11 @@
 	<!-- 更改口味 -->
 	<view class="name-edit">
 		<!-- TODO: 点击切换后把原有的元素隐藏掉，显示下面的input -->
-		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{!showNameEdit}}"></image>
-		<view class="value" wx:if="{{!showNameEdit}}" bindtap="showNameEdit">{{name}}味{{foods[chosenFoodIdx].name}}</view>
+		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{!showFlavorEdit}}"></image>
+		<view class="value" wx:if="{{!showFlavorEdit}}" bindtap="startNameEdit">{{name}}味{{foods[curFoodIdx].name}}</view>
 		<!-- TODO: 输入完毕后（失去焦点后，应该是用bindblur来绑定事件）成功修改口味，退回上一个状态 -->
-		<input class="input" bindinput="inputActivityName" bindblur="finishNameEdit" maxlength="5"
-			placeholder="写下你专注的内容吧" wx:if="{{showNameEdit}}"></input>
+		<input class="input" bindinput="inputFlavor" bindblur="finishNameEdit" maxlength="5"
+			placeholder="写下你专注的内容吧" wx:if="{{showFlavorEdit}}"></input>
 	</view>
 
 	<!-- TODO: 开始制作！（复用原来的代码） -->
@@ -67,7 +67,7 @@
 </view>
 
 <!-- 购买菜品弹窗 -->
-<van-popup custom-class="buy-food" show="{{ showPopup }}" bind:close="showPopup">
+<van-popup custom-class="buy-food" show="{{ showPopup }}" bind:close="closePopup">
 	<!-- TODO: 用户小麦数量 -->
 	<view class="user-roll">{{userInfo.rollCount}}
 		<image src="../../icon/roll2.png" mode="heightFix"></image>

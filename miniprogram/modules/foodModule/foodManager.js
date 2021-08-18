@@ -12,6 +12,7 @@ FoodManager.CF = {
 	Food: 'food'
 }
 FoodManager.foods = null;
+FoodManager.foodCount = 0;
 
 /**
  * 加载菜品
@@ -27,6 +28,7 @@ FoodManager.load = async function(force) {
 
 FoodManager._processFoods = function(foods) {
 	let _foods = {}
+	this.foodCount = foods.length;
 	foods = foods.map(f => new Food(f));
 	foods.forEach(f => _foods[f._id] = f);
 	return { ...foods, ..._foods }

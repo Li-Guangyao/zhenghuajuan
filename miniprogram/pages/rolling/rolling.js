@@ -1,12 +1,12 @@
-import {
-	canvasUtils
-} from "../../utils/canvasUtils";
-import {
-	userUtils
-} from "../../utils/userUtils";
-import {
-	navigateUtils
-} from "../../utils/navigateUtils";
+import CanvasUtils from "../../utils/canvasUtils";
+import userUtils from "../../utils/userUtils";
+import NavigateUtils from "../../utils/navigateUtils";
+import RollManager from "../../modules/rollModule/rollManager";
+import FoodManager from "../../modules/foodModule/foodManager";
+import MathUtils from "../../utils/mathUtils";
+import PageCombiner from "../common/pageCombiner";
+import userPage from "../common/userPage";
+
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
 var windowWidth = wx.getSystemInfoSync().windowWidth;
 var windowHeight = wx.getSystemInfoSync().windowHeight;
@@ -17,10 +17,6 @@ var w = 8,
 
 // 每隔125毫秒重绘图形
 var updateInterval = 125;
-// 最后一个状态“出锅”的持续时间
-var lastStatusTime = 2;
-// canvas的context
-var aniCtx;
 // 一个循环任务的句柄
 var updateId;
 
@@ -32,22 +28,9 @@ const MaxDeltaAngle = 0.5;
 // 退出时间不能超过5秒，否则花卷坏掉
 const MaxExitTime = 5 * 1000;
 
-Page({
+var main = {
 	data: {
-		userInfo: null,
-
-		// 制作数据
-		name: "学习",
-		duration: 15,
-		count: 15,
-		strictMode: false,
-		foodId: "",
-		foodImage: null,
-		foodName: null,
-		quality: 0,
-
-		// 海报自定义信息
-		message: "",
+		rollRecord: null, // RollRecord.data
 
 		// 制作过程的变量
 		startTime: null,
@@ -67,38 +50,42 @@ Page({
 
 		// 海报数据
 		sharings: [false, false],
-		continuity: 0,
+		continuity: 0, // 连续天数
 		defeat: 0, // 打败人数比例
 		equalActInfo: {
-			verb: '动作',
-			count: '计量',
-			act: '物',
+			verb: '', count: '', act: '',
 		}
 	},
 
-	onLoad: async function (e) {
+	// 数据操作
+	// TODO: 提取共有操作
+	getObject() {
+		return this.data.rollRecord;
+	},
+	getData() {
+		return this.getObject().data;
+	},
+	updateData(obj, refresh) {
+		Object.assign(this.getData(), obj)
+		if (refresh) this.refreshData();
+	},
+	refreshData() {
+		getObject().refresh();
+		this.setData({ rollRecord: this.getObject() });
+	},
 
+	onLoad: async function (e) {
 		wx.setKeepScreenOn({ keepScreenOn: true });
 
-		e.strictMode = e.strictMode == '1'
+		// var rollRecord = RollManager.curRollRecord;
 
-		this.setData({
-			...e,
-			/*
-			name: e.name,
-			duration: e.duration,
-			count: e.count,
-			strictMode: e.strictMode == '1',
-			foodImage: e.foodImage,
-			foodName: e.foodName,
-			*/
-			leftTimeStr: this.formatTimeStr(e.duration, 0),
-		})
+		// leftTimeStr: this.formatTimeStr(rollRecord.data.duration, 0),
 
 		wx.enableAlertBeforeUnload({
 			message: "退出将会导致制作失败！您确定要退出吗？"
 		})
 
+		this.setData({ rollRecord })
 		this.loadAsyncData();
 	},
 
@@ -168,53 +155,29 @@ Page({
 	onUnload: function () {
 		this.stopRolling();
 
-		canvasUtils.reset();
+		CanvasUtils.reset();
 
 		// 如果是完成了，但没有去分享的话
 		if (this.data.finished && !this.data.sharePost)
-			this.addPrivateRollPost();
-	},
-
-	// 添加一个私有的花卷记录
-	addPrivateRollPost: async function() {
-		var res = (await wx.cloud.callFunction({
-			name: 'savePost',
-			data: {
-				isPrivate: true,
-
-				// 如果帖子属性包含这3个，就是蒸花卷记录
-				rollName: this.data.name,
-				rollCount: this.data.count,
-				rollDuration: this.data.duration,
-				foodId: this.data.foodId,
-				quality: this.data.quality,
-				strictMode: this.data.strictMode
-			}
-		})).result;
-		
-		wx.cloud.callFunction({
-			name: 'saveRollRecord',
-			data: {
-				postId: res._id,
-				postAuthorOpenId: this.data.userInfo._openid,
-				count: this.data.count,
-				duration: this.data.duration,
-			}
-		});
+			RollManager.finish();
 	},
 
 	// 读取异步数据（边制作边读取）
 	loadAsyncData: async function() {
 
-		var name = this.data.name;
-		var duration = this.data.duration;
-		var foodName = this.data.foodName;
+		var flavor = this.getData().flavor;
+		var duration = this.getData().duration;
+
+		var foods = FoodManager.foods;
+		var food = foods[this.getData().foodId];
+		var foodName = food.data.name;
 		
-		var message = "我花了" + duration + "分钟，制作了" + name + "味" + foodName + "！";
+		var message = "我用" + duration + "分钟做出了" + flavor + "味的" + foodName + "！";
+
+		this.updateData({ message });
 
 		this.setData({
-			message,
-			userInfo: await userUtils.getUserInfo(),
+			// message,
 			sharings: await this.loadSharingRecord(),
 			continuity: 0, // await this.loadContinuity(),
 			defeat: await this.getDefeat(),
@@ -224,17 +187,8 @@ Page({
 
 	// 读取分享数据
 	loadSharingRecord: async function() {
-		var wxSharing = await wx.cloud.callFunction({
-			name: 'posterSharing', data: {
-				method: "TODAY", type: "wx"
-			}
-		})
-		var postSharing = await wx.cloud.callFunction({
-			name: 'posterSharing', data: {
-				method: "TODAY", type: "post"
-			}
-		})
-		return [wxSharing.result.length > 0, postSharing.result.length > 0]
+		var shares = await RollManager.getTodayShares();
+		return shares.map(s => s.length > 0);
 	},
 
 	// 读取连续卷的天数
@@ -276,7 +230,7 @@ Page({
 	// 配置Canvas
 	async setupBarCanvas() {
 		const query = this.createSelectorQuery()
-		await canvasUtils.setupById(query, 'progress-canvas');
+		await CanvasUtils.setupById(query, 'progress-canvas');
 		this.clearMinuteProgress();
 		this.startTimer();
 	},
@@ -311,7 +265,7 @@ Page({
 	},
 
 	drawMinuteProgress(minute) {
-		var ctx = canvasUtils.ctx;
+		var ctx = CanvasUtils.ctx;
 		if (!ctx) return;
 
 		this.clearMinuteProgress();
@@ -338,7 +292,7 @@ Page({
 
 	// 绘制一个灰色的圆圈
 	clearMinuteProgress() {
-		var ctx = canvasUtils.ctx;
+		var ctx = CanvasUtils.ctx;
 		if (!ctx) return;
 
 		ctx.lineWidth = w;
@@ -360,7 +314,7 @@ Page({
 
 		wx.disableAlertBeforeUnload();
 
-		canvasUtils.clearAll();
+		CanvasUtils.clearAll();
 
 		this.prepareSharing();
 
@@ -376,11 +330,13 @@ Page({
 		this.setData({ stopped: true })
 		this.stopRolling();
 
+		await RollManager.fail();
+
 		var title = "太可惜了，由于您在制作过程中分心，" + this.data.foodName + "坏掉了，再来一次吧！下次记得不要分心了哦~"
 
 		wx.disableAlertBeforeUnload();
 		await wx.showModal({ title, showCancel: false });
-		navigateUtils.pop();
+		NavigateUtils.pop();
 	},
 
 	stopRolling() {
@@ -389,7 +345,7 @@ Page({
 
 	// 取消分享
 	cancelShare() {
-		navigateUtils.pop();
+		NavigateUtils.pop();
 	},
 
 	prepareSharing: async function() {
@@ -415,16 +371,17 @@ Page({
 		this.setData({sharePost: true});
 
 		var data = {
-			rollName: this.data.name,
-			rollCount: this.data.count,
-			rollDuration: this.data.duration,
-			foodName: this.data.foodName,
-			foodId: this.data.foodId,
-			quality: this.data.quality,
-			shareImgUrl: this.posterImgUrl,
-			strictMode: this.data.strictMode
+			// rollName: this.data.name,
+			// rollCount: this.data.count,
+			// rollDuration: this.data.duration,
+			// foodName: this.data.foodName,
+			// foodId: this.data.foodId,
+			// quality: this.data.quality,
+			// shareImgUrl: this.posterImgUrl,
+			// strictMode: this.data.strictMode
+			isRoll: true
 		}
-		navigateUtils.change('../postAdd/postAdd', data);
+		NavigateUtils.change('../postAdd/postAdd', data);
 	},
 
 	onShareAppMessage: async function () {
@@ -448,7 +405,7 @@ Page({
 		]
 
 		return {
-			title: texts[Math.floor(Math.random() * texts.length)],
+			title: MathUtils.randomItem(texts),
 			imageUrl: this.posterImgUrl,
 			path: '/pages/roll/roll'
 		}
@@ -514,9 +471,9 @@ Page({
 
 	generatePoster: async function () {
 		// const query = this.createSelectorQuery()
-		// await canvasUtils.setupById(query, "post-canvas");
+		// await CanvasUtils.setupById(query, "post-canvas");
 
-		canvasUtils.clearAll();
+		CanvasUtils.clearAll();
 
 		var w = wx.getSystemInfoSync().windowWidth * 0.7;
 		var h = w / 9 * 16;
@@ -530,20 +487,20 @@ Page({
 		var fontSize = Math.round(60 * w / 750);
 		var font = "normal bold " + fontSize + "px Arial,sans-serif";
 
-		canvasUtils.clipRect(0, 0, w, h);
+		CanvasUtils.clipRect(0, 0, w, h);
 
 		// 绘制背景和菜品
-		await canvasUtils.drawImage(this.background, 0, 0, w, h);
+		await CanvasUtils.drawImage(this.background, 0, 0, w, h);
 		for (var i = 0; i < this.foodPositions.length; ++i) {
 			var p = this.foodPositions[i];
 			var src = this.data.foodImage;
 			var x = w * p[1] / 100,
 				y = h * p[0] / 100;
-			await canvasUtils.drawFood(src, undefined, x, y, fw, fh, false);
+			await CanvasUtils.drawFood(src, undefined, x, y, fw, fh, false);
 		}
 
 		// 绘制文本
-		canvasUtils.setFont(font);
+		CanvasUtils.setFont(font);
 		this.texts.forEach((t, i) => {
 			var pos = this.textPositions[i];
 			var skew = this.textSkewYs[i];
@@ -551,44 +508,44 @@ Page({
 				y = h * pos[0] / 100;
 			var tw = w * pos[2] / 100;
 
-			canvasUtils.setColor(this.fontColor);
-			canvasUtils.setTransform(1, skew, 0, 1, 0, 0);
-			canvasUtils.drawTextEx(t, x, y, tw, fontSize + 2, pos[3]);
+			CanvasUtils.setColor(this.fontColor);
+			CanvasUtils.setTransform(1, skew, 0, 1, 0, 0);
+			CanvasUtils.drawTextEx(t, x, y, tw, fontSize + 2, pos[3]);
 		})
-		canvasUtils.resetTransform();
+		CanvasUtils.resetTransform();
 
 		// 绘制底部信息
-		var cache = await canvasUtils.getImageInfo(this.postBottom);
+		var cache = await CanvasUtils.getImageInfo(this.postBottom);
 		var bw = cache.width;
 		var asp = w / bw;
 		var bh = cache.height * asp,
 			by = h - bh;
-		await canvasUtils.drawImage(this.postBottom, 0, by, w, bh);
+		await CanvasUtils.drawImage(this.postBottom, 0, by, w, bh);
 
 		var ap = this.avatarRect;
 		var ax = w * ap[0] / 100,
 			ay = by + bh * ap[1] / 100;
 		var ah = bh * ap[2] / 100,
 			aw = ah;
-		await canvasUtils.drawImage(this.data.userInfo.avatarUrl, ax, ay, aw, ah, 'round')
+		await CanvasUtils.drawImage(this.data.userInfo.avatarUrl, ax, ay, aw, ah, 'round')
 
 		var np = this.nickNameRect;
 		var nx = w * np[0] / 100,
 			nw = w * np[2] / 100;
 		var ny = by + bh * np[1] / 100 + nickNameSize;
-		canvasUtils.setColor(this.infoFontColor);
-		canvasUtils.setFont(nickNameFont);
-		canvasUtils.drawText(this.data.userInfo.nickName, nx, ny);
+		CanvasUtils.setColor(this.infoFontColor);
+		CanvasUtils.setFont(nickNameFont);
+		CanvasUtils.drawText(this.data.userInfo.nickName, nx, ny);
 
-		canvasUtils.setFont(messageFont);
-		canvasUtils.drawTextEx(this.data.message,
+		CanvasUtils.setFont(messageFont);
+		CanvasUtils.drawTextEx(this.data.message,
 			nx, ny + nickNameSize + 2, nw, messageSize + 2);
 
-		var data = canvasUtils.canvas.toDataURL();
+		var data = CanvasUtils.canvas.toDataURL();
 		this.posterImgUrl = wx.env.USER_DATA_PATH + '/tempPoster.png';
 		await this.savePosterImg(data, this.posterImgUrl);
 
-		canvasUtils.clearAll();
+		CanvasUtils.clearAll();
 		
 	},
 
@@ -606,5 +563,6 @@ Page({
 			})
 		)
 	},
+}
 
-})
+Page(PageCombiner.Combine(main, userPage));

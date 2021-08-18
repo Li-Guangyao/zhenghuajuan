@@ -1,5 +1,5 @@
-import { userUtils } from "/utils/userUtils"
 let tcb = require("./lib/tcb.js");
+const { default: UserManager } = require("./modules/userModule/userManager.js");
 
 App({
   onLaunch: async function () {
@@ -16,9 +16,7 @@ App({
       })
     }
 
-    var userInfo = await userUtils.getUserInfo()
-    wx.setStorageSync('userInfo', userInfo)
-
+    await UserManager.refresh();
 
     // const cloud = tcb.init({
     //   env: "cloud1-1gpq51y7845e8d66",
