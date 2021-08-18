@@ -34,21 +34,25 @@ exports.main = async (event, context) => {
 
 			// 返回分享记录列表
 			return await getShare(openid, type, startTime, endTime);
-		}
+	}
 }
 
 function addShare(openid, type) {
 	var data = {
-		_openid: openid, type, 
+		_openid: openid,
+		type,
 		createdAt: new Date()
 	}
-	db.collection('t_share').add({ data })
+	db.collection('t_share').add({
+		data
+	})
 }
 
 async function getShare(openid, type, startTime, endTime) {
 	var matcher = {
-		_openid: openid, type, 
-    createdAt: _.and(_.lte(endTime), _.gte(startTime))
+		_openid: openid,
+		type,
+		createdAt: _.and(_.lte(endTime), _.gte(startTime))
 	}
 	return (await db.collection('t_share').where(matcher).get()).data;
 }
