@@ -29,8 +29,8 @@ var main = {
 	},
 
 	// 如果是新用户，就需要授权获取
-	async getUserInfo() {
-		this.setData({ userInfo: await userUtils.login(true)})
+	async login() {
+		this.setData({ userInfo: await UserManager.login(true)})
 		await this.loadUserStat();
 	},
 

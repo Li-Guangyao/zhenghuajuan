@@ -1,4 +1,4 @@
-<post-display id="postDisplay" showDelete="true" postList="{{postList}}" userInfo="{{userInfo}}"></post-display>
+<post-display id="postDisplay" showDelete="true" posts="{{posts}}"></post-display>
 
 <!-- <view class="post" wx:for="{{postList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
 

@@ -83,14 +83,8 @@ Component({
 		}
 	},
 
-	pageLifetimes: {
-		hide: function () {
-			this.uploadLikes();
-		},
-	},
-
 	methods: {
-		openid: () => UserManager.userInfo.data._openid,
+		openid: () => UserManager.openid(),
 
 		// 帖子
 		// 当前帖子
@@ -105,9 +99,8 @@ Component({
 		tapPost(e) {
 			if (this.properties.post) return;
 
-			var postId = this.currentPost(e).data._id;
-
-			NavigateUtils.push('../postDetail/postDetail', { postId })
+			PostManager.curPost = this.currentPost(e);
+			NavigateUtils.push('../postDetail/postDetail')
 		},
 
 		// 点击视频或者图片预览
@@ -319,12 +312,13 @@ Component({
 			this.refreshPosts();
 		},
 
-		canDeleteComment = (post, comment) =>
-			this.openid() == comment.data._openid ||
-				this.openid() == post.data._openid,
+		canDeleteComment: function(post, comment) {
+			return this.openid() == comment.data._openid ||
+				this.openid() == post.data._openid;
+		},
 
 		// 删除评论
-		deleteComment(e) {
+		async deleteComment(e) {
 			var post = this.properties.post
 			if (!post) return;
 

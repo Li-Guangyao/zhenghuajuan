@@ -1,4 +1,4 @@
-<view class="post {{item.rollName ? 'roll-post' : ''}}" wx:for="{{post ? [post] : postList}}" wx:key="index"
+<view class="post {{item.data.rollRecord ? 'roll-post' : ''}}" wx:for="{{post ? [post] : posts}}" wx:key="index"
 	data-index="{{index}}" bindtap="{{bindtap}}">
 
 	<!-- 上方用户数据 -->
@@ -7,16 +7,20 @@
 		<!-- 左侧头像 -->
 		<view class="left">
 
-			<image class="user-avatar" src="../../images/defaultAvatar.jpeg" mode="aspectFill" wx:if="{{item.isAnony}}"></image>
-			<image class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{!item.isAnony}}"></image>
+			<image class="user-avatar" wx:if="{{item.isAnony}}"
+				src="{{item.anonyImage}}" mode="aspectFill"></image>
+			<image class="user-avatar" wx:if="{{!item.isAnony}}"
+				src="{{item.data.userInfo.avatarUrl}}" mode="aspectFill"></image>
 
 			<view class="nickname-time">
-				<view class="user-nickname" wx:if="{{item.isAnony}}">匿名用户</view>
-				<view class="user-nickname" wx:if="{{!item.isAnony}}">{{item.displayName}}</view>
+				<view class="user-nickname" wx:if="{{item.isAnony}}">
+					{{item.anonyName}}</view>
+				<view class="user-nickname" wx:if="{{!item.isAnony}}">
+					{{item.data.userInfo.displayName}}</view>
 
 				<view class="pub-time">{{item.timeDiff}}
-					<text class="check-info" wx:if="{{item.status==0}}">正在审核</text>
-					<text class="check-info" wx:if="{{item.status==2}}">审核未通过</text>
+					<text class="check-info" wx:if="{{item.data.status==0}}">正在审核</text>
+					<text class="check-info" wx:if="{{item.data.status==2}}">审核未通过</text>
 				</view>
 			</view>
 
@@ -32,14 +36,14 @@
 			</view>
 
 			<!-- 蒸花卷显示 -->
-			<view class="roll" wx:if="{{item.rollName}}">
-				{{item.rollName}}味{{foods[item.foodId].name}}
+			<view class="roll" wx:if="{{item.data.rollRecord}}">
+				{{item.data.rollRecord.flavor}}味{{item.rollFood.data.name}}
 			</view>
 		</view>
 	</view>
 
 	<!-- 帖子文本 -->
-	<text class="{{post ? 'content-full' : 'content'}}">{{item.content}}</text>
+	<text class="{{post ? 'content-full' : 'content'}}">{{item.data.content}}</text>
 
 	<!-- 多媒体显示 -->
 	<view class="media" wx:if="{{item.fileList.length!=0}}" wx:for="{{item.fileList}}" wx:for-item="item2"
@@ -62,9 +66,9 @@
 	<view class="post-info">
 
 		<!-- 位置显示 -->
-		<view class="location" wx:if="{{item.location}}">
+		<view class="location" wx:if="{{item.data.location}}">
 			<van-icon name="location-o" size="20rpx" />
-			<view class="location-name">{{item.location.name}}</view>
+			<view class="location-name">{{item.data.location.name}}</view>
 		</view>
 
 		<!-- 交互 -->
@@ -72,19 +76,21 @@
 			<!-- 删除 -->
 			<van-icon custom-style="icon-delete" name="delete-o" size="42rpx" data-index="{{index}}"
 				style="margin-right: 20rpx" catchtap="deletePost"
-				wx:if="{{showDelete && userInfo._openid==item._openid}}" />
+				wx:if="{{showDelete && item.isSelfPost}}" />
 
-			<!-- 点赞 likeIndex: 当前用户的点赞索引 oriLikeIndex: 保存记录 -->
-			<image class="icon-huajuan" wx:if="{{!(item.likeIndex >= 0)}}" mode="aspectFit" data-index="{{index}}"
+			<!-- 点赞 -->
+			<image class="icon-huajuan" wx:if="{{!item.curLike}}"
+				mode="aspectFit" data-index="{{index}}"
 				catchtap="giveLike" src="../../icon/roll.png"></image>
-			<image class="icon-huajuan" wx:if="{{item.likeIndex >= 0}}" mode="aspectFit" data-index="{{index}}"
+			<image class="icon-huajuan" wx:if="{{item.curLike}}" 
+				mode="aspectFit" data-index="{{index}}"
 				catchtap="cancelLike" src="../../icon/roll2.png"></image>
-			<view wx:if="{{item.likeIndex >= 0}}">+{{likeItems[item.likeIndex].value}}</view>
+			<view wx:if="{{item.curLike}}">+{{item.curLike.data.value}}</view>
 
-			<!-- 评论 commentCount: 当前帖子的评论数 -->
+			<!-- 评论 commentCnt: 当前帖子的评论数 -->
 			<image class="icon-comment" mode="aspectFit" data-index="{{index}}" catchtap="tapComment"
 				src="../../icon/comment.png"></image>
-			<view wx:if="{{item.commentCount > 0}}">{{item.commentCount}}</view>
+			<view wx:if="{{item.commentCnt > 0}}">{{item.commentCnt}}</view>
 		</view>
 
 		<!-- <view class="interaction">
@@ -103,24 +109,25 @@
 </view>
 
 <!-- 评论详情（仅post状态下显示） -->
-<view class="comment" wx:if="{{post && commentList.length > 0}}">
+<view class="comment" wx:if="{{post && post.data.comments.length > 0}}">
 	<view class="comment-title">评论</view>
-	<view class="comment-item" wx:for="{{commentList}}" wx:key="index" data-index="{{index}}"
+	<view class="comment-item" wx:for="{{post.data.comments}}" 
+		wx:key="index" data-index="{{index}}"
 		bindtap="showInputForComment">
 		<view class="comment-info">
 			<view class="left">
-				<image class="user-avatar" mode="aspectFill" src="{{item.avatarUrl}}"></image>
+				<image class="user-avatar" mode="aspectFill" src="{{item.userInfo.avatarUrl}}"></image>
 				<view class="nickname-time">
-					<view class="user-nickname">{{item.displayName}}</view>
+					<view class="user-nickname">{{item.userInfo.displayName}}</view>
 					<view class="pub-time">{{item.timeDiff}}</view>
 				</view>
 			</view>
 			<view class="right">
-				<van-icon size="30rpx" name="delete-o" data-index="{{index}}" catchtap="deleteComment"
-					wx:if="{{userInfo._openid==item._openid}}" />
+				<van-icon size="30rpx" name="delete-o" data-index="{{index}}" 
+					catchtap="deleteComment" wx:if="{{item.canDelete}}" />
 			</view>
 		</view>
-		<text class="content">{{item.content}}</text>
+		<text class="content">{{item.data.content}}</text>
 	</view>
 </view>
 

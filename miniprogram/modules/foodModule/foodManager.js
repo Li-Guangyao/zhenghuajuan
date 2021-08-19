@@ -15,6 +15,13 @@ FoodManager.foods = null;
 FoodManager.foodCount = 0;
 
 /**
+ * 刷新数据
+ */
+FoodManager.refreshData = function() {
+	for (var key in this.foods) this.foods[key].refresh();
+}
+
+/**
  * 加载菜品
  * @param {Boolean} force 强制刷新
  */
@@ -30,7 +37,7 @@ FoodManager._processFoods = function(foods) {
 	let _foods = {}
 	this.foodCount = foods.length;
 	foods = foods.map(f => new Food(f));
-	foods.forEach(f => _foods[f._id] = f);
+	foods.forEach(f => _foods[f.data._id] = f);
 	return { ...foods, ..._foods }
 }
 

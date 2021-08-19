@@ -1,6 +1,6 @@
 import FSM from '../coreModule/fileStroageManager'
 import UserManager from '../userModule/userManager'
-import FoodManager from '../userModule/foodManager'
+import FoodManager from '../foodModule/foodManager'
 import MathUtils from '../../utils/mathUtils'
 import PostComment from './postComment';
 import PostLike from './postLike';
@@ -27,8 +27,6 @@ Post.prototype.initialize = function(data) {
 	
 		createdAt: null, // new Date() 发布日期
 	
-		likeValue: 0, // 点赞数
-
 		comments: [], // 评论列表
 		likes: [], // 点赞列表
 
@@ -41,37 +39,73 @@ Post.prototype.initialize = function(data) {
 		visibility: 1, // 可见性，0为对所有人隐藏，1为公开，2仅自己可见
 	
 		status: 1, // 审核状态，0为待审核，1为已审核，2为审核未通过
+
+		userInfo: null, // 查询时返回
+		rollRecord: null // 查询时返回
 	}
-	this.isAnony = false;
+	Object.assign(this.data, data);
+
+	this.isAnony = !!this.data.anonyFoodId;
 	this.fileList = [];
 	this.timeDiff = '';
 
 	this.likeValue = 0; // 累计点赞数
 	this.commentCnt = 0; // 累计评论数
 
-	this.curLike = this.getCurLike(); // 当前用户点赞
+	this.anonyName = this._getAnonyName();
+	this.anonyImage = this._getAnonyImage();
 
-	Object.assign(this.data, data);
+	this.rollFood = this._getRollFood();
+
+	this.isSelfPost = false; // 是否自己的帖子
+	this.curLike = null; // 当前用户点赞
 
 	this._generateTimeDiff();
 	this._convertFileList();
 	this._processComments();
 	this._processLikes();
+
+	this.refresh();
 };
 
+Post.prototype._getAnonyName = function() {
+	if (!this.isAnony) return '';
+	var food = FoodManager.foods[this.data.anonyFoodId];
+	return this.anonyFoodDesc + food.data.name;
+}
+
+Post.prototype._getAnonyImage = function() {
+	if (!this.isAnony) return '';
+	var food = FoodManager.foods[this.data.anonyFoodId];
+	return food.data.images[this.data.anonyFoodQuality];
+}
+
+Post.prototype._getRollFood = function() {
+	if (!this.data.rollRecord) return null;
+	return FoodManager.foods[this.data.rollRecord.foodId];
+}
+
+Post.prototype._isSelfPost = function() {
+	if (!UserManager.userInfo) return false;
+	var userInfo = UserManager.userInfo.data;
+	return userInfo._openid == this.data._openid;
+}
+
 Post.prototype._processComments = function() {
-	this.data.comments = this.data.comments.map(this._processComment)
+	this.data.comments = this.data.comments.map(
+		this._processComment.bind(this))
 }
 Post.prototype._processComment = function(comment) {
-	return c instanceof PostComment ? c : 
+	return comment instanceof PostComment ? comment : 
 		new PostComment(this, comment);
 }
 
 Post.prototype._processLikes = function() {
-	this.data.likes = this.data.likes.map(this._processLike)
+	this.data.likes = this.data.likes.map(
+		this._processLike.bind(this))
 }
 Post.prototype._processLike = function(like) {
-	return l instanceof PostLike ? l : 
+	return like instanceof PostLike ? like : 
 		new PostLike(this, like);
 }
 
@@ -92,7 +126,8 @@ Post.prototype._convertFileList = function() {
 }
 
 Post.prototype._generateTimeDiff = function() {
-	this.timeDiff = DateUtils.getDateOff(this.data.createdAt);	
+	if (this.data.createdAt)
+		this.timeDiff = DateUtils.getDateOff(this.data.createdAt);	
 }
 
 Post.prototype.addLike = function(like) {
@@ -106,8 +141,8 @@ Post.prototype.removeLike = function() {
 }
 
 Post.prototype.getCurLike = function() {
-	var openid = UserManager.userInfo.data._openid;
-	return this.data.likes.forEach(
+	var openid = UserManager.openid();
+	return this.data.likes.find(
 		l => l.data._openid == openid
 	);
 }
@@ -153,7 +188,16 @@ Post.prototype.setFileList = function(fileList) {
 }
 
 Post.prototype.setAnonymous = function(anony) {
-	this.isAnony = anony;
+	if (!(this.isAnony = anony)) 
+		this.data.anonyFoodId = null;
+	else {
+		var food = FoodManager.getRandom();
+		var imgCnt = food.data.images.length;
+		var quality = MathUtils.randomInt(imgCnt);
+	
+		this.data.anonyFoodId = food.data._id;
+		this.data.anonyFoodQuality = quality;
+	}
 }
 
 Post.prototype.setRollRecord = function(roll) {
@@ -166,27 +210,20 @@ Post.prototype.setRollRecord = function(roll) {
 }
 
 Post.prototype.refresh = function() {
-	this._processAnony();
+	this._refreshBasicData();
 	this._refreshLikeValue();
 	this._refreshCommentCnt();
 }
 
-Post.prototype._processAnony = function() {
-	if (!this.isAnony) 
-		this.data.anonyFoodId = null;
-	else {
-		var food = FoodManager.getRandom();
-		var imgCnt = food.data.images.length;
-		var quality = MathUtils.randomInt(imgCnt);
-	
-		this.data.anonyFoodId = food.data._id;
-		this.data.anonyFoodQuality = quality;
-	}
+Post.prototype._refreshBasicData = function() {
+	this.isSelfPost = this._isSelfPost();
+	this.curLike = this.getCurLike();
 }
-
 Post.prototype._refreshLikeValue = function() {
 	this.likeValue = this.data.likes.reduce(
-		(sum, l) => sum += l.value, 0);
+		(sum, l) => sum += l.data.value, 0);
+	if (this.data.rollRecord)
+		this.likeValue += this.data.rollRecord.rollCount;
 }
 Post.prototype._refreshCommentCnt = function() {
 	this.commentCnt = this.data.comments.length;
@@ -220,7 +257,7 @@ Post.PhotoFilePath = 'postPhoto';
 Post.VideoFilePath = 'postVideo';
 
 Post.GenerateFileName = function(name, format) {
-	var _openid = UserManager.userInfo.data._openid;
+	var _openid = UserManager.openid();
 	return _openid + '-' + Date.now() + '-' + name + '.' + format;
 }
 

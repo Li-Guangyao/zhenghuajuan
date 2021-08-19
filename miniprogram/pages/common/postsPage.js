@@ -24,13 +24,14 @@ var postsPage = (type) => ({
 		if (this.pictureFlag)
 			this.pictureFlag = false;
 		else 
-			await this.refreshUser();
+			await this.refreshPage();
 	},
 
 	getFunc() {
+		console.log(PostManager);
 		switch (type || 'all') {
-			case 'all': return PostManager.getAll; 
-			case 'my': return PostManager.getMy; 
+			case 'all': return PostManager.getAll.bind(PostManager); 
+			case 'my': return PostManager.getMy.bind(PostManager);
 		}
 	},
 
@@ -58,7 +59,7 @@ var postsPage = (type) => ({
 	// 触底加载
 	async onReachBottom() {
 		this.queryParams.pageNum++;
-		var newestDate = this.data.postList[0].createdAt;
+		var newestDate = this.data.posts[0].createdAt;
 		await this.refreshPage(newestDate);
 	},
 

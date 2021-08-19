@@ -24,16 +24,16 @@ exports.main = async (event, context) => {
 	switch (method.toUpperCase()) {
 		case "GET": // 获取蒸花卷记录
 			var userOpenid = event.userOpenid; // 指定用户openid
-			var startTime = new Date(event.startTime); // 开始时间
-			var endTime = new Date(event.endTime); // 结束时间
+			var startTime = event.startTime; // 开始时间
+			var endTime = event.endTime; // 结束时间
 			var cond = event.cond; // 附加条件
 
 			return await getRollRecords(
 				userOpenid, startTime, endTime, cond);
 
 		case "GET_MY": // 获取我的蒸花卷记录
-			var startTime = new Date(event.startTime); // 开始时间
-			var endTime = new Date(event.endTime); // 结束时间
+			var startTime = event.startTime; // 开始时间
+			var endTime = event.endTime; // 结束时间
 			var cond = event.cond; // 附加条件
 
 			return await getRollRecords(
@@ -65,6 +65,9 @@ queryUser = openid => db.collection('t_user')
 	.where({_openid: openid})
 
 getRollRecords = async (userOpenid, startTime, endTime, cond) => {
+	if (typeof(startTime) == 'number') startTime = new Date(startTime);
+	if (typeof(endTime) == 'number') endTime = new Date(endTime);
+
 	var matcher = {
 		_openid: userOpenid,
 		createdAt: _.and(_.gt(startTime), _.lt(endTime)),

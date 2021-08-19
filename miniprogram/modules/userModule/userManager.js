@@ -22,6 +22,10 @@ UserManager.userCache = {}
 // 当前用户
 UserManager.userInfo = null;
 
+UserManager.openid = function() {
+	return this.userInfo ? this.userInfo.data._openid : null;
+}
+
 /**
  * 获取单个用户数据
  * @param {String} openid 用户Openid
@@ -29,7 +33,7 @@ UserManager.userInfo = null;
 UserManager.get = async function(userOpenid) {
 	if (userOpenid == this.userInfo.data._openid) 
 		return this.userInfo.data;
-		
+
 	var res = this.userCache[userOpenid] ||= 
 		await CFM.call(this.CF.UserInfo, 
 			'get_basic', { userOpenid })
@@ -40,12 +44,17 @@ UserManager.get = async function(userOpenid) {
  * 设置用户信息（内部调用）
  */
 UserManager._setUserInfo = function(data) {
-	this._resetData(); // 重置相关数据
 	wx.setStorage({key: this.StroageKey, data})
-	return this.userInfo = new UserInfo(data);
+	this.userInfo = new UserInfo(data);
+	this.refreshData(); // 重置相关数据
+	return this.userInfo;
 }
-UserManager._resetData = function() {
-	FoodManager.foods = null;
+
+/**
+ * 刷新所有数据
+ */
+UserManager.refreshData = function() {
+	FoodManager.refreshData();
 }
 
 /**
@@ -74,6 +83,8 @@ UserManager.login = async function(force, desc) {
  */
 UserManager.judgeLogin = async function(
 	refresh, title, onConfirm, onCancel) {
+	this._loadFromWx();
+
 	if (!this.userInfo) {
 		title ||= "卷王同志，请先登陆再来";
 		onConfirm ||= () => NavigateUtils.goto(this.LoginPage);
@@ -87,6 +98,13 @@ UserManager.judgeLogin = async function(
 	} else if (refresh) await this.refresh();
 
 	return this.userInfo;
+}
+
+UserManager._loadFromWx = async function() {
+	var userInfo = wx.getStorageSync(this.StroageKey);
+	if (!userInfo) return;
+
+	this._setUserInfo(UserInfo);
 }
 
 /**

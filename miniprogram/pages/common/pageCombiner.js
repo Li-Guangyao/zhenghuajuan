@@ -12,15 +12,19 @@ PageCombiner.Combine = function(target, pages) {
 
 	pages.forEach(p => {
 		// 遍历页面每个键
-		for(var key in p) {
-			var val = p[key], tVal = target[key];
+		for (var _key in p) {
+			let key = _key, val = p[key], tVal = target[key];
 			if (val instanceof Function) {
-				var caller = target[key + '_caller'] ||= [tVal];
-				caller.push(val);
+				let callers = target[key + '_caller'] ||= [tVal];
+				callers.push(val);
 				
-				target[key] = async function() {
-					for (let i = 0; i < caller.length; i++) 
-						if (caller[i]) await caller[i].call(target, arguments);
+				target[key] = function() {
+					var res = [];
+					for (let i = 0; i < callers.length; i++) {
+						// console.log("combiner.call: ", key, callers[i], arguments, target, this);
+						if (callers[i]) res.push(callers[i].apply(this, arguments));
+					}
+					return res.length == 1 ? res[0] : res;
 				}
 			} else if (val instanceof Object) {
 				target[key] ||= {};

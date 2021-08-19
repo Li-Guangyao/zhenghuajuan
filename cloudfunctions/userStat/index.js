@@ -3,6 +3,8 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+const _ = db.command
+const $ = db.command.aggregate
 
 const TOKEN = "dOXi^w$7D0BOwG!UIA";
 
@@ -23,7 +25,7 @@ exports.main = async (event, context) => {
 			var userOpenid = event.userOpenid || openid; // 指定用户openid
 
 			return await getUserStat(userOpenid);
-			
+
 		case "TODAY": // 获取用户本日数据
 			var userOpenid = event.userOpenid || openid; // 指定用户openid
 

@@ -47,36 +47,36 @@ DateUtils.getTimeRages = function() {
  * @param {String | Number | Date} date 原始时间
  */
 DateUtils.getDateOff = (date) => {
-	if (date instanceof String) date = Date.parse(date);
-	if (date instanceof Number) date = new Date(date);
+	if (typeof(date) == 'string') date = Date.parse(date);
+	if (date instanceof Date) date = date.getTime(); 
 
-	var result = ''
-	var minute = 1000 * 60
-	var hour = minute * 60
-	var day = hour * 24
-	var month = day * 30
-	var now = new Date().getTime()
-	var diffValue = now - dateTimeStamp
-	if (diffValue < 0) return
+	var result = '';
+	var minute = 1000 * 60;
+	var hour = minute * 60;
+	var day = hour * 24;
+	var month = day * 30;
+	var now = new Date().getTime();
+	var diffValue = now - date;
+	if (diffValue < 0) return;
 
-	var monthC = diffValue / month
-	var weekC = diffValue / (7 * day)
-	var dayC = diffValue / day
-	var hourC = diffValue / hour
-	var minC = diffValue / minute
+	var monthC = diffValue / month;
+	var weekC = diffValue / (7 * day);
+	var dayC = diffValue / day;
+	var hourC = diffValue / hour;
+	var minC = diffValue / minute;
 
 	if (monthC >= 1) {
 		// result = "" + parseInt(monthC) + "月前"
-		result = YMD(dateTimeStamp)
+		result = DateUtils.date2YMD(date);
 	// } else if (weekC >= 1) {
 	// 	// result = "" + parseInt(weekC) + "周前"
-	// 	result = YMD(dateTimeStamp)
+	// 	result = DateUtils.date2YMD(date)
 	} else if (dayC >= 1) {
-		result = "" + parseInt(dayC) + "天前"
+		result = "" + parseInt(dayC) + "天前";
 	} else if (hourC >= 1) {
-		result = "" + parseInt(hourC) + "小时前"
+		result = "" + parseInt(hourC) + "小时前";
 	} else if (minC >= 1) {
-		result = "" + parseInt(minC) + "分钟前"
+		result = "" + parseInt(minC) + "分钟前";
 	} else {
 		result = "刚刚"
 	}
@@ -88,11 +88,11 @@ DateUtils.getDateOff = (date) => {
  * @param {Date | Number} date 日期
  */
 DateUtils.date2YMD = function(date) {
-	if (date instanceof Number) date = new Date(date);
+	if (typeof(date) == 'number') date = new Date(date);
 
-	var y = time.getFullYear();	
-	var m = time.getMonth() + 1;
-	var d = date.getDate();
+	var y = date.getFullYear();	
+	var m = date.getMonth() + 1 + '';
+	var d = date.getDate() + '';
 
 	m = m.padStart(2, 0);
 	d = d.padStart(2, 0);
@@ -115,10 +115,10 @@ DateUtils.date2YMD = function(date) {
  * @param {Date | Number} date 日期
  */
 DateUtils.date2YMDChi = function(date) {
-	if (date instanceof Number) date = new Date(date);
+	if (typeof(date) == 'number') date = new Date(date);
 
-	var y = time.getFullYear();	
-	var m = time.getMonth() + 1;
+	var y = date.getFullYear();	
+	var m = date.getMonth() + 1;
 	var d = date.getDate();
 
 	return y + "年" + m + "月" + d + "日";
@@ -129,12 +129,12 @@ DateUtils.date2YMDChi = function(date) {
  * @param {Date | Number} date 日期
  */
 DateUtils.date2MDHM = function(date) {
-	if (date instanceof Number) date = new Date(date);
+	if (typeof(date) == 'number') date = new Date(date);
 
-	var m = time.getMonth() + 1;
+	var m = date.getMonth() + 1;
 	var d = date.getDate();
-	var h = date.getHours();
-	var min = date.getMinutes();
+	var h = date.getHours() + '';
+	var min = date.getMinutes() + '';
 
 	h = h.padStart(2, 0);
 	min = min.padStart(2, 0);

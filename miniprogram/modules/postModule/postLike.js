@@ -1,4 +1,4 @@
-import Post from "../../data/post";
+import Post from "./post";
 
 function PostLike() {
 	this.initialize.apply(this, arguments);
@@ -6,7 +6,7 @@ function PostLike() {
 
 PostLike.prototype.initialize = function(post, data) {
 
-	this.post = post;
+	// this.post = post;
 	this.data = {
 		_openid: null, // 点赞用户openid
 

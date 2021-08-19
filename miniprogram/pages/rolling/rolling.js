@@ -1,5 +1,4 @@
 import CanvasUtils from "../../utils/canvasUtils";
-import userUtils from "../../utils/userUtils";
 import NavigateUtils from "../../utils/navigateUtils";
 import RollManager from "../../modules/rollModule/rollManager";
 import FoodManager from "../../modules/foodModule/foodManager";

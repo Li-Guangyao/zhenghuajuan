@@ -10,9 +10,7 @@ var main = {
 	},
 
 	async onLoad(e) {
-		var post = await PostManager.getOne(e.postId);
-
-		this.setData({ post })
+		this.setData({ post: PostManager.curPost })
 	},
 
 	back() { NavigateUtils.pop(); }

@@ -14,6 +14,9 @@ PostManager.CF = {
 	PostLike: 'postLike'
 }
 
+// 当前浏览的帖子
+PostManager.curPost = null;
+
 /**
  * 发布帖子
  * @param {Post} post 帖子
@@ -38,7 +41,7 @@ PostManager.getAll = async function(
 	if (newestDate instanceof Date)
 		newestDate = newestDate.getTime();
 
-	var dataList = await CFM.call(this.Post, "get_all", 
+	var dataList = await CFM.call(this.CF.Post, "get_all", 
 		{skipNum, newestDate, cond});
 
 	return this._processPosts(dataList);
@@ -56,7 +59,7 @@ PostManager.getUser = async function(userOpenid,
 	if (newestDate instanceof Date)
 		newestDate = newestDate.getTime();
 
-	var dataList = await CFM.call(this.Post, "get_user", 
+	var dataList = await CFM.call(this.CF.Post, "get_user", 
 		{userOpenid, skipNum, newestDate, cond});
 		
 	return this._processPosts(dataList);
@@ -73,7 +76,7 @@ PostManager.getMy = async function(
 	if (newestDate instanceof Date)
 		newestDate = newestDate.getTime();
 
-	var dataList = await CFM.call(this.Post, "get_my", 
+	var dataList = await CFM.call(this.CF.Post, "get_my", 
 		{skipNum, newestDate, cond});
 
 	return this._processPosts(dataList);
@@ -84,7 +87,7 @@ PostManager.getMy = async function(
  * @param {String} postId 帖子ID
  */
 PostManager.getOne = async function(postId) {
-	var data = await CFM.call(this.Post, "get_one", {postId});
+	var data = await CFM.call(this.CF.Post, "get_one", {postId});
 
 	return this._processPost(data);
 }
@@ -102,7 +105,7 @@ PostManager._processPost = function(data) {
  * @param {String} postId 帖子ID
  */
 PostManager.delete = async function(postId) {
-	return await CFM.call(this.Post, "delete", { postId });
+	return await CFM.call(this.CF.Post, "delete", { postId });
 }
 
 /**
@@ -114,7 +117,7 @@ PostManager.addComment = async function(postId, comment) {
 	if (!await comment.check()) 
 		throw new Error("未通过审核！");
 
-	return await CFM.call(this.PostComment, "add", 
+	return await CFM.call(this.CF.PostComment, "add", 
 		{ postId, comment: comment.data });
 }
 
@@ -124,7 +127,7 @@ PostManager.addComment = async function(postId, comment) {
  * @param {Number} cIndex 评论索引
  */
 PostManager.deleteComment = async function(postId, cIndex) {
-	return await CFM.call(this.PostComment, "delete", 
+	return await CFM.call(this.CF.PostComment, "delete", 
 		{ postId, cIndex });
 }
 
@@ -134,7 +137,7 @@ PostManager.deleteComment = async function(postId, cIndex) {
  * @param {PostLike} like 点赞对象
  */
 PostManager.likePost = async function(postId, like) {
-	return await CFM.call(this.PostLike, null, 
+	return await CFM.call(this.CF.PostLike, null, 
 		{ postId, like: like.data });
 }
 

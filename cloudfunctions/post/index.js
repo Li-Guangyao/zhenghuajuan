@@ -19,19 +19,21 @@ exports.main = async (event, context) => {
 	// 函数参数
 	var method = event.method;
 
+	// return method.toUpperCase();
+
 	switch (method.toUpperCase()) {
 		case "GET_ALL": // 获取所有帖子
 			var skipNum = event.skipNum; // 跳过次数
-			var newestDate = new Date(event.newestDate) // 最新日期
+			var newestDate = event.newestDate // 最新日期
 			var cond = event.cond; // 附加条件
 
 			// 返回帖子列表
-			return await getPosts(openid, null, skipNum, newestDate, cond);
+			return await getPosts(openid, null, skipNum, null, newestDate, cond);
 		
 		case "GET_USER": // 获取指定用户的帖子
 			var userOpenid = event.userOpenid; // 指定用户openid
 			var skipNum = event.skipNum; // 跳过次数
-			var newestDate = new Date(event.newestDate) // 最新日期
+			var newestDate = event.newestDate // 最新日期
 			var cond = event.cond; // 附加条件
 
 			// 返回帖子列表
@@ -39,7 +41,7 @@ exports.main = async (event, context) => {
 
 		case "GET_MY": // 获取我的帖子
 			var skipNum = event.skipNum; // 跳过次数
-			var newestDate = new Date(event.newestDate) // 最新日期
+			var newestDate = event.newestDate // 最新日期
 			var cond = event.cond; // 附加条件
 
 			// 返回帖子列表
@@ -88,11 +90,15 @@ queryPost = postId => db.collection('t_post').doc(postId)
 // 获取单个帖子（帖子详情）
 // TODO: 未完成鉴权（私有帖子其他人不能获取）
 getPost = async (postId) => 
-	(await queryPosts(aggregatePosts({postId})).end())[0]
+// (await aggregatePosts({_id: postId}).end()).list[0]
+	(await queryPosts(aggregatePosts({_id: postId})).end()).list[0]
 
 // 获取所有帖子
 getPosts = async (openid, userOpenid, skipNum, startTime, endTime, cond) => {
 	var matcher = { ...cond };
+
+	if (typeof(startTime) == 'number') startTime = new Date(startTime);
+	if (typeof(endTime) == 'number') endTime = new Date(endTime);
 
 	// 如果看的是自己的帖子
 	if (openid == userOpenid) 
@@ -110,6 +116,8 @@ getPosts = async (openid, userOpenid, skipNum, startTime, endTime, cond) => {
 	else if (startTime && endTime) 
 		matcher.createdAt = _.and(
 			_.gt(startTime), _.lt(endTime));
+
+	// return matcher;
 
 	var query = aggregatePosts(matcher);
 	if (skipNum) query = query.skip(skipNum - 1)

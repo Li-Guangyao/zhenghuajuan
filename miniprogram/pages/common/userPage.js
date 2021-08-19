@@ -2,8 +2,7 @@ import UserManager from '../../modules/userModule/userManager'
 
 var userPage = {
 	data: {
-		userInfo: null, // 用户数据
-		userInfoObject: null // 用户对象
+		userInfo: null, // 用户对象（UserInfo）
 	},
 
 	async onShow() {
@@ -19,12 +18,11 @@ var userPage = {
 	},
 
 	async judgeLogin(refresh) {
-		var userInfoObject = await UserManager.judgeLogin(refresh);
 		this.setData({
-			userInfo: userInfoObject.data, 
-			userInfoObject
+			userInfo: await UserManager.judgeLogin(refresh)
 		});
-	}
+	},
+
 }
 
 export default userPage;

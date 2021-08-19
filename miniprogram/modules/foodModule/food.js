@@ -18,15 +18,26 @@ Food.prototype.initialize = function(data) {
 	}
 	Object.assign(this.data, data);
 
-	this._isUnlocked = this.isUnlocked();
+	this._isUnlocked = false;
+
+	this.refresh();
 };
 
 /**
  * 是否已解锁
  */
 Food.prototype.isUnlocked = async function() {
-	var user = await UserManager.judgeLogin();
-	return user.data.unlockFoods.includes(this._id);
+	var userInfo = UserManager.userInfo;
+	if (!userInfo) return false;
+	
+	return userInfo.data.unlockFoods.includes(this._id);
+}
+
+/**
+ * 刷新
+ */
+Food.prototype.refresh = function() {
+	this._isUnlocked = this.isUnlocked();
 }
 
 export default Food;

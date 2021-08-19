@@ -21,7 +21,7 @@ RollRecord.prototype.initialize = function(data) {
 		status: 0, // 状态（0: 进行中, 1: 已完成, 2: 已失败）
 
 		message: '', // 海报内容
-		shareImage: '', // 分享图片
+		shareImage: null, // 分享图片
 
 		rollCount: 0, // 获得的小麦数量
 

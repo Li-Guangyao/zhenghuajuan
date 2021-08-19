@@ -8,7 +8,7 @@ function PostComment() {
 
 PostComment.prototype.initialize = function(post, data) {
 
-	this.post = post;
+	// this.post = post;
 	this.data = {
 		index: 0, // 评论序号
 		_openid: null, // 评论用户openid
@@ -20,20 +20,30 @@ PostComment.prototype.initialize = function(post, data) {
 
 		isDeleted: false // 是否已删除
 	}
+	Object.assign(this.data, data);
+
 	this.timeDiff = '';
 	this.userInfo = null;
 
-	Object.assign(this.data, data);
+	this.canDelete = false;
 
-	this._generateTimeDiff();
-	this._getUserInfo();
+	this._getTimeDiff();
+	this.refresh();
 };
 
-PostComment.prototype.getUserInfo = async function() {
-	return this.userInfo ||= await UserManager.get(this.data._openid);
+PostComment.prototype.refresh = function() {
+	this.getUserInfo();
 }
 
-PostComment.prototype._generateTimeDiff = function() {
+PostComment.prototype.getUserInfo = async function() {
+	var openid = this.data._openid;
+	var curOpenid = UserManager.openid();
+	this.userInfo ||= await UserManager.get(openid);
+	this.canDelete = openid == curOpenid; // || this.post.isSelfPost;
+	return this.userInfo;
+}
+
+PostComment.prototype._getTimeDiff = function() {
 	this.timeDiff = DateUtils.getDateOff(this.data.createdAt);	
 }
 

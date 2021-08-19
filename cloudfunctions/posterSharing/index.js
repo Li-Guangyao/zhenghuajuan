@@ -49,6 +49,9 @@ function addShare(openid, type) {
 }
 
 async function getShare(openid, type, startTime, endTime) {
+	if (typeof(startTime) == 'number') startTime = new Date(startTime);
+	if (typeof(endTime) == 'number') endTime = new Date(endTime);
+
 	var matcher = {
 		_openid: openid,
 		type,

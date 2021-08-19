@@ -4,6 +4,8 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+const _ = db.command
+const $ = db.command.aggregate
 
 const TOKEN = "dOXi^w$7D0BOwG!UIA";
 

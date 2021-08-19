@@ -7,8 +7,7 @@
     "van-picker": "@vant/weapp/picker/index",
     "van-checkbox": "@vant/weapp/checkbox/index",
     "van-slider": "@vant/weapp/slider/index",
-    "van-field": "@vant/weapp/field/index",
-    "post-display": "../../components/postDisplay/postDisplay"
+    "van-field": "@vant/weapp/field/index"
   },
   "navigationStyle": "custom"
 }

@@ -16,7 +16,7 @@
 
 		<view class="user-info" wx:if="{{!userInfo}}" bindtap="getUserInfo">
 			<image class="user-avatar" src="../../images/defaultAvatar.jpeg"></image>
-			<view class="user-nickname" bindtap="getUserInfo">点击登录</view>
+			<view class="user-nickname" bindtap="login">点击登录</view>
 		</view>
 	</view>
 

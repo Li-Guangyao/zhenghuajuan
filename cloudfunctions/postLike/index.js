@@ -4,6 +4,8 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 const db = cloud.database()
+const _ = db.command
+const $ = db.command.aggregate
 
 const TOKEN = "dOXi^w$7D0BOwG!UIA";
 
@@ -52,7 +54,7 @@ exports.main = async (event, context) => {
 		updater['likes[' + likeIndex + ']'] = like;
 		
 	var deltaValue = newValue - lastValue
-	updater.likeValue = _.inc(deltaValue);
+	// updater.likeValue = _.inc(deltaValue);
 
 	queryPost.update({ data: updater })
 	queryUser.update({

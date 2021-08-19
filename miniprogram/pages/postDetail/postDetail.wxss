@@ -4,7 +4,7 @@ page {
 .van-nav-bar {
   background-color: var(--themeColor) !important;
 }
-.van-icon:before {
+.van-nav-bar .van-icon:before {
   color: white !important;
   font-size: 36rpx !important;
 }
