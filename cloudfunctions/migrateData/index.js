@@ -10,7 +10,36 @@ const $ = db.command.aggregate
 // 原有数据迁移
 exports.main = async (event, context) => {
 
+	// 迁移到 t_roll_gain
+	for (let skip = 0; skip <= 100; skip += 20) {
+		let posts = (await db.collection('t_post').aggregate()
+			.skip(skip).end()).list;
+
+		posts.forEach(p => 
+			p.likes.forEach(l => {
+				let data = {
+					_openid: p._openid,
+					value: l.value, createdAt: l.createdAt
+				}
+				db.collection('t_roll_gain').add({data});
+			})
+		)
+
+		let rollRecords = (await db.collection('t_roll_record').aggregate()
+			.skip(skip).end()).list;
+
+		rollRecords.forEach(rr => {
+			let data = {
+				_openid: rr._openid,
+				value: rr.rollCount, 
+				createdAt: rr.terminatedAt
+			}
+			db.collection('t_roll_gain').add({data});
+		})
+	}
+
 	// 修复rollRecordId的错误 删除原有的不可见的蒸花卷帖子
+	/*
 	for (let skip = 20; skip <= 100; skip += 20) {
 		let posts = (await db.collection('t_post').aggregate()
 			.match({
@@ -33,7 +62,7 @@ exports.main = async (event, context) => {
 				post.update({ data: { rollRecordId: rrid } })
 		});
 	}
-
+	*/
 	/*
 	for (let skip = 20; skip <= 100; skip += 20) {
 		// 修改t_post数据

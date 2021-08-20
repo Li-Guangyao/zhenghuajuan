@@ -7,10 +7,11 @@ var foodPage = {
 
 	async onLoad(e) {
 		var foods = await FoodManager.load();
-		this.setData({ 
-			foods 
-		});
-	}
+		this.setData({ foods });
+		this.onFoodLoaded();
+	},
+
+	onFoodLoaded() { }
 }
 
 export default foodPage;

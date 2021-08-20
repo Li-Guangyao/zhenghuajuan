@@ -16,18 +16,20 @@ PostManager.CF = {
 
 // 当前浏览的帖子
 PostManager.curPost = null;
+// 当前加载的帖子列表
+PostManager.posts = []
 
 /**
  * 发布帖子
  * @param {Post} post 帖子
  */
 PostManager.add = async function(post) {
-	if (!await post.check()) 
+	if (!(await post.check()))
 		throw new Error("未通过审核！");
 
-	var postId = await CFM.call(this.Post, "add", 
-		{ post: post.data });
-	return post.data._id = postId;
+	var data = await CFM.call(this.CF.Post, 
+		"add", { post: post.data });
+	return post.data = data; // 没有Comment和Like
 }
 
 /**
@@ -83,6 +85,13 @@ PostManager.getMy = async function(
 }
 
 /**
+ * 清空已有缓存的帖子
+ */
+PostManager.clearPosts = function() {
+	this.posts = [];
+}
+
+/**
  * 查询指定帖子详情（分页）
  * @param {String} postId 帖子ID
  */
@@ -94,7 +103,16 @@ PostManager.getOne = async function(postId) {
 
 // 内部调用
 PostManager._processPosts = function(dataList) {
-	return dataList.map(this._processPost);
+	var res = [];
+	dataList.forEach(d => {
+		// 剔除相同ID
+		if (!this.posts.find(p => p.data._id == d._id)) {
+			var post = this._processPost(d);
+			this.posts.push(post);
+			res.push(post);
+		}
+	})
+	return res;
 }
 PostManager._processPost = function(data) {
 	return new Post(data);
@@ -114,7 +132,7 @@ PostManager.delete = async function(postId) {
  * @param {PostComment} comment 评论对象
  */
 PostManager.addComment = async function(postId, comment) {
-	if (!await comment.check()) 
+	if (!(await comment.check())) 
 		throw new Error("未通过审核！");
 
 	return await CFM.call(this.CF.PostComment, "add", 
@@ -138,7 +156,7 @@ PostManager.deleteComment = async function(postId, cIndex) {
  */
 PostManager.likePost = async function(postId, like) {
 	return await CFM.call(this.CF.PostLike, null, 
-		{ postId, like: like.data });
+		{ postId, like: like ? like.data : null });
 }
 
 export default PostManager;

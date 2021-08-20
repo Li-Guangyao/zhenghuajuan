@@ -7,7 +7,7 @@ function RollManager() {
 
 // 云函数名称
 RollManager.CF = {
-	Roll: 'roll',
+	RollRecord: 'rollRecord',
 	PosterSharing: 'posterSharing',
 }
 
@@ -30,8 +30,8 @@ RollManager.get = async function(userOpenid,
 	if (endTime instanceof Date)
 		endTime = endTime.getTime();
 	
-	var dataList = await CFM.call(this.Roll, "get", 
-		{userOpenid, startTime, endTime, cond});
+	var dataList = await CFM.call(this.CF.RollRecord, 
+		"get", {userOpenid, startTime, endTime, cond});
 		
 	return this._processRollRecords(dataList);
 }
@@ -49,8 +49,8 @@ RollManager.getMy = async function(
 	if (endTime instanceof Date)
 		endTime = endTime.getTime();
 	
-	var dataList = await CFM.call(this.Roll, "get_my", 
-		{startTime, endTime, cond});
+	var dataList = await CFM.call(this.CF.RollRecord, 
+		"get_my", {startTime, endTime, cond});
 		
 	return this._processRollRecords(dataList);
 }
@@ -71,16 +71,16 @@ RollManager.start = async function(rollRecord) {
 	this.curRollRecord = rollRecord;
 	await this.getTodayShares();
 
-	var rollId = await CFM.call(this.Roll, "start", 
-		{ rollRecord: rollRecord.data });
-	return rollRecord.data._id = rollId;
+	var data = await CFM.call(this.CF.RollRecord, 
+		"start", { rollRecord: rollRecord.data }, false);
+	return rollRecord.data = data;
 }
 
 /**
  * 蒸花卷失败
  */
 RollManager.fail = async function() {
-	await CFM.call(this.Post, "fail", 
+	await CFM.call(this.CF.RollRecord, "fail", 
 		{ rollRecord: this.curRollRecord.data });
 	this.terminate();
 }
@@ -89,7 +89,7 @@ RollManager.fail = async function() {
  * 蒸花卷完成
  */
 RollManager.finish = async function() {
-	await CFM.call(this.Post, "finish", 
+	await CFM.call(this.CF.RollRecord, "finish", 
 		{ rollRecord: this.curRollRecord.data });
 	this.terminate();
 }
@@ -100,7 +100,7 @@ RollManager.finish = async function() {
  */
 RollManager.getShare = async function(type) {
 	return await CFM.call(this.CF.PosterSharing, 
-		"get", { type })
+		"get", { type }, false)
 }
 
 /**
@@ -111,7 +111,7 @@ RollManager.getTodayShare = async function(type) {
 	return this.curSharings ? // 如果有缓存则使用缓存
 		this.curSharings[type == 'wx' ? 0 : 1] :
 		await CFM.call(this.CF.PosterSharing, 
-			"get_today", { type })
+			"get_today", { type }, false)
 }
 
 /**
@@ -134,7 +134,8 @@ RollManager.getTodayShares = async function() {
  */
 RollManager.addShare = async function(type, postId) {
 	var data = this.curRollRecord.data;
-	var shared = this.getTodayShare(type).length > 0;
+	var shared = await this.getTodayShare(type);
+	shared = shared.length > 0;
 
 	// 如果首次分享，奖励翻倍
 	if (!shared) data.rollCount *= 2;

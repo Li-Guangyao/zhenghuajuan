@@ -1,4 +1,5 @@
 import CFM from "../../modules/coreModule/cloudFuncManager"
+import UserManager from "../../modules/userModule/userManager"
 import NavigateUtils from "../../utils/navigateUtils"
 import PageCombiner from "../common/pageCombiner"
 import userPage from "../common/userPage"
@@ -55,7 +56,7 @@ var main = {
 
 		res.forEach((r, i) => {
 			this.data.rankList[i] = r.rankList;
-			this.data.myRankInfo[i] = r.myValue;
+			this.data.myRankInfo[i] = this.getMyRankInfo(r);
 		});
 
 		this.setData({
@@ -63,6 +64,15 @@ var main = {
 			myRankInfo: this.data.myRankInfo,
 			topRankList: this.data.rankList[0]
 		})
+	},
+
+	// 获取我的排行信息
+	getMyRankInfo(r) {
+		var openid = UserManager.openid();
+		var index = r.rankList.findIndex(rl => rl._id == openid);
+		if (index < 0) return [-1, -1]; // 未上榜
+		var sum = r.rankList[index].sumValue;
+		return [index, sum];
 	},
 
 	// 获得排行榜信息
@@ -89,4 +99,4 @@ var main = {
 	back() { NavigateUtils.pop(); }
 }
 
-Page(PageCombiner.Combine(main, userPage))
+Page(PageCombiner.Combine(main, userPage()))

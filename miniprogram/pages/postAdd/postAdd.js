@@ -8,7 +8,7 @@ import userPage from '../common/userPage'
 
 var main = {
 	data: {
-		post: new Post(),
+		post: null,
 
 		isRoll: false // 是否蒸花卷的分享
 
@@ -46,12 +46,14 @@ var main = {
 		if (refresh) this.refreshData();
 	},
 	refreshData() {
-		getObject().refresh();
+		this.getObject().refresh();
 		this.setData({ post: this.getObject() });
 	},
 
 	onLoad: async function (e) {
-		var isRoll = e.isRoll == 1;
+		this.setData({ post: new Post()});
+
+		var isRoll = !!e.isRoll;
 		if (isRoll) {
 			var roll = RollManager.curRollRecord;
 			this.data.post.setRollRecord(roll);
@@ -63,8 +65,8 @@ var main = {
 	},
 
 	// 退出，把已经输入的内容缓存起来
-	onUnload: function () {
-		if (this.data.isRoll) RollManager.finish();
+	onUnload: async function () {
+		if (this.data.isRoll) await RollManager.finish();
 		if (!this.isPublished) this.saveTempPost();
 	},
 
@@ -92,17 +94,22 @@ var main = {
 		})
 	},
 
+	// 输入内容
+	inputContent(e) {
+		this.updateData({content: e.detail.value}, true)
+	},
+
 	// 获取用户位置
 	async getLocation() {
 		try {
 			var res = await wx.chooseLocation();
 			if (res.name) this.updateData({ location: res }, true)
 			// TODO: 测试报错
-			console.log(res, res.errMsg);
+			console.error(res, res.errMsg);
 
 		} catch (e) {
 			// TODO: 测试报错
-			console.log(e, e.message, e.errMsg);
+			console.error(e, e.message, e.errMsg);
 
 			if (e.errMsg || e.message == "chooseLocation:fail auth deny") {
 				var res2 = await wx.showModal({
@@ -166,14 +173,15 @@ var main = {
 	async onPostPublish() {
 		try {
 			await this.getObject().generateFileData();
-			var postId = await PostManager.add(this.getObject());
+			var post = await PostManager.add(this.getObject());
 
 			if (this.data.isRoll) // 如果是蒸花卷记录
-				await RollManager.addShare('post', postId);
+				await RollManager.addShare('post', post._id);
 
 			this.isPublished = true;
 			NavigateUtils.pop();
 		} catch (e) {
+			console.error(e);
 			wx.showToast({
 				title: e.message, icon: 'error'
 			})
@@ -183,4 +191,4 @@ var main = {
 	back() { NavigateUtils.pop(); }
 }
 
-Page(PageCombiner.Combine(main, userPage))
+Page(PageCombiner.Combine(main, userPage()))

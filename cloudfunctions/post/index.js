@@ -57,7 +57,7 @@ exports.main = async (event, context) => {
 			var post = event.post; // 帖子数据
 
 			// 返回保存后的帖子ID
-			return await savePost(openid, post);
+			return await savePost(test, openid, post);
 
 		case "DELETE": // 删除帖子
 			var postId = event.postId // 帖子ID
@@ -102,7 +102,7 @@ getPosts = async (openid, userOpenid, skipNum, startTime, endTime, cond) => {
 
 	// 如果看的是自己的帖子
 	if (openid == userOpenid) 
-		matcher.visibility = _.or(1, 2)
+		matcher.visibility = _.or(_.eq(1), _.eq(2))
 	else {
 		matcher.visibility = 1;
 		matcher.status = 1;
@@ -131,9 +131,8 @@ savePost = async (test, openid, data) => {
 
 	// 非测试模式下重置数据
 	if (!test) {
-		// data.likeValue = 0;
-		// data.comments = []
-		// data.likes = []
+		data.comments = []
+		data.likes = []
 
 		if (data.anonyFoodId) 
 			data.anonyFoodDesc = processAnony();
@@ -143,16 +142,18 @@ savePost = async (test, openid, data) => {
 
 		data.createdAt = new Date()
 	}
+	delete data._id;
 
-	return await db.collection('t_post').add({ data });
+	data._id = (await db.collection('t_post').add({data}))._id;
+	return data;
 }
 
 // 处理匿名数据
 processAnony = function() {
-	var descs = ["美味", "诱人", "卓越", "黯淡无光", "隔壁家", 
-	"精致", "饱满", "极品", "楼上", "楼下", "金色", "粗糙", "普通", 
-	"平凡", "香喷喷", "香飘飘", "我最爱", "金黄", "家门口"]
-	return descs[Math.floor(Math.random() * descs.length)] + "的"
+	var descs = ["美味的", "诱人的", "卓越的", "发臭的", "好吃的", "隔壁家的", 
+	"精致的", "无敌的", "极品的", "坏掉的", "金色", "粗糙的", "普通的", "妈妈的",
+	"平凡的", "神级", "过期的", "究极美味的", "稀有的", "传说的", "金黄的", "至尊", "家门口的"]
+	return descs[Math.floor(Math.random() * descs.length)];
 }
 
 // 删除帖子

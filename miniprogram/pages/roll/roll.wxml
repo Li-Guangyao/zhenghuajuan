@@ -9,7 +9,7 @@
 <!-- 店名 -->
 <navigator class="shop-board" url="../shopName/shopName">
 	<image src="../../images/titleBoard.png" mode="widthFix">
-		<view>{{userInfo.shopName}}</view>
+		<view>{{userInfo.data.shopName}}</view>
 	</image>
 </navigator>
 
@@ -20,7 +20,7 @@
 	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
 	<view class="food-select">
 		<!-- TODO: 显示当前选择的菜品的图片 -->
-		<image class="food" src="{{foods[curFoodIdx].images[quality]}}" mode="aspectFit"></image>
+		<image class="food" src="{{foods[curFoodIdx].data.images[rollRecord.data.quality]}}" mode="aspectFit"></image>
 		<view class="tips">点击图标可更换菜品</view>
 	</view>
 </view>
@@ -43,17 +43,17 @@
 	</view>
 	<!-- TODO: 时间显示，需要和上面的拖拽条同步更新 -->
 	<view class="time-tips">
-		制作需要<text>{{duration}}</text>min
-		<van-checkbox class="strict-mode" label-class="strict-mode-label" checked-color="#ffa600" value="{{ strictMode }}" bind:change="onStrictChange">严格模式</van-checkbox>
+		制作需要<text>{{rollRecord.data.duration}}</text>min
+		<van-checkbox class="strict-mode" label-class="strict-mode-label" checked-color="#ffa600" value="{{ rollRecord.data.strictMode }}" bind:change="onStrictChange">严格模式</van-checkbox>
 	</view>
 
 	<!-- 更改口味 -->
 	<view class="name-edit">
 		<!-- TODO: 点击切换后把原有的元素隐藏掉，显示下面的input -->
 		<image src="../../icon/edit.png" mode="heightFix" wx:if="{{!showFlavorEdit}}"></image>
-		<view class="value" wx:if="{{!showFlavorEdit}}" bindtap="startNameEdit">{{name}}味{{foods[curFoodIdx].name}}</view>
+		<view class="value" wx:if="{{!showFlavorEdit}}" bindtap="startFlavorEdit">{{rollRecord.data.flavor}}味{{foods[curFoodIdx].data.name}}</view>
 		<!-- TODO: 输入完毕后（失去焦点后，应该是用bindblur来绑定事件）成功修改口味，退回上一个状态 -->
-		<input class="input" bindinput="inputFlavor" bindblur="finishNameEdit" maxlength="5"
+		<input class="input" bindinput="inputFlavor" bindblur="finishFlavorEdit" maxlength="5"
 			placeholder="写下你专注的内容吧" wx:if="{{showFlavorEdit}}"></input>
 	</view>
 
@@ -69,36 +69,35 @@
 <!-- 购买菜品弹窗 -->
 <van-popup custom-class="buy-food" show="{{ showPopup }}" bind:close="closePopup">
 	<!-- TODO: 用户小麦数量 -->
-	<view class="user-roll">{{userInfo.rollCount}}
+	<view class="user-roll">{{userInfo.data.rollCount}}
 		<image src="../../icon/roll2.png" mode="heightFix"></image>
 	</view>
 	<!-- TODO: 菜品名称 -->
-	<view class="food-name">{{foods[foodIdx].name}}</view>
+	<view class="food-name">{{foods[foodIdx].data.name}}</view>
 	<!-- TODO: 菜品描述 -->
-	<view class="food-desc">{{foods[foodIdx].description}}</view>
+	<view class="food-desc">{{foods[foodIdx].data.description}}</view>
 	<view class="food-switch">
 		<image class="prev" src="../../icon/prevArrow2.png" mode="widthFix" bindtap="prevFood"></image>
 		<image class="food-card" src="../../images/foodBackground.png" mode="heightFix">
 			<!-- TODO: 菜品图像 -->
-			<image class="food-image" src="{{foods[foodIdx].images[0]}}" mode="aspectFit"></image>
+			<image class="food-image" src="{{foods[foodIdx].data.images[0]}}" mode="aspectFit"></image>
 			<!-- TODO: 菜品价格 -->
-			<view class="food-price" wx:if="{{!foods[foodIdx].unlock}}">
-				<image src="../../icon/roll2.png" mode="heightFix"></image>{{foods[foodIdx].cost}}
+			<view class="food-price" wx:if="{{!foods[foodIdx].isUnlocked}}">
+				<image src="../../icon/roll2.png" mode="heightFix"></image>{{foods[foodIdx].data.cost}}
 			</view>
 		</image>
 		<image class="next" src="../../icon/nextArrow4.png" mode="widthFix" bindtap="nextFood"></image>
 	</view>
 	<!-- TODO: 菜品最短制作时间（如果没有则显示15min） -->
 	<view class="food-time">最短制作时间
-		<text wx:if="{{foods[foodIdx].minTime<=15}}">15min</text>
-		<text wx:if="{{foods[foodIdx].minTime>15}}">{{foods[foodIdx].minTime}}min</text>
+		<text>{{foods[foodIdx].data.minTime || 15}}min</text>
 	</view>
 	<!-- TODO: 解锁，需要前端判断是否有足够的小麦 -->
 	<van-button custom-class="confirm-button" round color="#ffa600"
-		wx:if="{{!foods[foodIdx].unlock}}" bindtap="unlockFood">解锁菜谱
+		wx:if="{{!foods[foodIdx].isUnlocked}}" bindtap="unlockFood">解锁菜谱
 	</van-button>
 	<van-button custom-class="confirm-button" round color="#ffa600"
-		wx:if="{{foods[foodIdx].unlock}}" bindtap="chooseFood">选择菜品
+		wx:if="{{foods[foodIdx].isUnlocked}}" bindtap="chooseFood">选择菜品
 	</van-button>
 	<!-- <van-button custom-class="confirm-button" round color="#ffa600"
 		wx:if="{{!judgeFoodLock.judge(foods[foodIdx]._id, userInfo)}}" bindtap="unlockFood">解锁菜谱

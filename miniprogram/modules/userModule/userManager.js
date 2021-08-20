@@ -70,7 +70,7 @@ UserManager.login = async function(force, desc) {
 				{ userInfo: profile.userInfo })
 		console.log("login: ", res);
 
-		this._setUserInfo(res.userInfo);
+		this._setUserInfo(res);
 	}
 	return this.userInfo
 }
@@ -83,7 +83,7 @@ UserManager.login = async function(force, desc) {
  */
 UserManager.judgeLogin = async function(
 	refresh, title, onConfirm, onCancel) {
-	this._loadFromWx();
+	if (!this.userInfo) this._loadFromWx();
 
 	if (!this.userInfo) {
 		title ||= "卷王同志，请先登陆再来";
@@ -100,11 +100,11 @@ UserManager.judgeLogin = async function(
 	return this.userInfo;
 }
 
-UserManager._loadFromWx = async function() {
+UserManager._loadFromWx = function() {
 	var userInfo = wx.getStorageSync(this.StroageKey);
 	if (!userInfo) return;
 
-	this._setUserInfo(UserInfo);
+	this._setUserInfo(userInfo);
 }
 
 /**

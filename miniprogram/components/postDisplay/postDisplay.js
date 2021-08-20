@@ -8,11 +8,16 @@ import PostLike from "../../modules/postModule/postLike"
 Component({
 
 	properties: {
+		isSingle: {
+			type: Boolean,
+			value: false
+		},
 		showDelete: {
 			type: Boolean,
 			value: false
 		},
 
+		/*
 		posts: {
 			type: Array,
 			value: null
@@ -21,25 +26,16 @@ Component({
 			type: Object,
 			value: null
 		},
-
-		bindtap: {
-			type: String,
-			value: "tapPost"
-		},
-		imagetap: {
-			type: String,
-			value: "previewMadia"
-		},
-		videotap: {
-			type: String,
-			value: "previewMadia"
-		},
+		*/
 	},
 
 	/**
 	 * 组件的初始数据
 	 */
 	data: {
+		post: null,
+		posts: [],
+
 		// 菜品数据
 		foods: [],
 
@@ -79,6 +75,7 @@ Component({
 
 	lifetimes: {
 		attached: async function() {
+			this.refreshData();
 			this.setData({ foods: FoodManager.foods });
 		}
 	},
@@ -86,21 +83,28 @@ Component({
 	methods: {
 		openid: () => UserManager.openid(),
 
+		refreshData() {
+			if (this.properties.isSingle)
+				this.setData({ post: PostManager.curPost });
+			else 
+				this.setData({ posts: PostManager.posts });
+		},
+
 		// 帖子
 		// 当前帖子
 		currentPost(e) {
-			if (this.properties.post)
-				return this.properties.post;
-
+			if (this.data.post) return this.data.post;
 			var index = e.currentTarget.dataset.index;
-			return this.properties.posts[index];
+			return this.data.posts[index];
 		},
 
 		tapPost(e) {
-			if (this.properties.post) return;
+			if (this.data.post) return;
 
 			PostManager.curPost = this.currentPost(e);
 			NavigateUtils.push('../postDetail/postDetail')
+
+			this.triggerEvent("tappost", e);
 		},
 
 		// 点击视频或者图片预览
@@ -113,18 +117,20 @@ Component({
 				current: index2,
 				showmenu: true,
 			})
+
+			this.triggerEvent("preview", e);
 		},
 
 		// 刷新数据列表
 		refreshPosts() {
-			if (this.properties.post)
-				this.properties.post.refresh();
-			if (this.properties.posts)
-				this.properties.posts.forEach(p => p.refresh());
+			if (this.data.post) 
+				this.data.post.refresh();
+			if (this.data.posts) 
+				this.data.posts.forEach(p => p.refresh());
 				
 			this.setData({
-				post: this.properties.post,
-				posts: this.properties.posts
+				post: this.data.post,
+				posts: this.data.posts
 			})
 		},
 
@@ -132,7 +138,7 @@ Component({
 
 		// 删除
 		async deletePost(e) {
-			var posts = this.properties.posts;
+			var posts = this.data.posts;
 			var postId = this.currentPost(e).data._id;
 			var index = e.currentTarget.dataset.index;
 
@@ -147,7 +153,7 @@ Component({
 				title: '删除成功', icon: 'none'
 			});
 
-			if (this.properties.post) // 如果是单个帖子的页面
+			if (this.data.post) // 如果是单个帖子的页面
 				NavigateUtils.pop();
 			else if (posts) { // 否则有多个帖子
 				posts.splice(index, 1);
@@ -175,7 +181,7 @@ Component({
 			if (!post.curLike) return; // 已经没有点赞了
 			post.removeLike();
 
-			await uploadLike(post);
+			await this.uploadLike(post);
 			this.refreshPosts();
 		},
 
@@ -199,6 +205,7 @@ Component({
 
 			if (!like) { // 新增点赞
 				like = new PostLike(post, {
+					_openid: this.openid(),
 					value: likeItem.value, likeIndex
 				})
 				post.addLike(like);
@@ -207,14 +214,14 @@ Component({
 				like.data.value = likeItem.value;
 			}
 
-			await uploadLike(post, like);
+			await this.uploadLike(post, like);
 
 			this.closeLikePopup();
 		},
 
 		// 上传点赞数据
 		async uploadLike(post, like) {
-			like = like ? like.data : null;
+			// like = like ? like.data : null;
 			await PostManager.likePost(post.data._id, like);
 			this.refreshPosts();
 		},
@@ -222,13 +229,13 @@ Component({
 		// 评论
 		// 点击评论按钮
 		tapComment(e) {
-			if (this.properties.post) this.showInput();
+			if (this.properties.isSingle) this.showInput();
 			else this.tapPost(e);
 		},
 
-		// 评论评论
+		// 当前评论
 		currentComment(e) {
-			var post = this.properties.post;
+			var post = this.data.post;
 			if (!post) return null;
 			
 			var index = e.currentTarget.dataset.index;
@@ -237,19 +244,19 @@ Component({
 
 		// 点击了评论图标
 		showInput() {
-			if (!this.properties.post) return;
+			console.log("showInput");
 			this.setData({ showInput: true })
 		},
 
 		// 评论框失焦
 		foldInput() {
-			if (!this.properties.post) return;
+			console.log("foldInput");
 			this.setData({ showInput: false })
 		},
 
 		// 评论评论
 		async showInputForComment(e) {
-			if (!this.properties.post) return;
+			if (!this.properties.isSingle) return;
 
 			var comment = this.currentComment(e);
 			var userInfo = await comment.getUserInfo();
@@ -262,13 +269,12 @@ Component({
 
 		// 评论框失焦
 		foldInputForComment() {
-			if (!this.properties.post) return;
 			this.setData({ showInputForComment: false })
 		},
 
 		// 点击保存评论
 		pubComment() {
-			if (!this.properties.post) return;
+			console.log("pubComment: ", this.data.inputComment);
 
 			if (this.data.inputComment)
 				this.saveComment(this.data.inputComment)
@@ -276,7 +282,7 @@ Component({
 
 		// 保存评论的评论
 		pubCommentComment() {
-			if (!this.properties.post) return;
+			if (!this.data.post) return;
 
 			if (this.data.inputCommentComment) 
 				this.saveComment(this.data.commentSb + 
@@ -284,23 +290,24 @@ Component({
 		},
 
 		inputCommentChange(e) {
-			if (!this.properties.post) return;
-
+			console.log("inputCommentChange: ", e.detail.value);
 			this.setData({ inputComment: e.detail.value })
 		},
 
 		inputCommentCommentChange(e) {
-			if (!this.properties.post) return;
-
 			this.setData({ inputCommentComment: e.detail.value })
 		},
 
 		// 保存评论
 		async saveComment(content) {
-			var post = this.properties.post;
+			console.log("saveComment: ", this.data.post, content);
+			var post = this.data.post;
 			if (!post) return;
 
-			var comment = new PostComment(post, { content });
+			var comment = new PostComment(post, { 
+				_openid: this.openid(), content, 
+				createdAt: new Date() 
+			});
 			post.addComment(comment);
 
 			await PostManager.addComment(post.data._id, comment);
@@ -319,13 +326,13 @@ Component({
 
 		// 删除评论
 		async deleteComment(e) {
-			var post = this.properties.post
+			var post = this.data.post
 			if (!post) return;
 
 			var comment = this.currentComment(e);
 
 			// 必须是本人/贴主才能删除
-			if (!canDeleteComment) return;
+			if (!comment.canDelete) return;
 
 			var cIndex = comment.data.index;
 			post.removeComment(comment);

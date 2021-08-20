@@ -8,7 +8,7 @@ import RollManager from "../../modules/rollModule/rollManager"
 
 var main = {
 	data: {
-		rollRecord: new RollRecord(),
+		rollRecord: null, //new RollRecord(),
 		/*
 		{
 			flavor: '学习', // 口味
@@ -45,8 +45,14 @@ var main = {
 		if (refresh) this.refreshData();
 	},
 	refreshData() {
-		getObject().refresh();
-		this.setData({ rollRecord: this.getObject() });
+		this.getObject().updateData();
+		this.getObject().refresh();
+		this.setData({rollRecord: this.getObject()});
+	},
+
+	onFoodLoaded() {
+		this.setData({rollRecord: new RollRecord()});
+		this.changeFoodIdx(0);
 	},
 
 	// 数据编辑
@@ -67,10 +73,11 @@ var main = {
 	},
 
 	changeFoodIdx(idx) {
-		var max = FoodManager.foodCount;
+		var max = FoodManager.foodCount - 1;
 		this.setData({ 
 			foodIdx: Math.max(Math.min(max, idx), 0)
 		})
+		this.updateData({foodId: this.curFoodId()})
 	},
 
 	// 当前菜品
@@ -78,21 +85,28 @@ var main = {
 		return this.data.foods[this.data.foodIdx];
 	},
 	curFoodId() {
-		return this.curFood()._id;
+		return this.curFood().data._id;
 	},
 
 	// 解锁食物
 	async unlockFood() {
 		var food = this.curFood();
 		var res = await wx.showModal({
-			title: '确定要解锁' + food.name + '吗？',
+			title: '确定要解锁' + food.data.name + '吗？',
 			showCancel: true
 		})
 
 		if (res.confirm) {
-			await FoodManager.buy(food._id);
-			await this.getUser();
+			await FoodManager.buy(food.data._id);
+			this.refreshFoodUnlock();
 		}
+	},
+
+	refreshFoodUnlock() {
+		this.setData({
+			foods: this.data.foods,
+			userInfo: this.data.userInfo
+		})
 	},
 
 	// 选择食物
@@ -106,12 +120,12 @@ var main = {
 	},
 
 	// 修改学习任务的名字
-	startNameEdit() {
-		this.setData({ showNameEdit: true })
+	startFlavorEdit() {
+		this.setData({ showFlavorEdit: true })
 	},
 	// 完成输入，失去焦点触发
-	finishNameEdit() {
-		this.setData({ showNameEdit: false })
+	finishFlavorEdit() {
+		this.setData({ showFlavorEdit: false })
 	},
 	// 输入口味的名称
 	inputFlavor(e) {
@@ -129,11 +143,11 @@ var main = {
 	// 设置时间
 	setDuration(rate) {
 		var food = this.curFood();
-		var min = food.minTime || 15;
+		var min = food.data.minTime || 15;
 		var duration = Math.floor(min + (120 - min) * rate);
 
-		this.setData({ rate })
 		this.updateData({ duration }, true)
+		this.setData({ rate })
 	},
 
 	// 严格模式
@@ -162,7 +176,7 @@ var main = {
 	},
 
 	// 真的开始啦！
-	doStartRoll() {
+	async doStartRoll() {
 		RollManager.start(this.getObject());
 
 		NavigateUtils.push('../rolling/rolling');
@@ -185,4 +199,4 @@ var main = {
 	}
 }
 
-Page(PageCombiner.Combine(main, [userPage, foodPage]));
+Page(PageCombiner.Combine(main, [userPage(true), foodPage]));

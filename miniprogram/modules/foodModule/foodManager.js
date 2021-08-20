@@ -61,6 +61,11 @@ FoodManager.buy = async function(foodId) {
 		userData.unlockFoods.push(foodId);
 
 		CFM.call(this.CF.Food, "buy", {foodId})
+		this.refreshData();
+	} else {
+		wx.showToast({ 
+			title: '小麦不足，无法解锁！', icon: 'none' 
+		});
 	}
 }
 

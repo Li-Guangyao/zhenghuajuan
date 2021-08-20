@@ -4,7 +4,7 @@ import userPage from '../common/userPage';
 
 var main = { }
 
-Page(PageCombiner.Combine(main, [userPage, postsPage('my')]))
+Page(PageCombiner.Combine(main, [userPage(), postsPage('my')]))
 
 	/*
 	data: {

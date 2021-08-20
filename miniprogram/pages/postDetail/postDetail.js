@@ -16,4 +16,4 @@ var main = {
 	back() { NavigateUtils.pop(); }
 }
 
-Page(PageCombiner.Combine(main, userPage));
+Page(PageCombiner.Combine(main, userPage()));

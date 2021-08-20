@@ -4,10 +4,10 @@
 <view class="page">
 	<!-- 用户信息 -->
 	<view class="user-card">
-		<view class="user-info" wx:if="{{userInfo}}" bindtap="getUserInfo">
-			<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
+		<view class="user-info" wx:if="{{userInfo}}" bindtap="login">
+			<image class="user-avatar" src="{{userInfo.data.avatarUrl}}"></image>
 			<view class="user-detail">
-				<view class="user-nickname" bindtap="getUserInfo">{{userInfo.nickName}}</view>
+				<view class="user-nickname">{{userInfo.data.nickName}}</view>
 				<!-- TODO: 今日制作时长 -->
 				<view class="user-today">今日已制作<text>{{todayData.duration}}</text>min</view>
 			</view>

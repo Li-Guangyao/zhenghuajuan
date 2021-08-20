@@ -35,7 +35,7 @@ FileStroageManager.uploadFiles = async function(files, path, loading, title, mas
 
 FileStroageManager._uploadFile = (file, path) =>
 	wx.cloud.uploadFile({
-		cloudPath: savePath + '/' + file.name,
+		cloudPath: path + '/' + file.name,
 		filePath: file.url		
 	})
 

@@ -18,7 +18,7 @@ Food.prototype.initialize = function(data) {
 	}
 	Object.assign(this.data, data);
 
-	this._isUnlocked = false;
+	this.isUnlocked = false;
 
 	this.refresh();
 };
@@ -26,18 +26,18 @@ Food.prototype.initialize = function(data) {
 /**
  * 是否已解锁
  */
-Food.prototype.isUnlocked = async function() {
+Food.prototype.judgeUnlocked = function() {
 	var userInfo = UserManager.userInfo;
 	if (!userInfo) return false;
-	
-	return userInfo.data.unlockFoods.includes(this._id);
+
+	return userInfo.data.unlockFoods.includes(this.data._id);
 }
 
 /**
  * 刷新
  */
 Food.prototype.refresh = function() {
-	this._isUnlocked = this.isUnlocked();
+	this.isUnlocked = this.judgeUnlocked();
 }
 
 export default Food;

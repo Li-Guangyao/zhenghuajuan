@@ -2,7 +2,7 @@
 <view class="page">
 
 	<!-- 左上角标题 -->
-	<van-nav-bar border="{{false}}" fixed left-text="{{userInfo.shopName}}" left-arrow bind:click-left="back"/>
+	<van-nav-bar border="{{false}}" fixed left-text="{{userInfo.data.shopName}}" left-arrow bind:click-left="back"/>
 
 
 	<!-- 主页 -->
@@ -28,13 +28,13 @@
 						<!-- <image src="../../icon/arrowLeft.png"/> -->
 					</view>
 					<view class="record" wx:for="{{item}}" wx:for-item="item2">
-						<image class="icon" src="{{foods[item2.foodId].images[item2.quality]}}" mode="aspectFit"></image>
+						<image class="icon" src="{{item2.foodImage}}" mode="aspectFit"></image>
 						<view class="info">
-							<view class="name">{{item2.rollName}}味{{foods[item2.foodId].name}}</view>
-							<view class="detail">{{item2.time}} | {{item2.rollDuration}}min</view>
+							<view class="name">{{item2.data.flavor}}味{{item2.foodName}}</view>
+							<view class="detail">{{item2.time}} | {{item2.data.duration}}min</view>
 						</view>
 						<view class="roll">
-							{{item2.rollCount}} <image src="../../icon/roll2.png"></image>
+							{{item2.data.rollCount}} <image src="../../icon/roll2.png"></image>
 						</view>
 					</view>
 				</view>

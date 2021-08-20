@@ -1,4 +1,5 @@
-<post-display id="postDisplay" showDelete="true" posts="{{posts}}"></post-display>
+<post-display id="postDisplay" showDelete="{{true}}" 
+	posts="{{posts}}" bind:preview="previewMadia"></post-display>
 
 <!-- <view class="post" wx:for="{{postList}}" wx:key="index" data-index="{{index}}" bindtap="tapPost">
 

@@ -4,7 +4,7 @@
 <!-- 内容 -->
 <view class="main">
 	<post-display id="postDisplay" posts="{{posts}}"
-		videotap="previewMadia" imagetap="previewMadia">
+		bind:preview="previewMadia">
 	</post-display>
 
 	<image class="btn-add" src="../../icon2/add.png" mode="aspectFill" bindtap="toPostAdd"></image>

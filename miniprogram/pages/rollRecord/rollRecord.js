@@ -97,12 +97,12 @@ var main = {
 			var range = this.curTimeRange();
 
 			var res = await RollManager.getMy(
-				range[0], range[1]
+				range[0], range[1], {status: 1}
 			);
 
 			var key = 'records[' + this.data.curIndex + ']'
 			this.setData({
-				[key]: this.processRecordData(res.result)
+				[key]: this.processRecordData(res)
 			});
 
 			data = this.curRecords();
@@ -113,14 +113,9 @@ var main = {
 	processRecordData: function (records) {
 		var res = { records };
 
-		records.forEach(r => {
-			var time = new Date(r.createdAt);
-			
-			r.time = DateUtils.date2MDHM(time);
-			var key = DateUtils.date2YMDChi(time);
-
-			res[key] ||= []; res[key].push(r)
-		})
+		records.forEach(r => 
+			(res[r.timeKey] ||= []).push(r)
+		)
 
 		return res;
 	},
@@ -199,9 +194,8 @@ var main = {
 
 		var x = pos[0], y = pos[1];
 		var w = this.foodSize[0], h = this.foodSize[1];
-		var food = this.data.foods[rec.foodId];
 
-		await CanvasUtils.drawFood(food, rec.quality,
+		await CanvasUtils.drawFood(rec.food.data, rec.data.quality,
 			x, y, w, h);
 	},
 
@@ -218,4 +212,4 @@ var main = {
 	}
 }
 
-Page(PageCombiner.Combine(main, [userPage, foodPage]))
+Page(PageCombiner.Combine(main, [userPage(), foodPage]))

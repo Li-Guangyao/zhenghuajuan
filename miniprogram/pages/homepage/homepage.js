@@ -18,7 +18,7 @@ var main = {
 	}
 }
 
-Page(PageCombiner.Combine(main, [userPage, postsPage('all')]))
+Page(PageCombiner.Combine(main, [userPage(), postsPage('all')]))
 
 /*
 Page({

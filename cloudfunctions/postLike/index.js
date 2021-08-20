@@ -26,12 +26,8 @@ exports.main = async (event, context) => {
 	// 函数主体
 	var queryPost = db.collection('t_post').doc(postId);
 
-	var post = (await queryPost.get())[0];
+	var post = (await queryPost.get()).data;
 	if (!post) throw new Error("找不到对应的帖子")
-
-	var queryUser = db.collection('t_user').where({
-		_openid: post._openid,
-	})
 
 	// 找到当前用户的点赞数据
 	var likeIndex = post.likes.findIndex(l => l._openid == openid);
@@ -53,17 +49,24 @@ exports.main = async (event, context) => {
 	else // 更新
 		updater['likes[' + likeIndex + ']'] = like;
 		
-	var deltaValue = newValue - lastValue
-	// updater.likeValue = _.inc(deltaValue);
-
 	queryPost.update({ data: updater })
-	queryUser.update({
-		data: { 
-			rollCount: _.inc(deltaValue),
-			totalRoll: _.inc(deltaValue)
-		}
-	})
+	gainRoll(post._openid, newValue - lastValue);
 
 	// 返回帖子的总点赞数
-	return post.likeValue + deltaValue;
+	return post.likeValue + newValue - lastValue;
+}
+
+queryUser = openid => db.collection('t_user').where({_openid: openid})
+
+gainRoll = (openid, value) => {
+	var data = {
+		_openid: openid, value, createdAt: new Date()
+	}
+	db.collection('t_roll_gain').add({ data })
+	queryUser(openid).update({
+		data: { 
+			rollCount: _.inc(value),
+			totalRoll: _.inc(value)
+		}
+	})
 }

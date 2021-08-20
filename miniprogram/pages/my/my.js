@@ -50,4 +50,4 @@ var main = {
 
 }
 
-Page(PageCombiner.Combine(main, userPage))
+Page(PageCombiner.Combine(main, userPage()))

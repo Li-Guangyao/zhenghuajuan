@@ -60,6 +60,8 @@ Post.prototype.initialize = function(data) {
 	this.isSelfPost = false; // 是否自己的帖子
 	this.curLike = null; // 当前用户点赞
 
+	this.postStyle = this._getPostStyle();
+
 	this._generateTimeDiff();
 	this._convertFileList();
 	this._processComments();
@@ -71,7 +73,7 @@ Post.prototype.initialize = function(data) {
 Post.prototype._getAnonyName = function() {
 	if (!this.isAnony) return '';
 	var food = FoodManager.foods[this.data.anonyFoodId];
-	return this.anonyFoodDesc + food.data.name;
+	return this.data.anonyFoodDesc + food.data.name;
 }
 
 Post.prototype._getAnonyImage = function() {
@@ -83,6 +85,12 @@ Post.prototype._getAnonyImage = function() {
 Post.prototype._getRollFood = function() {
 	if (!this.data.rollRecord) return null;
 	return FoodManager.foods[this.data.rollRecord.foodId];
+}
+
+Post.prototype._getPostStyle = function() {
+	if (this.data.rollRecord) return 'roll-post';
+	if (this.data.anonyFoodId) return 'anony-post';
+	return ''
 }
 
 Post.prototype._isSelfPost = function() {
@@ -135,9 +143,9 @@ Post.prototype.addLike = function(like) {
 	this.data.likes.push(like);
 }
 Post.prototype.removeLike = function() {
-	this.curLike = null;
 	var index = this.data.likes.indexOf(this.curLike);
 	if (index >= 0) this.data.likes.splice(index, 1);
+	this.curLike = null;
 }
 
 Post.prototype.getCurLike = function() {
@@ -148,12 +156,13 @@ Post.prototype.getCurLike = function() {
 }
 
 Post.prototype.addComment = function(comment) {
-	comment = this._processLike(comment);
+	comment = this._processComment(comment);
 	this.data.comments.push(comment);
 }
 Post.prototype.removeComment = function(comment) {
-	var index = this.data.comments.indexOf(comment);
-	if (index >= 0) this.data.comments.splice(index, 1);
+	comment.data.isDeleted = true;
+	// var index = this.data.comments.indexOf(comment);
+	// if (index >= 0) this.data.comments.splice(index, 1);
 }
 
 /**
@@ -226,12 +235,13 @@ Post.prototype._refreshLikeValue = function() {
 		this.likeValue += this.data.rollRecord.rollCount;
 }
 Post.prototype._refreshCommentCnt = function() {
-	this.commentCnt = this.data.comments.length;
+	var comments = this.data.comments.filter(c => !c.data.isDeleted);
+	this.commentCnt = comments.length;
 }
 
 Post.prototype.generateFileData = async function() {
 	var fileData = await Post._GenerateFileData(this.fileList);
-	Object.assign(data, fileData);
+	Object.assign(this.data, fileData);
 }
 
 Post.CheckCFName = 'checkPost';
@@ -293,7 +303,6 @@ Post._ProcessAnony = function() {
 */
 
 Post._GenerateFileData = async function(fileList) {
-	var fileList = this.data.fileList
 	var photoList = [], videoList = [], typeList = []
 
 	fileList.forEach(f => {

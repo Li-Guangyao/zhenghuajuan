@@ -7,8 +7,6 @@ import NavigateUtils from '../../utils/navigateUtils';
  * @param {'all' | 'my'} type 页面类型
  */
 var postsPage = (type) => ({
-	data: { posts: [] },
-
 	queryParams: {
 		pageNum: 0,
 		pageSize: 20
@@ -16,23 +14,29 @@ var postsPage = (type) => ({
 
 	pictureFlag: false, // 是否打开图片
 
-	onLoad() {
-		this.queryParams.pageNum = 0;
+	onUnload() {
+		this.resetPage();
 	},
 
-	async onShow() {
+	async onShow(e) {
 		if (this.pictureFlag)
 			this.pictureFlag = false;
-		else 
+		else {
+			this.resetPage();
 			await this.refreshPage();
+		}
 	},
 
 	getFunc() {
-		console.log(PostManager);
 		switch (type || 'all') {
 			case 'all': return PostManager.getAll.bind(PostManager); 
 			case 'my': return PostManager.getMy.bind(PostManager);
 		}
+	},
+
+	resetPage() {
+		PostManager.clearPosts();
+		this.queryParams.pageNum = 0;
 	},
 
 	async refreshPage(newestDate) {
@@ -42,16 +46,24 @@ var postsPage = (type) => ({
 			this.queryParams.pageSize;
 		var posts = await getFunc(skipNum, newestDate);
 
-		if (newestDate && postObjects.length <= 0) 
+		if (newestDate && posts.length <= 0) 
 			wx.showToast({
 				icon: 'error', title: '没有更多了~',
 			})
 
+		var comp = this.selectComponent('#postDisplay');
+		if (comp) comp.refreshData();
+
+		/*
+		posts = this.data.posts.concat(posts);
+
 		this.setData({ posts });
+		*/
 	},
 	
 	// 下拉刷新
 	async onPullDownRefresh() {
+		this.resetPage();
 		await this.refreshPage()
 		wx.stopPullDownRefresh()
 	},
@@ -59,16 +71,14 @@ var postsPage = (type) => ({
 	// 触底加载
 	async onReachBottom() {
 		this.queryParams.pageNum++;
-		var newestDate = this.data.posts[0].createdAt;
+		var newestPost = PostManager.posts[0];
+		var newestDate = newestPost.data.createdAt;
+		newestDate = Date.parse(newestDate);
 		await this.refreshPage(newestDate);
 	},
 
 	// 点击视频或者图片预览
 	previewMadia(e) {
-		var comp = this.selectComponent('#postDisplay');
-		if (!comp) return;
-
-		comp.previewMadia(e);
 		this.pictureFlag = true;
 	}
 })

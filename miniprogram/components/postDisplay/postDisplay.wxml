@@ -1,5 +1,5 @@
-<view class="post {{item.data.rollRecord ? 'roll-post' : ''}}" wx:for="{{post ? [post] : posts}}" wx:key="index"
-	data-index="{{index}}" bindtap="{{bindtap}}">
+<view class="post {{item.postStyle}}" wx:for="{{post ? [post] : posts}}" wx:key="index"
+	data-index="{{index}}" bindtap="tapPost">
 
 	<!-- 上方用户数据 -->
 	<view class="user-info">
@@ -52,12 +52,12 @@
 		<!-- 显示视频 -->
 		<video class="post-video" wx:if="{{item2.type=='video'}}" show-fullscreen-btn="{{false}}"
 			play-btn-position="center" muted="{{true}}" object-fit="cover" src="{{item2.url}}" data-index="{{index}}"
-			data-index2="{{index2}}" catchtap="{{videotap}}">
+			data-index2="{{index2}}" catchtap="previewMadia">
 		</video>
 
 		<!-- 显示图片 -->
 		<image class="post-image" wx:if="{{item2.type=='image'}}" mode="aspectFill" src="{{item2.url}}"
-			data-index="{{index}}" data-index2="{{index2}}" catchtap="{{imagetap}}">
+			data-index="{{index}}" data-index2="{{index2}}" catchtap="previewMadia">
 		</image>
 
 	</view>
@@ -109,10 +109,11 @@
 </view>
 
 <!-- 评论详情（仅post状态下显示） -->
-<view class="comment" wx:if="{{post && post.data.comments.length > 0}}">
+<view class="comment" wx:if="{{post && post.commentCnt > 0}}">
 	<view class="comment-title">评论</view>
 	<view class="comment-item" wx:for="{{post.data.comments}}" 
 		wx:key="index" data-index="{{index}}"
+		wx:if="{{!item.data.isDeleted}}"
 		bindtap="showInputForComment">
 		<view class="comment-info">
 			<view class="left">

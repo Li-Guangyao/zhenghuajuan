@@ -5,6 +5,7 @@ import FoodManager from "../../modules/foodModule/foodManager";
 import MathUtils from "../../utils/mathUtils";
 import PageCombiner from "../common/pageCombiner";
 import userPage from "../common/userPage";
+import CFM from "../../modules/coreModule/cloudFuncManager";
 
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
 var windowWidth = wx.getSystemInfoSync().windowWidth;
@@ -69,22 +70,17 @@ var main = {
 		if (refresh) this.refreshData();
 	},
 	refreshData() {
-		getObject().refresh();
+		this.getObject().refresh();
 		this.setData({ rollRecord: this.getObject() });
 	},
 
 	onLoad: async function (e) {
 		wx.setKeepScreenOn({ keepScreenOn: true });
-
-		// var rollRecord = RollManager.curRollRecord;
-
-		// leftTimeStr: this.formatTimeStr(rollRecord.data.duration, 0),
-
 		wx.enableAlertBeforeUnload({
 			message: "退出将会导致制作失败！您确定要退出吗？"
 		})
 
-		this.setData({ rollRecord })
+		this.setData({ rollRecord: RollManager.curRollRecord})
 		this.loadAsyncData();
 	},
 
@@ -109,7 +105,8 @@ var main = {
 		*/
 
 		var now = new Date();
-		if (this.data.strictMode && now - this.data.exitTime >= MaxExitTime) 
+		if (this.getData().strictMode && 
+			now - this.data.exitTime >= MaxExitTime) 
 			this.onStopped();
 		else
 			wx.showToast({
@@ -156,8 +153,11 @@ var main = {
 
 		CanvasUtils.reset();
 
+		// 如果未完成
+		if (!this.data.finished)
+			RollManager.fail();
 		// 如果是完成了，但没有去分享的话
-		if (this.data.finished && !this.data.sharePost)
+		else if (!this.data.sharePost)
 			RollManager.finish();
 	},
 
@@ -166,14 +166,11 @@ var main = {
 
 		var flavor = this.getData().flavor;
 		var duration = this.getData().duration;
-
-		var foods = FoodManager.foods;
-		var food = foods[this.getData().foodId];
-		var foodName = food.data.name;
+		var foodName = this.getObject().foodName;
 		
 		var message = "我用" + duration + "分钟做出了" + flavor + "味的" + foodName + "！";
 
-		this.updateData({ message });
+		this.updateData({ message }, true);
 
 		this.setData({
 			// message,
@@ -192,21 +189,18 @@ var main = {
 
 	// 读取连续卷的天数
 	loadContinuity: async function() {
-		return (await wx.cloud.callFunction({
-			name: 'getContinuity'
-		})).result;
+		return await CFM.call('getContinuity', null, null, false);
 	},
 
 	// 获取打败人数比例
 	getDefeat: async function() {
-		return (await wx.cloud.callFunction({
-			name: 'getDefeat', data: { duration: this.data.duration }
-		})).result;
+		return await CFM.call('getDefeat', null, 
+			{ duration: this.getData().duration }, false);
 	},
 
 	// 获取等价活动
 	getEqualActInfo() {
-		let duration = this.data.duration;
+		var duration = this.getData().duration;
 		var act1 = ['刷', 0.5, '条', '短视频']
 		var act2 = ['玩', 15, '局', '王者荣耀']
 		var act3 = ['煲', 40, '集', '电视剧']
@@ -244,13 +238,15 @@ var main = {
 	},
 
 	update() {
-		var ms = this.data.curMilliSecond + updateInterval * 1000;
+		var ms = this.data.curMilliSecond + updateInterval;
 
 		var dtTime = ms / 1000;
 		var minute = dtTime / 60;
 		var second = dtTime % 60;
 
-		this.drawMinuteProgress(minute);
+		var duration = this.getData().duration;
+
+		this.drawMinuteProgress(minute, duration);
 
 		this.setData({
 			curMinute: minute,
@@ -259,11 +255,10 @@ var main = {
 			leftTimeStr: this.getLeftTimeStr()
 		});
 
-		if (minute >= this.data.duration)
-			this.onFinished();
+		if (minute >= duration) this.onFinished();
 	},
 
-	drawMinuteProgress(minute) {
+	drawMinuteProgress(minute, duration) {
 		var ctx = CanvasUtils.ctx;
 		if (!ctx) return;
 
@@ -271,7 +266,7 @@ var main = {
 		// s代表start，定义绘制弧线的开始点
 		var s = 1.5 * Math.PI;
 		// e代表end，定义绘制弧线的结束点
-		var e = s + minute / this.data.duration * 2 * Math.PI;
+		var e = s + minute / duration * 2 * Math.PI;
 		// API，创建一个渐变颜色
 		const grd = ctx.createLinearGradient(0, 0, x * 2, 0)
 		grd.addColorStop(0, '#FEA403')
@@ -329,11 +324,12 @@ var main = {
 		this.setData({ stopped: true })
 		this.stopRolling();
 
-		await RollManager.fail();
-
-		var title = "太可惜了，由于您在制作过程中分心，" + this.data.foodName + "坏掉了，再来一次吧！下次记得不要分心了哦~"
-
 		wx.disableAlertBeforeUnload();
+
+		var foodName = this.getObject().foodName;
+
+		var title = "太可惜了，由于您在制作过程中分心，" + 
+			foodName + "坏掉了，再来一次吧！下次记得不要分心了哦~"
 		await wx.showModal({ title, showCancel: false });
 		NavigateUtils.pop();
 	},
@@ -349,7 +345,7 @@ var main = {
 
 	prepareSharing: async function() {
 
-		let duration = this.data.duration;
+		let duration = this.getData().duration;
 		let equalAct = this.data.equalActInfo;
 		let verb = equalAct.verb;
 		let count = equalAct.count;
@@ -359,6 +355,11 @@ var main = {
 			'超过' + this.data.defeat + '%的人',
 			'相当于' + verb + '了' + count + '\n' + act
 		];
+	},
+
+	// 输入内容
+	inputMessage(e) {
+		this.updateData({message: e.detail.value}, true)
 	},
 
 	// 分享到动态
@@ -386,6 +387,12 @@ var main = {
 	onShareAppMessage: async function () {
 		await this.generatePoster();
 	
+		await RollManager.addShare('wx');
+
+		this.data.sharings[0] = true;
+		this.setData({sharings: this.data.sharings});
+
+		/*
 		// 已经无法检测是否分享成功了，只能直接在这里写
 		if (!this.data.sharings[0]) {
 			this.data.count *= 2; 
@@ -396,6 +403,7 @@ var main = {
 			name: "posterSharing", 
 			data: { method: "ADD", type: "wx" }
 		})
+		*/
 
 		var texts = [
 			"来蒸花卷，争做最卷的“卷王”吧",
@@ -418,7 +426,8 @@ var main = {
 	},
 
 	getLeftTimeStr() {
-		var leftMinutes = this.data.duration - 1 - Math.floor(this.data.curMinute);
+		var duration = this.getData().duration;
+		var leftMinutes = duration - 1 - Math.floor(this.data.curMinute);
 		var leftSeconds = 59 - Math.floor(this.data.curSecond);
 		return this.formatTimeStr(leftMinutes, leftSeconds);
 	},
@@ -492,7 +501,7 @@ var main = {
 		await CanvasUtils.drawImage(this.background, 0, 0, w, h);
 		for (var i = 0; i < this.foodPositions.length; ++i) {
 			var p = this.foodPositions[i];
-			var src = this.data.foodImage;
+			var src = this.getObject().foodImage;
 			var x = w * p[1] / 100,
 				y = h * p[0] / 100;
 			await CanvasUtils.drawFood(src, undefined, x, y, fw, fh, false);
@@ -521,12 +530,13 @@ var main = {
 			by = h - bh;
 		await CanvasUtils.drawImage(this.postBottom, 0, by, w, bh);
 
+		var user = this.data.userInfo.data;
 		var ap = this.avatarRect;
 		var ax = w * ap[0] / 100,
 			ay = by + bh * ap[1] / 100;
 		var ah = bh * ap[2] / 100,
 			aw = ah;
-		await CanvasUtils.drawImage(this.data.userInfo.avatarUrl, ax, ay, aw, ah, 'round')
+		await CanvasUtils.drawImage(user.avatarUrl, ax, ay, aw, ah, 'round')
 
 		var np = this.nickNameRect;
 		var nx = w * np[0] / 100,
@@ -534,18 +544,19 @@ var main = {
 		var ny = by + bh * np[1] / 100 + nickNameSize;
 		CanvasUtils.setColor(this.infoFontColor);
 		CanvasUtils.setFont(nickNameFont);
-		CanvasUtils.drawText(this.data.userInfo.nickName, nx, ny);
+		CanvasUtils.drawText(user.nickName, nx, ny);
 
 		CanvasUtils.setFont(messageFont);
-		CanvasUtils.drawTextEx(this.data.message,
+		CanvasUtils.drawTextEx(this.getData().message,
 			nx, ny + nickNameSize + 2, nw, messageSize + 2);
 
 		var data = CanvasUtils.canvas.toDataURL();
 		this.posterImgUrl = wx.env.USER_DATA_PATH + '/tempPoster.png';
 		await this.savePosterImg(data, this.posterImgUrl);
 
+		this.updateData({shareImage: this.posterImgUrl});
+
 		CanvasUtils.clearAll();
-		
 	},
 
 	generateSharePoster: async function () {
@@ -564,4 +575,4 @@ var main = {
 	},
 }
 
-Page(PageCombiner.Combine(main, userPage));
+Page(PageCombiner.Combine(main, userPage()));

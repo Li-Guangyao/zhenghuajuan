@@ -34,7 +34,7 @@ exports.main = async (event, context) => {
 			var postId = event.postId // 帖子ID
 			var cIndex = event.cIndex; // 帖子评论Index
 
-			deleteComment(openid, postId, cIndex); break;
+			return await deleteComment(openid, postId, cIndex); 
 	}
 }
 
@@ -43,7 +43,7 @@ queryPost = postId => db.collection('t_post').doc(postId)
 // 发布评论
 addComment = async (openid, postId, comment) => {
 	var query = queryPost(postId);
-	var post = (await query.get())[0];
+	var post = (await query.get()).data;
 	if (!post) throw new Error("找不到对应的帖子")
 
 	comment._openid = openid
@@ -60,16 +60,17 @@ addComment = async (openid, postId, comment) => {
 // 删除评论
 deleteComment = async (openid, postId, cIndex) => {
 	var query = queryPost(postId);
-	var post = (await query.get())[0];
+	var post = (await query.get()).data;
 	if (!post) throw new Error("找不到对应的帖子！")
-	if (post._openid != openid) // 当前用户不是楼主
-		throw new Error("无法删除其他人的评论")
 
 	var comment = post.comments[cIndex];
 	if (!comment) throw new Error("找不到对应的评论！")
-	if (comment._openid != openid) // 当前用户不是发帖者
+
+	if (comment._openid != openid && // 当前用户不是楼主
+		post._openid != openid) // 当前用户不是发帖者
 		throw new Error("无法删除其他人的评论")
 	
-	var key = 'comments[' + cIndex + '].isDeleted'
-	query.update({data: { key: true }})
+	comment.isDeleted = true;
+	
+	query.update({data: { comments: post.comments }})
 }

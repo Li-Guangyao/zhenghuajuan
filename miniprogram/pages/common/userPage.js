@@ -1,12 +1,16 @@
 import UserManager from '../../modules/userModule/userManager'
 
-var userPage = {
+/**
+ * 带有用户功能的页面
+ * @param {Boolean} refresh 是获取用户数据还是刷新用户数据
+ */
+var userPage = (refresh) => ({
 	data: {
 		userInfo: null, // 用户对象（UserInfo）
 	},
 
 	async onShow() {
-		await this.refreshUser();
+		await this.judgeLogin(refresh);
 	},
 
 	async getUser() {
@@ -21,8 +25,10 @@ var userPage = {
 		this.setData({
 			userInfo: await UserManager.judgeLogin(refresh)
 		});
+		this.onUserLoaded();
 	},
 
-}
+	onUserLoaded() {}
+})
 
 export default userPage;

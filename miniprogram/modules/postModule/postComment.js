@@ -1,6 +1,7 @@
 import Post from "./post";
 import DateUtils from '../../utils/dateUtils';
 import UserManager from "../userModule/userManager";
+import CFM from '../coreModule/cloudFuncManager';
 
 function PostComment() {
 	this.initialize.apply(this, arguments);

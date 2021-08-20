@@ -2,7 +2,7 @@
 	<!-- 左上角标题 -->
 	<van-nav-bar border="{{false}}" fixed left-text="更改店名" left-arrow bind:click-left="back"/>
 
-	<image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
+	<image class="user-avatar" src="{{userInfo.data.avatarUrl}}" mode="widthFix"></image>
 
 	<view class="input-area">
 		<view class="tag">店名</view>

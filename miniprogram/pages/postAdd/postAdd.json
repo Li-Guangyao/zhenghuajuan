@@ -4,6 +4,7 @@
 		"van-nav-bar": "@vant/weapp/nav-bar/index",
 		"van-uploader": "@vant/weapp/uploader/index",
 		"van-button": "@vant/weapp/button/index",
+    "van-checkbox": "@vant/weapp/checkbox/index",
 		"van-switch": "@vant/weapp/switch/index"
 	},
 	"navigationBarTitleText": "卷一波",

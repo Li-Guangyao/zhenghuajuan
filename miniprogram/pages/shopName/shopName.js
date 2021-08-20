@@ -1,41 +1,50 @@
-Page({
+import CFM from "../../modules/coreModule/cloudFuncManager";
+import NavigateUtils from "../../utils/navigateUtils";
+import PageCombiner from "../common/pageCombiner"
+import userPage from "../common/userPage"
+
+var main = {
 	data: {
-		shopName: '',
-		userInfo: wx.getStorageSync('userInfo')
+		shopName: ''
 	},
 
-	editShopName: function () {
-		if (this.data.shopName.length > 10) {
+	onUserLoaded() {
+		this.setData({
+			shopName: this.data.userInfo.data.shopName
+		});
+	},
+
+	editShopName: async function () {
+		if (this.data.shopName.length > 6) 
 			wx.showToast({
 				icon: 'error',
-				title: '不超过10个字！',
+				title: '不能超过6个字！',
 			})
-		} else if (this.data.shopName.length != 0) {
-			wx.cloud.callFunction({
-				name: "editShopName",
-				data: {
-					shopName: this.data.shopName
-				}
-			}).then(res => {
-				if (res.result.stats.updated == 0) {
-					wx.showToast({
-						icon: 'error',
-						title: '1天修改一次！',
-					})
-				} else {
-					wx.showToast({
-						title: '修改成功！',
-					})
-					this.setData({
-						['userInfo.shopName']: this.data.shopName
-					})
-					wx.setStorageSync('userInfo', this.data.userInfo)
-				}
+		else if (this.data.shopName.length <= 0) 
+			wx.showToast({
+				icon: 'error',
+				title: '不能为空！',
 			})
-		} else {}
+		else if (this.data.shopName.length != 0) {
+			var res = await CFM.call("editShopName", null,
+				{ shopName: this.data.shopName });
+			if (res.stats.updated == 0)
+				wx.showToast({
+					icon: 'error',
+					title: '每天只修改一次！',
+				})
+			else {
+				wx.showToast({ title: '修改成功！' });
+				this.setData({
+					['userInfo.data.shopName']: this.data.shopName
+				})
+			}
+		}
 	},
 
 	back() {
-		wx.navigateBack({ delta: 1 })
+		NavigateUtils.pop();
 	}
-})
+}
+
+Page(PageCombiner.Combine(main, userPage()))

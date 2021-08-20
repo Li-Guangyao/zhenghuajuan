@@ -57,12 +57,12 @@ exports.main = async (event, context) => {
 	}
 }
 
-queryRollRecords = matcher => db.collection('t_roll_record').where(matcher);
+queryRollRecords = matcher => db.collection('t_roll_record')
+	.aggregate().match(matcher).sort({createdAt: -1});
 
-queryRollRecord = recordId => db.collection('t_roll_record').doc(postId)
+queryRollRecord = recordId => db.collection('t_roll_record').doc(recordId)
 
-queryUser = openid => db.collection('t_user')
-	.where({_openid: openid})
+queryUser = openid => db.collection('t_user').where({_openid: openid})
 
 getRollRecords = async (userOpenid, startTime, endTime, cond) => {
 	if (typeof(startTime) == 'number') startTime = new Date(startTime);
@@ -73,7 +73,7 @@ getRollRecords = async (userOpenid, startTime, endTime, cond) => {
 		createdAt: _.and(_.gt(startTime), _.lt(endTime)),
 		...cond
 	}
-	return (await queryRollRecords(matcher).get()).data;
+	return (await queryRollRecords(matcher).end()).list;
 }
 
 startRollRecord = async (openid, data) => {
@@ -83,7 +83,8 @@ startRollRecord = async (openid, data) => {
 
 	delete data._id;
 
-	return await db.collection('t_roll_record').add({ data });
+	data._id = (await db.collection('t_roll_record').add({ data }))._id;
+	return data;
 }
 
 failRollRecord = (openid, data) => {
@@ -94,6 +95,7 @@ failRollRecord = (openid, data) => {
 	data.status = 2;
 
 	delete data._id;
+	delete data.createdAt;
 
 	queryRollRecord(id).update({ data })
 }
@@ -106,14 +108,21 @@ finishRollRecord = (openid, data) => {
 	data.status = 1;
 
 	delete data._id;
+	delete data.createdAt;
 
-	var cnt = data.rollCount;
+	gainRoll(openid, data.rollCount);
+	queryRollRecord(id).update({ data })
+}
 
+gainRoll = (openid, value) => {
+	var data = {
+		_openid: openid, value, createdAt: new Date()
+	}
+	db.collection('t_roll_gain').add({ data })
 	queryUser(openid).update({
-		data: {
-			rollCount: _.inc(cnt),
-			totalRoll: _.inc(cnt),
+		data: { 
+			rollCount: _.inc(value),
+			totalRoll: _.inc(value)
 		}
 	})
-	queryRollRecord(id).update({ data })
 }

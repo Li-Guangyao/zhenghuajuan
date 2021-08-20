@@ -1,8 +1,8 @@
-<view class="title">{{name}}味{{foodName}}</view>
+<view class="title">{{rollRecord.data.flavor}}味{{rollRecord.foodName}}</view>
 <!-- 旋转 -->
 <!-- 暂时隐藏 -->
 <canvas id="progress-canvas" type="2d" class="circle" wx:if="{{true}}">
-	<image src="{{foodImage}}" mode="heightFix"></image>
+	<image src="{{rollRecord.foodImage}}" mode="heightFix"></image>
 </canvas>
 <view class="content">
 	<view class="chicken-soup">
@@ -15,7 +15,7 @@
 			backgroundColor="#FFFFFF" stroke-width="12"></progress> -->
 		<view class="small-tip">
 			<text class="text1">预计可获得</text>
-			<text class="number1">{{count}}</text>
+			<text class="number1">{{rollRecord.data.rollCount}}</text>
 			<image src="../../icon/roll2.png" mode="heightFix"></image>
 			<!-- <text class="number2">{{curCount}}/{{count}}</text> -->
 		</view>
@@ -29,32 +29,36 @@
 	<!-- <canvas id="post-canvas" type="2d" ></canvas> -->
 
 	<image class="post" src="../../images/post.png" mode="heightFix" >
-		<text class="time">本次制作{{duration}}分钟</text>
+		<text class="time">本次制作{{rollRecord.data.duration}}分钟</text>
 		<text class="day">超过{{defeat}}%的人</text>
 		<text class="play">相当于{{equalActInfo.verb}}了{{equalActInfo.count}}\n{{equalActInfo.act}}</text>
 		<view class="foods">
-			<food-display class="food1" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food2" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food3" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food4" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food5" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food6" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food7" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food8" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food9" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food10" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food11" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food12" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food13" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food14" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food15" src="{{foodImage}}" mode="aspectFit"></food-display>
-			<food-display class="food16" src="{{foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food1" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food2" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food3" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food4" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food5" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food6" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food7" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food8" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food9" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food10" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food11" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food12" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food13" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food14" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food15" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
+			<food-display class="food16" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
 		</view>
 		<image class="post-bottom" src="../../images/postBottom.png" mode="widthFix">
-			<image class="avatar" src="{{userInfo.avatarUrl}}" mode="heightFix"></image>
+			<image class="avatar" src="{{userInfo.data.avatarUrl}}" mode="heightFix"></image>
 			<view class="info">
-				<view class="name">{{userInfo.nickName}}</view>
-				<textarea class="message" model:value="{{message}}" placeholder="输入你的感想吧~" maxlength="20" placeholder-style="font-size: 24rpx"></textarea>
+				<view class="name">{{userInfo.data.displayName}}</view>
+				<textarea class="message" 
+					model:value="{{rollRecord.data.message}}" 
+					bindinput="inputMessage"
+					placeholder="输入你的感想吧~" maxlength="20" 
+					placeholder-style="font-size: 24rpx"></textarea>
 			</view>
 		</image>
 	</image>

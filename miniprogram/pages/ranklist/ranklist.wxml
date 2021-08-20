@@ -23,26 +23,26 @@
 		<view class="top3">
 			<view class="first" wx:if="{{topRankList[0]}}">
 				<view class="rank">1</view>
-				<image class="avatar" src="{{topRankList[0].avatarUrl}}"></image>
-				<view class="nickname">{{topRankList[0].displayName}}</view>
-				<view class="value">{{topRankList[0].totalValue}}
+				<image class="avatar" src="{{topRankList[0].userInfo.avatarUrl}}"></image>
+				<view class="nickname">{{topRankList[0].userInfo.displayName}}</view>
+				<view class="value">{{topRankList[0].sumValue}}
 					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
 				<view class="text">恭迎卷王！</view>
 			</view>
 			<view class="second" wx:if="{{topRankList[1]}}">
 				<view class="rank">2</view>
-				<image class="avatar" src="{{topRankList[1].avatarUrl}}"></image>
-				<view class="nickname">{{topRankList[1].displayName}}</view>
-				<view class="value">{{topRankList[1].totalValue}}
+				<image class="avatar" src="{{topRankList[1].userInfo.avatarUrl}}"></image>
+				<view class="nickname">{{topRankList[1].userInfo.displayName}}</view>
+				<view class="value">{{topRankList[1].sumValue}}
 					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
 			<view class="third" wx:if="{{topRankList[2]}}">
 				<view class="rank">3</view>
-				<image class="avatar" src="{{topRankList[2].avatarUrl}}"></image>
-				<view class="nickname">{{topRankList[2].displayName}}</view>
-				<view class="value">{{topRankList[2].totalValue}}
+				<image class="avatar" src="{{topRankList[2].userInfo.avatarUrl}}"></image>
+				<view class="nickname">{{topRankList[2].userInfo.displayName}}</view>
+				<view class="value">{{topRankList[2].sumValue}}
 					<image class="icon" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
@@ -56,11 +56,11 @@
 			<view class="rank-item" wx:for="{{topRankList}}" wx:key="index" wx:if="{{index>=3}}">
 				<view class="left">
 					<text class="rank-number">{{index+1}}</text>
-					<image class="user-avatar" src="{{item.avatarUrl}}"></image>
-					<view class="user-nickname">{{item.displayName}}</view>
+					<image class="user-avatar" src="{{item.userInfo.avatarUrl}}"></image>
+					<view class="user-nickname">{{item.userInfo.displayName}}</view>
 				</view>
 				<view class="right">
-					<view class="juan-number">{{item.totalValue}}</view>
+					<view class="juan-number">{{item.sumValue}}</view>
 					<image class="juan-image" src="../../icon/roll2.png"></image>
 				</view>
 			</view>
@@ -73,9 +73,9 @@
 		<view class="my-rank">
 			<view class="rank-item">
 				<view class="left">
-					<text class="rank-number" wx:if="{{myRankInfo[tabIndex][0]!=-1}}">{{myRankInfo[tabIndex][0]}}</text>
-					<image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-					<view class="user-nickname">{{userInfo.displayName}}</view>
+					<text class="rank-number" wx:if="{{myRankInfo[tabIndex][0]!=-1}}">{{myRankInfo[tabIndex][0]+1}}</text>
+					<image class="user-avatar" src="{{userInfo.data.avatarUrl}}"></image>
+					<view class="user-nickname">{{userInfo.data.displayName}}</view>
 				</view>
 				<view class="right">
 					<view class="juan-number" wx:if="{{myRankInfo[tabIndex][1]!=-1}}">

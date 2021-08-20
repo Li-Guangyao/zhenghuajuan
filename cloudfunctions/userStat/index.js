@@ -52,27 +52,32 @@ getUserStat = async (userOpenid, startTime, endTime) => {
 		matcher.createdAt = _.and(
 			_.gt(startTime), _.lt(endTime));
 
-	var queryRollRecord = db.collection('t_roll_record')
+	// 似乎不能提取变量
+	// var queryRollRecord = db.collection('t_roll_record')
+	// 	.aggregate().match(matcher)
+
+	var duration = await db.collection('t_roll_record')
 		.aggregate().match(matcher)
+		.group({
+			_id: null, _duration: $.sum('$duration')
+		}).end();
+	var count = await db.collection('t_roll_record')
+		.aggregate().match(matcher)
+		.count('_count').end();
+	var rollCount = await db.collection('t_roll_record')
+		.aggregate().match(matcher)
+		.group({
+			_id: null, _rollCount: $.sum('$rollCount')
+		}).end();
 
-	var task1 = queryRollRecord.count('_count').end();
-	var task2 = queryRollRecord.group({
-    _id: null, _duration: $.sum('$duration')
-  }).end();
-	var task3 = queryRollRecord.group({
-    _id: null, _rollCount: $.sum('$rollCount')
-	}).end();
-	
-	var res = await Promise.all([task1, task2, task3]);
-
-	var count = res[0].list[0];
+	count = count.list[0];
 	count = count ? count._count : 0;
 
-	var duration = res[1].list[0];
+	duration = duration.list[0];
 	duration = duration ? duration._duration : 0;
 
-	var rollCount = res[2].list[0];
+	rollCount = rollCount.list[0];
 	rollCount = rollCount ? rollCount._rollCount : 0;
 
-	return { count, duration, rollCount }
+	return {count, duration, rollCount}
 }

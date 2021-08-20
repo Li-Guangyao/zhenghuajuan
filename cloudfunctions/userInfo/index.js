@@ -53,6 +53,9 @@ saveUserInfo = async (openid, userInfo) => {
 	// nickName可能不同，每次都需要更新一下 displayName
 	userInfo.displayName = getDisplayNickName(userInfo.nickName)
 
+	// 日期类型需要特殊处理（由后台维护）
+	delete userInfo.lastEditTime;
+
 	var data = await getUserInfo(openid); 
 	return data ? updateUserInfo(data, userInfo)
 		: createUserInfo(userInfo);
@@ -77,7 +80,7 @@ createUserInfo = (userInfo) => {
 
 updateUserInfo = (data, userInfo) => {
 	Object.assign(data, userInfo)
-	delete data['_id']
+	delete data._id
 
 	queryUser(userInfo._openid).update({data})
 
