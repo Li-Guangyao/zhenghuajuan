@@ -14,7 +14,7 @@
 </navigator>
 
 <!-- 菜品选择 -->
-<view class="food-layer" bindtap="showPopup">
+<view class="food-layer" bindtap="showFoodPopup">
 	<!-- TODO: 以下任意元素点击均可唤起菜品切换/购买弹窗 -->
 	<image class="prev" src="../../icon/prevArrow.png" mode="widthFix"></image>
 	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
@@ -69,7 +69,7 @@
 </view>
 
 <!-- 购买菜品弹窗 -->
-<van-popup custom-class="buy-food" show="{{ showPopup }}" bind:close="closePopup">
+<van-popup custom-class="buy-food" show="{{ showFoodPopup }}" bind:close="closePopup">
 	<!-- TODO: 用户小麦数量 -->
 	<view class="user-roll">{{userInfo.data.rollCount}}
 		<image src="../../icon/roll2.png" mode="heightFix"></image>
@@ -119,6 +119,17 @@
 	}
 	module.exports.judge = judge
 </wxs> -->
+
+<van-popup custom-class="info" show="{{showNoticePopup}}"
+	bind:close="onNoticeConfirm">
+	<view class="title">{{curNotice.data.title}}</view>
+	<view class="content">
+		<rich-text nodes="{{curNotice.data.content}}" space="nbsp"></rich-text>
+	</view>
+	<van-button custom-class="confirm" round color="#ffa600" bindtap="onNoticeConfirm">
+		关闭
+	</van-button>
+</van-popup>
 
 <!-- tabbar -->
 <view class="bottom-bar">

@@ -29,6 +29,8 @@ UserInfo.prototype.initialize = function(data) {
 		unlockFoods: [], // 解锁的菜品
 		unlockTools: [], // 解锁的烹饪工具
 
+		readNotices: [], // 已阅读的公告
+
 		createdAt: null, // 注册日期
 
 		status: 0, // 用户状态，0为正常，1为封禁

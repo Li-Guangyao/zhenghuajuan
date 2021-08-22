@@ -5,6 +5,8 @@ import foodPage from "../common/foodPage"
 import FoodManager from "../../modules/foodModule/foodManager"
 import RollRecord from "../../modules/rollModule/rollRecord"
 import RollManager from "../../modules/rollModule/rollManager"
+import noticePage from "../common/noticePage"
+import NoticeManager from '../../modules/noticeModule/noticeManager'
 
 // 更新间隔
 var updateInterval = 50;
@@ -27,14 +29,14 @@ var main = {
 		*/
 
 		showFlavorEdit: false, // 修改口味
-		showPopup: false, // 菜品弹窗
+		showFoodPopup: false, // 菜品弹窗
 		
 		foodIdx: 0, // 浏览到第几个菜品
 		curFoodIdx: 0, // 选择了第几个菜品
 
 		rate: 0, // 时间滑动条的比率
 		dragging: false,
-		animating:true,
+		animating: true,
 	},
 	updateHandler: 0,
 
@@ -97,11 +99,11 @@ var main = {
 
 	// 数据编辑
 	// 菜品弹窗
-	showPopup() {
-		this.setData({ showPopup: true })
+	showFoodPopup() {
+		this.setData({ showFoodPopup: true })
 	},
 	closePopup() {
-		this.setData({ showPopup: false })
+		this.setData({ showFoodPopup: false })
 	},
 
 	// 菜品选择控制
@@ -252,6 +254,11 @@ var main = {
 		NavigateUtils.push('../rolling/rolling');
 	},
 
+	async onNoticeConfirm() {
+		await NoticeManager.read(this.data.curNotice.data._id);
+		this.refreshCurNotice();
+	},
+
 	toPost() {
 		NavigateUtils.switch('../homepage/homepage');
 	},
@@ -269,4 +276,4 @@ var main = {
 	}
 }
 
-Page(PageCombiner.Combine(main, [userPage(true), foodPage]));
+Page(PageCombiner.Combine(main, [userPage(true), foodPage, noticePage]));
