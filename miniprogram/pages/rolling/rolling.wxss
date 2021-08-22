@@ -189,6 +189,7 @@ page {
   position: absolute;
   display: block;
   height: 70%;
+  width: 19%;
   left: 5%;
   top: 15%;
   bottom: 15%;

@@ -13,7 +13,7 @@ FileStroageManager.uploadFiles = async function(files, path, loading, title, mas
 	if (mask == undefined) mask = true;
 	title ||= "保存中";
 
-	wx.showLoading({ title, mask })
+	if (loading) wx.showLoading({ title, mask })
 
 	try {
 		console.log("uploadFiles: ", files, path);
@@ -29,7 +29,7 @@ FileStroageManager.uploadFiles = async function(files, path, loading, title, mas
 			title: '上传失败', icon: 'none'
 		});
 	} finally {
-		wx.hideLoading()
+		if (loading) wx.hideLoading()
 	}
 }
 

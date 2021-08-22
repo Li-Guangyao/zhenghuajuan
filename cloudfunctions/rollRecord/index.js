@@ -81,6 +81,10 @@ startRollRecord = async (openid, data) => {
 	data.createdAt = new Date();
 	data.status = 0;
 
+	var userInfo = (await queryUser(openid).get()).data[0];
+	if (!userInfo.unlockFoods.includes(data.foodId))
+		throw new Error("尚未解锁该菜品！");
+
 	delete data._id;
 
 	data._id = (await db.collection('t_roll_record').add({ data }))._id;

@@ -20,8 +20,9 @@ var main = {
 
 Page(PageCombiner.Combine(main, [userPage(), postsPage('all')]))
 
-/*
-Page({
+/* 
+Page(
+{
 	data: {
 		postList: [],
 		userInfo: null,
@@ -143,5 +144,7 @@ Page({
 		wx.switchTab({ url: '../my/my' })
 	},
 
-})
+}
+)
+
 */

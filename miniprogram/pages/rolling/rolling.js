@@ -5,6 +5,7 @@ import FoodManager from "../../modules/foodModule/foodManager";
 import MathUtils from "../../utils/mathUtils";
 import PageCombiner from "../common/pageCombiner";
 import userPage from "../common/userPage";
+import foodPage from "../common/foodPage";
 import CFM from "../../modules/coreModule/cloudFuncManager";
 
 // 圆环的坐标和尺寸，x和y是相对于canvas左上角的坐标，r是圆环半径，w是线的宽度
@@ -575,4 +576,4 @@ var main = {
 	},
 }
 
-Page(PageCombiner.Combine(main, userPage()));
+Page(PageCombiner.Combine(main, [userPage(), foodPage]));

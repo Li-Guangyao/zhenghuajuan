@@ -36,6 +36,8 @@ async function makeRankList(type, startTime, endTime) {
 		as: "userInfo"
 	}).addFields({ // 会直接替换掉
 		userInfo: $.arrayElemAt(['$userInfo', 0])
+	}).match({
+		sumValue: _.gt(0)
 	}).end()
 
 	updateResult(type, res.list, startTime, endTime)

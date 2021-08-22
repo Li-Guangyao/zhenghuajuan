@@ -4,6 +4,9 @@ function UserInfo() {
 
 UserInfo.prototype.initialize = function(data) {
 
+	if (!data || !data._openid) 
+		throw new Error("未获取到用户数据！");
+
 	this.data = {
 		_id: null, // 用户ID
 		_openid: null, // 用户openid

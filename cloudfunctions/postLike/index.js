@@ -46,9 +46,11 @@ exports.main = async (event, context) => {
 		updater.likes = _.push(like);
 	else if (!like) // 如果点赞已存在，且当前点赞不存在，取消
 		updater.likes = _.pull({ _openid: openid });
-	else // 更新
-		updater['likes[' + likeIndex + ']'] = like;
-		
+	else { // 更新
+		post.likes[likeIndex] = like;
+		updater.likes = post.likes;
+	}
+
 	queryPost.update({ data: updater })
 	gainRoll(post._openid, newValue - lastValue);
 

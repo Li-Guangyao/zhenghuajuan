@@ -51,7 +51,7 @@
 			<food-display class="food16" src="{{rollRecord.foodImage}}" mode="aspectFit"></food-display>
 		</view>
 		<image class="post-bottom" src="../../images/postBottom.png" mode="widthFix">
-			<image class="avatar" src="{{userInfo.data.avatarUrl}}" mode="heightFix"></image>
+			<image class="avatar" src="{{userInfo.data.avatarUrl}}" mode="aspectFill"></image>
 			<view class="info">
 				<view class="name">{{userInfo.data.displayName}}</view>
 				<textarea class="message" 

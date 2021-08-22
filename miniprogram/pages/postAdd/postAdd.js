@@ -113,7 +113,7 @@ var main = {
 
 			if (e.errMsg || e.message == "chooseLocation:fail auth deny") {
 				var res2 = await wx.showModal({
-					title: '点击右上角，授权获取位置信息',
+					title: '点击右上角进入设置，授权获取位置信息',
 					showCancel: true
 				});
 				if (res2.confirm) wx.openSetting()

@@ -31,7 +31,7 @@ var main = {
 			if (res.stats.updated == 0)
 				wx.showToast({
 					icon: 'error',
-					title: '每天只修改一次！',
+					title: '一天只能改一次！',
 				})
 			else {
 				wx.showToast({ title: '修改成功！' });

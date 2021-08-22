@@ -44,6 +44,7 @@ UserManager.get = async function(userOpenid) {
  * 设置用户信息（内部调用）
  */
 UserManager._setUserInfo = function(data) {
+	if (!data || !data._openid) return;
 	wx.setStorage({key: this.StroageKey, data})
 	this.userInfo = new UserInfo(data);
 	this.refreshData(); // 重置相关数据
@@ -85,12 +86,12 @@ UserManager.judgeLogin = async function(
 	refresh, title, onConfirm, onCancel) {
 	if (!this.userInfo) this._loadFromWx();
 
-	if (!this.userInfo) {
+	if (!this.userInfo && !NavigateUtils.isCurPage(this.LoginPage)) {
 		title ||= "卷王同志，请先登陆再来";
 		onConfirm ||= () => NavigateUtils.goto(this.LoginPage);
 		onCancel ||= () => NavigateUtils.pop();
 
-		var response = await wx.showModal({ title, showCancel: true});
+		var response = await wx.showModal({ title, showCancel: false });
 		if (response.confirm) onConfirm();
 		else if (response.cancel) onCancel();
 

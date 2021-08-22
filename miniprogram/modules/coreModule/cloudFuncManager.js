@@ -9,7 +9,7 @@ CloudFuncManager.call = async function(name, method, data, loading, title, mask)
 	
 	data.method = method;
 
-	wx.showLoading({ title, mask })
+	if (loading) wx.showLoading({ title, mask })
 	try {
 		console.log("call: ", name, data);
 		var res = await wx.cloud.callFunction({name, data});
@@ -19,7 +19,7 @@ CloudFuncManager.call = async function(name, method, data, loading, title, mask)
 		console.error("call: ", name, ": error: ", e)
 		throw e;
 	} finally {
-		wx.hideLoading()
+		if (loading) wx.hideLoading()
 	} 
 }
 
