@@ -36,8 +36,8 @@
 			如果中途切换了菜品，导致最低时限改变了，这里也需要同步改变
 		 -->
 		<van-slider use-button-slot bar-height="20" active-color="#F2B771" step="1" inactive-color="#EBD6BC"
-			bind:drag="onDrag" bind:change="onValueChange" min="0" max="100">
-			<image class="bar-icon" src="../../icon/barIcon.png" slot="button" mode="aspectFit" bindtouchstart="onDragStart" bindtouchend="onDragEnd">
+			bind:drag="onDrag" bind:change="onValueChange" min="0" max="100" >
+			<image class="{{animating?'bar-icon scale-ani':'bar-icon'}}"  src="../../icon/barIcon.png"  slot="button" mode="aspectFit"  bindtouchstart="onDragStart" bindtouchend="onDragEnd">
 				<view class="drag-prompt" wx:if="{{dragging}}">{{rollRecord.data.duration}}</view>
 			</image>
 		</van-slider>
