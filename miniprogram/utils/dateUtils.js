@@ -18,7 +18,7 @@ DateUtils.getTimeRages = function() {
 		var dayStart = new Date(year, month, date);
 		var dayEnd = new Date(year, month, date + 1);
 	
-		var weekStart = new Date(year, month, date - day);
+		var weekStart = new Date(year, month, date - day + 1);
 		var weekEnd = new Date(year, month, date - day + 8);
 	
 		var monthStart = new Date(year, month, 1);

@@ -183,14 +183,14 @@ var main = {
 	onDragStart(e) {
 		this.setData({
 			dragging: true,
-			animating:false,
+			animating: false,
 		});
 	},
 	onDragEnd(e) {
-		this.accumulateTime=3000;//重置到动画暂停点
+		this.accumulateTime=3000; // 重置到动画暂停点
 		this.setData({
 			dragging: false,
-			animating:true,
+			animating: true,
 		});
 	},
 

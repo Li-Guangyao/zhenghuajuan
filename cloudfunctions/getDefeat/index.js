@@ -17,12 +17,11 @@ exports.main = async (event, context) => {
 
 async function getDefeat(duration) {
 	if (duration >= 120) return 100;
-	
+
 	var cnt = (await db.collection('t_roll_record').where(_.or([
 		{ // 已完成的，同时时间比当前时间短的
 			status: 1, duration: _.lt(duration)
-		},
-		{ // 失败的个数
+		}, { // 失败的个数
 			status: 2
 		}
 	])).count()).total;
