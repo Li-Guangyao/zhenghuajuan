@@ -30,6 +30,7 @@ var main = {
 		curFoodIdx: 0, // 选择了第几个菜品
 
 		rate: 0, // 时间滑动条的比率
+		dragging: false,
 	},
 
 	// 数据操作
@@ -135,9 +136,11 @@ var main = {
 	// 进度条事件
 	onDrag(e) {
 		this.setDuration(e.detail.value / 100);
+		this.setData({dragging: true});
 	},
 	onValueChange(e) {
 		this.setDuration(e.detail / 100);
+		this.setData({dragging: false});
 	},
 
 	// 设置时间
