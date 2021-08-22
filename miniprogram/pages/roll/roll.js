@@ -34,9 +34,12 @@ var main = {
 
 		rate: 0, // 时间滑动条的比率
 		dragging: false,
+		animating:true,
 	},
-
 	updateHandler: 0,
+
+	//动画周期计时
+	accumulateTime:0,
 
 	foodSwitch: {
 		startX: null,
@@ -73,6 +76,23 @@ var main = {
 
 	update() {
 		// 每帧更新
+		this.accumulateTime+=updateInterval;
+		if(this.accumulateTime>=3000&&this.accumulateTime<5000){
+			this.setData({
+				animating:false,
+			});
+		}else if(this.accumulateTime>=5000){
+			if(!this.data.dragging)
+			{
+				if(this.data.rollRecord.data.duration==15)
+				{
+					this.setData({
+						animating:true,
+					});
+				}
+			}
+			this.accumulateTime=0;
+		}
 	},
 
 	// 数据编辑
@@ -161,10 +181,17 @@ var main = {
 	},
 
 	onDragStart(e) {
-		this.setData({dragging: true});
+		this.setData({
+			dragging: true,
+			animating:false,
+		});
 	},
 	onDragEnd(e) {
-		this.setData({dragging: false});
+		this.accumulateTime=3000;//重置到动画暂停点
+		this.setData({
+			dragging: false,
+			animating:true,
+		});
 	},
 
 	onFoodDragStart(e) {
