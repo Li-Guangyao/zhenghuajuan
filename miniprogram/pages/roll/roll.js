@@ -7,7 +7,7 @@ import RollRecord from "../../modules/rollModule/rollRecord"
 import RollManager from "../../modules/rollModule/rollManager"
 
 // 更新间隔
-var updateInterval = 20;
+var updateInterval = 50;
 
 var main = {
 	data: {
@@ -37,8 +37,6 @@ var main = {
 	},
 
 	updateHandler: 0,
-	curDragging: false,
-	lastDragging: false,
 
 	// 数据操作
 	// TODO: 提取共有操作
@@ -69,20 +67,7 @@ var main = {
 	},
 
 	update() {
-		this.updateDragging();
-	},
-
-	// 更新拖拽
-	updateDragging() {
-		/*
-		if (this.lastDragging != this.curDragging) {
-			if (this.curDragging) this.setData({dragging: true});
-			if (this.lastDragging) this.setData({dragging: false});	
-		}
-
-		this.lastDragging = this.curDragging;
-		this.curDragging = false;
-		*/
+		// 每帧更新
 	},
 
 	// 数据编辑
@@ -165,10 +150,15 @@ var main = {
 	// 进度条事件
 	onDrag(e) {
 		this.setDuration(e.detail.value / 100);
-		this.setData({dragging: true});
 	},
 	onValueChange(e) {
 		this.setDuration(e.detail / 100);
+	},
+
+	onDragStart(e) {
+		this.setData({dragging: true});
+	},
+	onDragEnd(e) {
 		this.setData({dragging: false});
 	},
 
