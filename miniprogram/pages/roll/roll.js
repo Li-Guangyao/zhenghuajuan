@@ -38,6 +38,11 @@ var main = {
 
 	updateHandler: 0,
 
+	foodSwitch: {
+		startX: null,
+		threshold: 16
+	},
+
 	// 数据操作
 	// TODO: 提取共有操作
 	getObject() {
@@ -160,6 +165,22 @@ var main = {
 	},
 	onDragEnd(e) {
 		this.setData({dragging: false});
+	},
+
+	onFoodDragStart(e) {
+		this.foodSwitch.startX = e.changedTouches[0].pageX;
+		console.log("onFoodDragStart", e.changedTouches[0].pageX);
+	},
+	onFoodDragEnd(e) {
+		if (!this.foodSwitch.startX) return;
+
+		var ex = e.changedTouches[0].pageX;
+		if (ex - this.foodSwitch.startX < 
+			this.foodSwitch.threshold) this.nextFood();
+		if (ex - this.foodSwitch.startX > 
+			-this.foodSwitch.threshold) this.prevFood();
+
+		console.log("onFoodDragEnd", ex);
 	},
 
 	// 设置时间
