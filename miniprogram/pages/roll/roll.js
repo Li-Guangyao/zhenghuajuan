@@ -6,6 +6,9 @@ import FoodManager from "../../modules/foodModule/foodManager"
 import RollRecord from "../../modules/rollModule/rollRecord"
 import RollManager from "../../modules/rollModule/rollManager"
 
+// 更新间隔
+var updateInterval = 20;
+
 var main = {
 	data: {
 		rollRecord: null, //new RollRecord(),
@@ -33,6 +36,10 @@ var main = {
 		dragging: false,
 	},
 
+	updateHandler: 0,
+	curDragging: false,
+	lastDragging: false,
+
 	// 数据操作
 	// TODO: 提取共有操作
 	getObject() {
@@ -51,9 +58,31 @@ var main = {
 		this.setData({rollRecord: this.getObject()});
 	},
 
+	onLoad() {
+		this.updateHandler = setInterval(
+			this.update.bind(this), updateInterval);
+	},
+
 	onFoodLoaded() {
 		this.setData({rollRecord: new RollRecord()});
 		this.changeFoodIdx(0);
+	},
+
+	update() {
+		this.updateDragging();
+	},
+
+	// 更新拖拽
+	updateDragging() {
+		/*
+		if (this.lastDragging != this.curDragging) {
+			if (this.curDragging) this.setData({dragging: true});
+			if (this.lastDragging) this.setData({dragging: false});	
+		}
+
+		this.lastDragging = this.curDragging;
+		this.curDragging = false;
+		*/
 	},
 
 	// 数据编辑

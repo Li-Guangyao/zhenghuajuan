@@ -14,15 +14,15 @@ page {
 .buttons {
   position: fixed;
   left: 24rpx;
-  top: 80rpx;
+  top: 72rpx;
   width: 256rpx;
   height: 48rpx;
 }
 .buttons .icon-button {
+  display: block;
   width: 64rpx;
   height: 64rpx;
-  margin-left: 16rpx;
-  margin-right: 16rpx;
+  margin: 24rpx 12rpx;
 }
 .shop-board {
   position: fixed;
@@ -131,6 +131,12 @@ page {
   font-size: 28rpx;
   color: var(--themeColor);
 }
+.input-layer .time-input .scale-ani {
+  animation: scale 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+}
 .input-layer .time-tips {
   display: flex;
   flex-direction: row;
@@ -232,7 +238,7 @@ page {
 }
 .buy-food .food-desc {
   width: 80%;
-  height: 76rpx;
+  height: 80rpx;
   margin-top: 24rpx;
   text-align: left;
   overflow-y: scroll;
@@ -240,14 +246,16 @@ page {
 .buy-food .food-switch .prev {
   position: absolute;
   width: 28rpx;
-  left: 48rpx;
-  top: 45%;
+  left: 32rpx;
+  top: 44%;
+  padding: 16rpx;
 }
 .buy-food .food-switch .next {
   position: absolute;
   width: 28rpx;
-  right: 48rpx;
-  top: 45%;
+  right: 32rpx;
+  top: 44%;
+  padding: 16rpx;
 }
 .buy-food .food-switch .food-card {
   position: relative;
@@ -313,4 +321,12 @@ page {
 }
 .bottom-bar image {
   height: 100%;
+}
+@keyframes scale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
