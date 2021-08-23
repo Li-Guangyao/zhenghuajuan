@@ -102,6 +102,13 @@ var main = {
 	curFoodId() {
 		return this.curFood().data._id;
 	},
+	// 当前选择菜品
+	curChooseFood() {
+		return this.data.foods[this.data.curFoodIdx];
+	},
+	curChooseFoodId() {
+		return this.curChooseFood().data._id;
+	},
 
 	// 解锁食物
 	async unlockFood() {
@@ -199,6 +206,7 @@ var main = {
 
 	// 真的开始啦！
 	async doStartRoll() {
+		this.updateData({foodId: this.curChooseFoodId()})
 		RollManager.start(this.getObject());
 
 		NavigateUtils.push('../rolling/rolling');
