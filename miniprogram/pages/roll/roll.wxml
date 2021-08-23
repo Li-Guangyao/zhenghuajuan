@@ -14,7 +14,7 @@
 </navigator>
 
 <!-- 菜品选择 -->
-<view class="food-layer" bindtap="showPopup">
+<view class="food-layer" bindtap="showFoodPopup">
 	<!-- TODO: 以下任意元素点击均可唤起菜品切换/购买弹窗 -->
 	<image class="prev" src="../../icon/prevArrow.png" mode="widthFix"></image>
 	<image class="next" src="../../icon/nextArrow3.png" mode="widthFix"></image>
@@ -35,9 +35,10 @@
 			时间到达最大值，中间的菜品显示品质2的图片
 			如果中途切换了菜品，导致最低时限改变了，这里也需要同步改变
 		 -->
-		<van-slider use-button-slot bar-height="20" active-color="#F2B771" step="1" inactive-color="#EBD6BC"
-			bind:drag="onDrag" bind:change="onValueChange" min="0" max="100">
-			<image class="bar-icon" src="../../icon/barIcon.png" slot="button" mode="aspectFit" bindtouchstart="onDragStart" bindtouchend="onDragEnd">
+		<van-slider use-button-slot bar-height="20" 
+			active-color="#F2B771" step="1" inactive-color="#EBD6BC"
+			bind:drag="onDrag" bind:change="onValueChange" min="0" max="100" >
+			<image class="{{animating?'bar-icon scale-ani':'bar-icon'}}"  src="../../icon/barIcon.png"  slot="button" mode="aspectFit"  bindtouchstart="onDragStart" bindtouchend="onDragEnd" touchcancel="onDragEnd">
 				<view class="drag-prompt" wx:if="{{dragging}}">{{rollRecord.data.duration}}</view>
 			</image>
 		</van-slider>
@@ -68,7 +69,7 @@
 </view>
 
 <!-- 购买菜品弹窗 -->
-<van-popup custom-class="buy-food" show="{{ showPopup }}" bind:close="closePopup">
+<van-popup custom-class="buy-food" show="{{ showFoodPopup }}" bind:close="closePopup">
 	<!-- TODO: 用户小麦数量 -->
 	<view class="user-roll">{{userInfo.data.rollCount}}
 		<image src="../../icon/roll2.png" mode="heightFix"></image>
@@ -77,7 +78,7 @@
 	<view class="food-name">{{foods[foodIdx].data.name}}</view>
 	<!-- TODO: 菜品描述 -->
 	<view class="food-desc">{{foods[foodIdx].data.description}}</view>
-	<view class="food-switch">
+	<view class="food-switch" bindtouchstart="onFoodDragStart" bindtouchend="onFoodDragEnd">
 		<image class="prev" src="../../icon/prevArrow2.png" mode="widthFix" bindtap="prevFood"></image>
 		<image class="food-card" src="../../images/foodBackground.png" mode="heightFix">
 			<!-- TODO: 菜品图像 -->
@@ -118,6 +119,17 @@
 	}
 	module.exports.judge = judge
 </wxs> -->
+
+<van-popup custom-class="info" show="{{showNoticePopup}}"
+	bind:close="onNoticeConfirm">
+	<view class="title">{{curNotice.data.title}}</view>
+	<view class="content">
+		<rich-text nodes="{{curNotice.data.content}}" space="nbsp"></rich-text>
+	</view>
+	<van-button custom-class="confirm" round color="#ffa600" bindtap="onNoticeConfirm">
+		关闭
+	</van-button>
+</van-popup>
 
 <!-- tabbar -->
 <view class="bottom-bar">

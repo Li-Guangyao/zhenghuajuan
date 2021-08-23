@@ -3,16 +3,35 @@ const cloud = require('wx-server-sdk')
 
 cloud.init()
 
+const db = cloud.database();
+const _ = db.command
+
 // 获取打败了x%的人
 exports.main = async (event, context) => {
 	const wxContext = cloud.getWXContext()
 
 	var duration = event.duration;
 
-	return Math.round(getDefeat(duration));
+	return Math.round(await getDefeat(duration));
 }
 
-function getDefeat(duration) {
+async function getDefeat(duration) {
+	if (duration >= 120) return 100;
+
+	var cnt = (await db.collection('t_roll_record').where(_.or([
+		{ // 已完成的，同时时间比当前时间短的
+			status: 1, duration: _.lt(duration)
+		}, { // 失败的个数
+			status: 2
+		}
+	])).count()).total;
+
+	var sumCnt = (await db.collection('t_roll_record').count()).total;
+
+	return cnt / sumCnt * 100;
+
+	// 以下是随机算法
+	/*
 	var rand = Math.random();
 	if (duration <= 15) return 10 + rand * 5;
 	if (duration < 60) {
@@ -25,4 +44,5 @@ function getDefeat(duration) {
 		return 65 + (90 - 65) * percent + rand * 4 - 2;
 	}
 	return 100
+	*/
 }

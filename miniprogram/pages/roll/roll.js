@@ -5,6 +5,9 @@ import foodPage from "../common/foodPage"
 import FoodManager from "../../modules/foodModule/foodManager"
 import RollRecord from "../../modules/rollModule/rollRecord"
 import RollManager from "../../modules/rollModule/rollManager"
+import noticePage from "../common/noticePage"
+import NoticeManager from '../../modules/noticeModule/noticeManager'
+import sharePage from "../common/sharePage"
 
 // 更新间隔
 var updateInterval = 50;
@@ -27,16 +30,24 @@ var main = {
 		*/
 
 		showFlavorEdit: false, // 修改口味
-		showPopup: false, // 菜品弹窗
+		showFoodPopup: false, // 菜品弹窗
 		
 		foodIdx: 0, // 浏览到第几个菜品
 		curFoodIdx: 0, // 选择了第几个菜品
 
 		rate: 0, // 时间滑动条的比率
 		dragging: false,
+		animating: true,
 	},
-
 	updateHandler: 0,
+
+	//动画周期计时
+	accumulateTime:0,
+
+	foodSwitch: {
+		startX: null,
+		threshold: 16
+	},
 
 	// 数据操作
 	// TODO: 提取共有操作
@@ -65,18 +76,35 @@ var main = {
 		this.setData({rollRecord: new RollRecord()});
 		this.changeFoodIdx(0);
 	},
-
+	
 	update() {
 		// 每帧更新
+		this.accumulateTime+=updateInterval;
+		if(this.accumulateTime>=3000&&this.accumulateTime<5000){
+			this.setData({
+				animating:false,
+			});
+		}else if(this.accumulateTime>=5000){
+			if(!this.data.dragging)
+			{
+				if(this.data.rollRecord.data.duration==15)
+				{
+					this.setData({
+						animating:true,
+					});
+				}
+			}
+			this.accumulateTime=0;
+		}
 	},
 
 	// 数据编辑
 	// 菜品弹窗
-	showPopup() {
-		this.setData({ showPopup: true })
+	showFoodPopup() {
+		this.setData({ showFoodPopup: true })
 	},
 	closePopup() {
-		this.setData({ showPopup: false })
+		this.setData({ showFoodPopup: false })
 	},
 
 	// 菜品选择控制
@@ -163,10 +191,33 @@ var main = {
 	},
 
 	onDragStart(e) {
-		this.setData({dragging: true});
+		this.setData({
+			dragging: true,
+			animating: false,
+		});
 	},
 	onDragEnd(e) {
-		this.setData({dragging: false});
+		this.accumulateTime=3000; // 重置到动画暂停点
+		this.setData({
+			dragging: false,
+			animating: true,
+		});
+	},
+
+	onFoodDragStart(e) {
+		this.foodSwitch.startX = e.changedTouches[0].pageX;
+		console.log("onFoodDragStart", e.changedTouches[0].pageX);
+	},
+	onFoodDragEnd(e) {
+		if (!this.foodSwitch.startX) return;
+
+		var ex = e.changedTouches[0].pageX;
+		if (ex - this.foodSwitch.startX < 
+			this.foodSwitch.threshold) this.nextFood();
+		if (ex - this.foodSwitch.startX > 
+			-this.foodSwitch.threshold) this.prevFood();
+
+		console.log("onFoodDragEnd", ex);
 	},
 
 	// 设置时间
@@ -212,6 +263,11 @@ var main = {
 		NavigateUtils.push('../rolling/rolling');
 	},
 
+	async onNoticeConfirm() {
+		await NoticeManager.read(this.data.curNotice.data._id);
+		this.refreshCurNotice();
+	},
+
 	toPost() {
 		NavigateUtils.switch('../homepage/homepage');
 	},
@@ -226,7 +282,8 @@ var main = {
 
 	toRanklist() {
 		NavigateUtils.push('../ranklist/ranklist');
-	}
+	},
+	
 }
 
-Page(PageCombiner.Combine(main, [userPage(true), foodPage]));
+Page(PageCombiner.Combine(main, [userPage(true), foodPage, noticePage, sharePage()]));

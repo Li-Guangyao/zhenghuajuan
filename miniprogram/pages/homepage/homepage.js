@@ -1,6 +1,7 @@
 import NavigateUtils from '../../utils/navigateUtils';
 import PageCombiner from '../common/pageCombiner';
 import postsPage from '../common/postsPage';
+import sharePage from '../common/sharePage';
 import userPage from '../common/userPage';
 
 var main = {
@@ -18,7 +19,7 @@ var main = {
 	}
 }
 
-Page(PageCombiner.Combine(main, [userPage(), postsPage('all')]))
+Page(PageCombiner.Combine(main, [userPage(), postsPage('all'), sharePage()]))
 
 /* 
 Page(

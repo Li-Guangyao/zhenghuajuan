@@ -9,8 +9,12 @@
 		<view class="input-shopName">
 			<input type="text" model:value="{{shopName}}" maxlength="10"></input>
 		</view>
-		<view class="tag">点击确认更改，将店名修改为 <view class="shopName">{{shopName}}</view>
+		<view class="tag">点击确认更改，将店名修改为 
+			<view class="shopName">{{shopName}}</view>
+			<text>\n\n店名应该是您的长期目标，比如：\n我要上清华、我要进大厂、我要拿国奖……\n一天只能改一次</text>
 		</view>
+
+		<text></text>
 
 	</view>
 
