@@ -419,6 +419,29 @@ var main = {
 		}
 	},
 
+	/*
+	async onShareTimeline() {
+		await this.generatePoster();
+	
+		await RollManager.addShare('wx');
+
+		this.data.sharings[0] = true;
+		this.setData({sharings: this.data.sharings});
+
+		var texts = [
+			"来蒸花卷，争做最卷的“卷王”吧",
+			"来蒸花卷，记录你学习的点滴",
+			"来蒸花卷，沉浸在学习的快乐中吧"
+		]
+
+		return {
+			title: MathUtils.randomItem(texts),
+			imageUrl: this.posterImgUrl,
+			path: '/pages/roll/roll'
+		}
+	},
+	*/
+
 	// 格式化时间
 	formatTimeStr(minutes, seconds) {
 		var minuteStr = (minutes / 10 >= 1 ? '' : '0') + minutes;

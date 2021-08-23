@@ -5,6 +5,7 @@ import NavigateUtils from "../../utils/navigateUtils";
 import PageCombiner from "../common/pageCombiner";
 import foodPage from "../common/foodPage";
 import userPage from "../common/userPage";
+import sharePage from "../common/sharePage";
 
 var main = {
 	data: {
@@ -212,4 +213,4 @@ var main = {
 	}
 }
 
-Page(PageCombiner.Combine(main, [userPage(), foodPage]))
+Page(PageCombiner.Combine(main, [userPage(), foodPage, sharePage()]))

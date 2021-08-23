@@ -2,6 +2,7 @@ import Post from "../../modules/postModule/post";
 import PostManager from "../../modules/postModule/postManager";
 import NavigateUtils from "../../utils/navigateUtils";
 import PageCombiner from "../common/pageCombiner";
+import sharePage from "../common/sharePage";
 import userPage from "../common/userPage";
 
 var main = {
@@ -16,4 +17,4 @@ var main = {
 	back() { NavigateUtils.pop(); }
 }
 
-Page(PageCombiner.Combine(main, userPage()));
+Page(PageCombiner.Combine(main, [userPage(), sharePage()]));

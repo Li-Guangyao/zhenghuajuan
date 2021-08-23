@@ -7,6 +7,7 @@ import RollRecord from "../../modules/rollModule/rollRecord"
 import RollManager from "../../modules/rollModule/rollManager"
 import noticePage from "../common/noticePage"
 import NoticeManager from '../../modules/noticeModule/noticeManager'
+import sharePage from "../common/sharePage"
 
 // 更新间隔
 var updateInterval = 50;
@@ -75,7 +76,7 @@ var main = {
 		this.setData({rollRecord: new RollRecord()});
 		this.changeFoodIdx(0);
 	},
-
+	
 	update() {
 		// 每帧更新
 		this.accumulateTime+=updateInterval;
@@ -273,7 +274,8 @@ var main = {
 
 	toRanklist() {
 		NavigateUtils.push('../ranklist/ranklist');
-	}
+	},
+	
 }
 
-Page(PageCombiner.Combine(main, [userPage(true), foodPage, noticePage]));
+Page(PageCombiner.Combine(main, [userPage(true), foodPage, noticePage, sharePage()]));

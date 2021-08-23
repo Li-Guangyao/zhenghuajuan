@@ -2,6 +2,7 @@ import UserManager from '../../modules/userModule/userManager';
 import PageCombiner from '../common/pageCombiner';
 import userPage from '../common/userPage';
 import NavigateUtils from '../../utils/navigateUtils';
+import sharePage from '../common/sharePage';
 
 var main = {
 	data: {
@@ -50,4 +51,4 @@ var main = {
 
 }
 
-Page(PageCombiner.Combine(main, userPage()))
+Page(PageCombiner.Combine(main, userPage(), sharePage()))

@@ -2,6 +2,7 @@ import CFM from "../../modules/coreModule/cloudFuncManager"
 import UserManager from "../../modules/userModule/userManager"
 import NavigateUtils from "../../utils/navigateUtils"
 import PageCombiner from "../common/pageCombiner"
+import sharePage from "../common/sharePage"
 import userPage from "../common/userPage"
 
 var main = {
@@ -99,4 +100,4 @@ var main = {
 	back() { NavigateUtils.pop(); }
 }
 
-Page(PageCombiner.Combine(main, userPage()))
+Page(PageCombiner.Combine(main, [userPage(), sharePage()]))
